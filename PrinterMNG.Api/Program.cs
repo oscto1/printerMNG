@@ -33,4 +33,21 @@ app.MapPost("/printers", (CreatePrinterDto newPrinter) =>
     return Results.CreatedAtRoute(GetPrinterEndpointName, new { id = printerToAdd.Id }, printerToAdd);
 });
 
+// PUT /printers/1
+app.MapPut("/printers/{id}", (int id, UpdatePrinterDto updatedPrinter) =>
+{
+    try
+    {
+        var index = printerModels.FindIndex(printer => printer.Id == id);
+
+        printerModels[index] = new PrinterModelDto(id, updatedPrinter.Brand, updatedPrinter.ModelName, updatedPrinter.IsColorPrinter);
+
+        return Results.NoContent();
+    }
+    catch(Exception e)
+    {
+        return Results.InternalServerError($"There was an error updating the printer\n{e.Message}");
+    }
+});
+
 app.Run();

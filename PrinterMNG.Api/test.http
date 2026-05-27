@@ -15,3 +15,14 @@ Accept: application/json
   "modelName": "Test",
   "isColorPrinter": true
 }
+
+###
+PUT http://localhost:5280/printers/4
+Content-Type: application/json
+Accept: application/json
+
+{
+  "brand": "Toshiba",
+  "modelName": "Test updated",
+  "isColorPrinter": false
+}
