@@ -50,4 +50,20 @@ app.MapPut("/printers/{id}", (int id, UpdatePrinterDto updatedPrinter) =>
     }
 });
 
+
+// DELETE /printers/1
+app.MapDelete("/printers/{id}", (int id) =>
+{
+    try
+    {
+        printerModels.RemoveAll(printer => printer.Id == id);
+
+        return Results.NoContent();
+    }
+    catch (Exception e)
+    {
+        return Results.InternalServerError($"There was an error deleting the printer\n{e.Message}");
+    }
+});
+
 app.Run();
