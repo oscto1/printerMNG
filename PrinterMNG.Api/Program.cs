@@ -1,7 +1,12 @@
+using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddValidation();
+
+var connString = "Data Source=PrinterMNG.db";
+
+builder.Services.AddSqlite<PrinterMNGContext>(connString);
 
 var app = builder.Build();
 
