@@ -3,10 +3,7 @@ using PrinterMNG.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddValidation();
-
-var connString = "Data Source=PrinterMNG.db";
-
-builder.Services.AddSqlite<PrinterMNGContext>(connString);
+builder.AddPrinterMNGdb();
 
 var app = builder.Build();
 
@@ -33,6 +30,8 @@ app.UseExceptionHandler(exceptionApp =>
         }
     });
 });
+
+app.MigrateDb();
 
 app.Run();
 
