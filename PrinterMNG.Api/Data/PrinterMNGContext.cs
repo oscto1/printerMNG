@@ -8,4 +8,5 @@ public class PrinterMNGContext(DbContextOptions<PrinterMNGContext> options) : Db
 {
     public DbSet<Printer> Printers => Set<Printer>();
     public DbSet<Brand> Brands => Set<Brand>();
+    public DbSet<Client> Clients => Set<Client>();
 }
