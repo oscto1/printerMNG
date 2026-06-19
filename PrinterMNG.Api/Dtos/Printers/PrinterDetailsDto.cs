@@ -1,7 +1,7 @@
 ﻿namespace PrinterMNG.Api.Dtos;
-public record PrinterModelDto(
+public record PrinterDetailsDto(
   int Id,
-  string Brand,
+  int BrandId,
   string ModelName,
   bool IsColorPrinter
 );

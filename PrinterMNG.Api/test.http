@@ -11,23 +11,28 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "brand": "Toshiba",
-  "modelName": "Test",
+  "brandId": 5,
+  "modelName": "Testing",
   "isColorPrinter": true
 }
 
 ###
-PUT http://localhost:5280/printers/4
+PUT http://localhost:5280/printers/1
 Content-Type: application/json
 Accept: application/json
 
 {
-  "brand": "Toshiba",
+  "brandId": 2,
   "modelName": "Test updated",
   "isColorPrinter": false
 }
 
 ###
-DELETE http://localhost:5280/printers/1
+DELETE http://localhost:5280/printers/4
+Content-Type: application/json
+Accept: application/json
+
+###
+GET http://localhost:5280/brands
 Content-Type: application/json
 Accept: application/json

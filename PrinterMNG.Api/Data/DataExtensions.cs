@@ -14,10 +14,10 @@ public static class DataExtensions
 
     }
 
-    public static void AddDatabaseSeeding(this WebApplicationBuilder builder)
+    public static void AddPrinterMNGdb(this WebApplicationBuilder builder)
     {
-        var connString = "Data Source=PrinterMNG.db";
-
+        var connString = builder.Configuration.GetConnectionString("PrinterMNG");
+        builder.Services.AddScoped<PrinterMNGContext>();
         builder.Services.AddSqlite<PrinterMNGContext>(
             connString, 
             optionsAction: options => options.UseSeeding((context, _) =>

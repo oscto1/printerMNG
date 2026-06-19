@@ -2,15 +2,12 @@
 
 public record CreatePrinterDto
 (
-    [Required][StringLength(30)]
-    [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Brand contains invalid characters.")] 
-    string Brand,
+    [Required][Range(1,20)]
+    int BrandId,
 
     [Required][StringLength(50)]
     [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Model contains invalid characters.")] 
     string ModelName,
-    
-
 
     bool IsColorPrinter
 );

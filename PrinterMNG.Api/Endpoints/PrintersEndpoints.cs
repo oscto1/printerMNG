@@ -1,4 +1,8 @@
-﻿using PrinterMNG.Api.Dtos;
+﻿using System.Collections.Immutable;
+using Microsoft.EntityFrameworkCore;
+using PrinterMNG.Api.Data;
+using PrinterMNG.Api.Dtos;
+using PrinterMNG.Api.Models;
 
 namespace PrinterMNG.Api.Endpoints;
 
@@ -6,27 +10,33 @@ public static class PrintersEndpoints
 {
     const string GetPrinterEndpointName = "GetPrinter";
 
-    private static readonly List<PrinterModelDto> printerModels = [
-        new PrinterModelDto(1, "Toshiba", "eStudio 0000", true),
-        new PrinterModelDto(2, "Toshiba", "eStudio 0001", false),
-        new PrinterModelDto(3, "Canon", "CV1", true),
-    ];
-
     public static void MapPrintersEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("/printers");
         // GET /printers
-        group.MapGet("/", () => printerModels);
+        group.MapGet("/", async (PrinterMNGContext dbContext) =>
+        {
+            return await dbContext.Printers
+                .Include(printer => printer.Brand)
+                .Select(printer => new PrinterSummaryDto(
+                    printer.Id,
+                    printer.Brand!.Name,
+                    printer.Model,
+                    printer.IsColorPrinter
+                ))
+                .AsNoTracking()
+                .ToListAsync();
+        });
 
 
         // GET /printers/1
-        group.MapGet("/{id}", (int id) => {
+        group.MapGet("/{id}", async (int id, PrinterMNGContext dbContext) => {
 
-            var printer = printerModels.Find(printer => printer.Id == id);
+            var printer = await dbContext.Printers.FindAsync(id);
 
             if (printer != null)
             {
-                return Results.Ok(printer);
+                return Results.Ok(new PrinterDetailsDto(printer.Id, printer.BrandId, printer.Model, printer.IsColorPrinter));
             }
             else
             {
@@ -36,34 +46,54 @@ public static class PrintersEndpoints
 
 
         // POST /printers
-        group.MapPost("/", (CreatePrinterDto newPrinter) =>
+        group.MapPost("/", async (CreatePrinterDto newPrinter, PrinterMNGContext dbContext) =>
         {
-            PrinterModelDto printerToAdd = new PrinterModelDto(printerModels.Count + 1, newPrinter.Brand, newPrinter.ModelName, newPrinter.IsColorPrinter);
-            printerModels.Add(printerToAdd);
-            return Results.CreatedAtRoute(GetPrinterEndpointName, new { id = printerToAdd.Id }, printerToAdd);    
+            Printer printer = new()
+            {
+                Model = newPrinter.ModelName,
+                BrandId = newPrinter.BrandId,
+                IsColorPrinter = newPrinter.IsColorPrinter,
+            };
+
+            dbContext.Printers.Add(printer);
+            await dbContext.SaveChangesAsync();
+
+            PrinterDetailsDto printerDto = new (
+                printer.Id,
+                printer.BrandId,
+                printer.Model,
+                printer.IsColorPrinter
+            );
+
+
+            return Results.CreatedAtRoute(GetPrinterEndpointName, new { id = printerDto.Id }, printerDto);    
         });
 
         // PUT /printers/1
-        group.MapPut("/{id}", (int id, UpdatePrinterDto updatedPrinter) =>
+        group.MapPut("/{id}", async (int id, UpdatePrinterDto updatedPrinter, PrinterMNGContext dbContext) =>
         {
-            var index = printerModels.FindIndex(printer => printer.Id == id);
 
-            if (index == -1)
+            var printer = await dbContext.Printers.FindAsync(id);
+
+            if (printer is null)
             {
                 return Results.NotFound();
             }
 
-            printerModels[index] = new PrinterModelDto(id, updatedPrinter.Brand, updatedPrinter.ModelName, updatedPrinter.IsColorPrinter);
+            printer.BrandId = updatedPrinter.BrandId;
+            printer.Model = updatedPrinter.ModelName;
+            printer.IsColorPrinter = updatedPrinter.IsColorPrinter;
+
+            await dbContext.SaveChangesAsync();
 
             return Results.NoContent();
         });
 
 
         // DELETE /printers/1
-        group.MapDelete("/{id}", (int id) =>
+        group.MapDelete("/{id}", async (int id, PrinterMNGContext dbContext) =>
         {
-            
-            printerModels.RemoveAll(printer => printer.Id == id);
+            await dbContext.Printers.Where(printer => printer.Id == id).ExecuteDeleteAsync();
 
             return Results.NoContent();     
         });

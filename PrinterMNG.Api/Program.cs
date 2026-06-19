@@ -8,6 +8,7 @@ builder.AddPrinterMNGdb();
 var app = builder.Build();
 
 app.MapPrintersEndpoints();
+app.MapBrandsEndpoints();
 
 app.UseExceptionHandler(exceptionApp =>
 {
