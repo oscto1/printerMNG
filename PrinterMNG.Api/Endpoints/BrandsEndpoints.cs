@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PrinterMNG.Api.Data;
-using PrinterMNG.Api.Dtos;
+using PrinterMNG.Api.Dtos.Brands;
 
 namespace PrinterMNG.Api.Endpoints;
 

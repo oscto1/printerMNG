@@ -1,4 +1,4 @@
-﻿namespace PrinterMNG.Api.Dtos;
+﻿namespace PrinterMNG.Api.Dtos.Printers;
 public record PrinterSummaryDto(
   int Id,
   string Brand,

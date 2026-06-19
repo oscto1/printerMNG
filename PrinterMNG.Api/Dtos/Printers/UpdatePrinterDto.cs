@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+namespace PrinterMNG.Api.Dtos.Printers;
 public record UpdatePrinterDto
 (
     [Required][Range(1,20)]

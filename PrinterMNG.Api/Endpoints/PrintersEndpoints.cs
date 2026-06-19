@@ -1,7 +1,7 @@
-﻿using System.Collections.Immutable;
+﻿// using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore;
 using PrinterMNG.Api.Data;
-using PrinterMNG.Api.Dtos;
+using PrinterMNG.Api.Dtos.Printers;
 using PrinterMNG.Api.Models;
 
 namespace PrinterMNG.Api.Endpoints;
