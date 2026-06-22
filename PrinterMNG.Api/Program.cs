@@ -10,6 +10,7 @@ var app = builder.Build();
 app.MapPrintersEndpoints();
 app.MapBrandsEndpoints();
 app.MapClientsEndpoints();
+app.MapContractsEndpoints();
 
 app.UseExceptionHandler(exceptionApp =>
 {
