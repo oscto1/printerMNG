@@ -32,7 +32,51 @@ DELETE http://localhost:5280/printers/4
 Content-Type: application/json
 Accept: application/json
 
-###
+### BRANDS --------------------------------------------------------------------------------
 GET http://localhost:5280/brands
+Content-Type: application/json
+Accept: application/json
+
+### CLIENTS
+GET http://localhost:5280/clients
+Content-Type: application/json
+Accept: application/json
+
+###
+GET http://localhost:5280/clients
+Content-Type: application/json
+Accept: application/json
+
+###
+GET http://localhost:5280/clients/1
+Content-Type: application/json
+Accept: application/json
+
+###
+POST http://localhost:5280/clients
+Content-Type: application/json
+Accept: application/json
+
+{
+  "document": "126772",
+  "name": "Nombre Apellido",
+  "phone": "3949312119",
+  "location": "Locccccation"
+}
+
+###
+PUT http://localhost:5280/clients/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "document": "326772",
+  "name": "Cristian Pelaez",
+  "phone": "3234567890",
+  "location": "lasoidjasd"
+}
+
+###
+DELETE http://localhost:5280/clients/4
 Content-Type: application/json
 Accept: application/json

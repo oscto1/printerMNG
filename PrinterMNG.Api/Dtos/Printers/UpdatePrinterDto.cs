@@ -5,7 +5,7 @@ public record UpdatePrinterDto
     [Required][Range(1,20)]
     int BrandId,
 
-    [Required][StringLength(50)]
+    [Required][StringLength(50, MinimumLength = 3)]
     [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Model contains invalid characters.")] 
     string ModelName,
 
