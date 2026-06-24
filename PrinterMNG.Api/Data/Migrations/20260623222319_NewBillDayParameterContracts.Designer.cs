@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrinterMNG.Api.Data;
 
@@ -10,9 +11,11 @@ using PrinterMNG.Api.Data;
 namespace PrinterMNG.Api.Data.Migrations
 {
     [DbContext(typeof(PrinterMNGContext))]
-    partial class PrinterMNGContextModelSnapshot : ModelSnapshot
+    [Migration("20260623222319_NewBillDayParameterContracts")]
+    partial class NewBillDayParameterContracts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.8");

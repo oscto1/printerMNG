@@ -3,8 +3,9 @@ namespace PrinterMNG.Api.Models;
 public class Contract
 {
     public int Id { get; set; }
+    public bool IsActive { get; set; }
 
-    public string ClientId { get; set; } = null!;
+    public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
     public int PrinterId { get; set; }
@@ -20,5 +21,6 @@ public class Contract
     public decimal IncreasedColorPrice { get; set; }
 
     public DateOnly StartDate { get; set; }
+    public int BillDay { get; set; }
     public DateOnly? EndDate { get; set; }
 }

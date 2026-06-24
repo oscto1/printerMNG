@@ -11,8 +11,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "brandId": 5,
-  "modelName": "Testing",
+  "brandId": 1,
+  "modelName": "eStudio 3305c",
   "isColorPrinter": true
 }
 
@@ -80,3 +80,49 @@ Accept: application/json
 DELETE http://localhost:5280/clients/4
 Content-Type: application/json
 Accept: application/json
+
+###  CONTRACTS ------------------------------------------------------------------------
+GET http://localhost:5280/contracts
+Content-Type: application/json
+Accept: application/json
+
+###
+GET http://localhost:5280/contracts/4
+Content-Type: application/json
+Accept: application/json
+
+### 
+POST http://localhost:5280/contracts
+Content-Type: application/json
+Accept: application/json
+
+{
+  "clientId": 1,
+  "printerId": 1,
+  "minimumBlackCopies": 1000,
+  "minimumColorCopies": 1000,
+  "normalBlackPrice": 300,
+  "normalColorPrice": 500,
+  "increasedBlackPrice": 500,
+  "increasedColorPrice": 700,
+  "startDate": "2026-06-19",
+  "billDay": 19
+}
+
+###
+PUT http://localhost:5280/contracts/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "clientId": 1,
+  "printerId": 1,
+  "minimumBlackCopies": 1000,
+  "minimumColorCopies": 1000,
+  "normalBlackPrice": 300,
+  "normalColorPrice": 500,
+  "increasedBlackPrice": 500,
+  "increasedColorPrice": 700,
+  "startDate": "2026-06-19",
+  "billDay": 19
+}
