@@ -10,23 +10,18 @@ public record CreateContractDto(
     [Required][Range(1,10000)]
     int PrinterId,
 
-    [Required][Range(0,100000)]
-    int MinimumBlackCopies,
-
-    [Range(0,100000)]
-    int MinimumColorCopies,
+    [StringLength(80, MinimumLength = 3)]
+    [RegularExpression(@"^[A-Za-zÀ-ÿ\s]+$", ErrorMessage = "Path contains invalid characters.")]
+    string? PDFPath,
 
     [Required][Range(0,10000)]
-    decimal NormalBlackPrice,
+    decimal BlackCopyPrice,
 
     [Range(0,10000)]
-    decimal NormalColorPrice,
+    decimal ColorCopyPrice,
 
-    [Required][Range(0,10000)]
-    decimal IncreasedBlackPrice,
-
-    [Range(0,10000)]
-    decimal IncreasedColorPrice,
+    [Range(0,10000000)]
+    decimal MinimumCharge,
 
     [Required]
     DateOnly StartDate,

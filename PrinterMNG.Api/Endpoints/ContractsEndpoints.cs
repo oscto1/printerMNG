@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Dtos.Contracts;
+using PrinterMNG.Api.Dtos.MonthlyReadings;
 using PrinterMNG.Api.Models;
 
 namespace PrinterMNG.Api.Endpoints;
@@ -22,12 +23,9 @@ public static class ContractsEndpoints
                         contract.Id,
                         contract.ClientId,
                         contract.PrinterId,
-                        contract.MinimumBlackCopies,
-                        contract.MinimumColorCopies,
-                        contract.NormalBlackPrice,
-                        contract.NormalColorPrice,
-                        contract.IncreasedBlackPrice,
-                        contract.IncreasedColorPrice,
+                        contract.BlackCopyPrice,
+                        contract.ColorCopyPrice,
+                        contract.MinimumCharge,
                         contract.BillDay
                     ))
                     .AsNoTracking()
@@ -49,14 +47,12 @@ public static class ContractsEndpoints
                     contr.Id,
                     contr.Client.Name,
                     contr.Printer.Model,
+                    contr.ContractPdfPath,
                     contr.Printer.IsColorPrinter,
                     contr.IsActive,
-                    contr.MinimumBlackCopies,
-                    contr.MinimumColorCopies,
-                    contr.NormalBlackPrice,
-                    contr.NormalColorPrice,
-                    contr.IncreasedBlackPrice,
-                    contr.IncreasedColorPrice,
+                    contr.BlackCopyPrice,
+                    contr.ColorCopyPrice,
+                    contr.MinimumCharge,
                     contr.StartDate,
                     contr.BillDay
                 ));
@@ -74,12 +70,9 @@ public static class ContractsEndpoints
                 IsActive = true,
                 ClientId = newContract.ClientId,
                 PrinterId = newContract.PrinterId,
-                MinimumBlackCopies = newContract.MinimumBlackCopies,
-                MinimumColorCopies = newContract.MinimumColorCopies,
-                NormalBlackPrice = newContract.NormalBlackPrice,
-                NormalColorPrice = newContract.NormalColorPrice,
-                IncreasedBlackPrice = newContract.IncreasedBlackPrice,
-                IncreasedColorPrice = newContract.IncreasedColorPrice,
+                BlackCopyPrice = newContract.BlackCopyPrice,
+                ColorCopyPrice = newContract.ColorCopyPrice,
+                MinimumCharge = newContract.MinimumCharge,
                 StartDate = newContract.StartDate,
                 BillDay = newContract.BillDay
             };
@@ -103,12 +96,9 @@ public static class ContractsEndpoints
             contract.ClientId = newContract.ClientId;
             contract.PrinterId = newContract.PrinterId;
             contract.IsActive = newContract.IsActive;
-            contract.MinimumBlackCopies = newContract.MinimumBlackCopies;
-            contract.MinimumColorCopies = newContract.MinimumColorCopies;
-            contract.NormalBlackPrice = newContract.NormalBlackPrice;
-            contract.NormalColorPrice = newContract.NormalColorPrice;
-            contract.IncreasedBlackPrice = newContract.IncreasedBlackPrice;
-            contract.IncreasedColorPrice = newContract.IncreasedColorPrice;
+            contract.BlackCopyPrice = newContract.BlackCopyPrice;
+            contract.ColorCopyPrice = newContract.ColorCopyPrice;
+            contract.MinimumCharge = newContract.MinimumCharge;
             contract.StartDate = newContract.StartDate;
             contract.BillDay = newContract.BillDay;
             contract.EndDate = newContract.EndDate;
@@ -125,5 +115,61 @@ public static class ContractsEndpoints
             await dbContext.Contracts.Where(contract => contract.Id == id).ExecuteDeleteAsync();
             return Results.NoContent();
         });
+
+
+        // Readings by contract -----------------------------------------------------------
+        // GET /contracts/1/readings
+        group.MapGet("/{id}/readings", async (int id, PrinterMNGContext dbContext) =>
+        {
+            var readings = await dbContext.MonthlyReadings
+                                            .Where(reading => reading.ContractId == id)
+                                            .OrderByDescending(reading => reading.Month)
+                                            .Select(reading => new ReadingSummaryDto(
+                                                reading.Id,
+                                                reading.ContractId,
+                                                reading.Month,
+                                                reading.BlackCounter,
+                                                reading.ColorCounter,
+                                                reading.BlackCopiesUsed,
+                                                reading.ColorCopiesUsed,
+                                                reading.BlackCharge,
+                                                reading.ColorCharge,
+                                                reading.TotalCharge,
+                                                reading.Notes
+                                            ))
+                                            // .OrderByDescending(reading => reading.Month)
+                                            .AsNoTracking()
+                                            .ToListAsync();
+
+            return Results.Ok(readings);
+        });
+
+
+        // DELETE /contracts/1/readings/1
+        group.MapDelete("{id}/readings/{idRead}", async (int id, int idRead, PrinterMNGContext dbContext) =>
+        {
+            var lastReading = await dbContext.MonthlyReadings
+                                        .Where(reading => reading.ContractId == id)
+                                        .OrderByDescending(reading => reading.Month)
+                                        .AsNoTracking()
+                                        .FirstOrDefaultAsync();
+
+            if(lastReading is not null)
+            {
+                if(lastReading.Id == idRead)
+                {
+                    await dbContext.MonthlyReadings.Where(reading => reading.Id == idRead).ExecuteDeleteAsync();
+                }
+                else
+                {
+                    return Results.BadRequest("Only can delete the last reading!");
+                }
+            }
+            
+
+            return Results.NoContent();
+        });
+
+        
     }
 }

@@ -11,16 +11,20 @@ public class Contract
     public int PrinterId { get; set; }
     public Printer Printer { get; set; } = null!;
 
-    public int MinimumBlackCopies { get; set; }
-    public int MinimumColorCopies { get; set; }
+    public string? ContractPdfPath { get; set; }
 
-    public decimal NormalBlackPrice { get; set; }
-    public decimal NormalColorPrice { get; set; }
+    // public int MinimumBlackCopies { get; set; }
+    // public int MinimumColorCopies { get; set; }
 
-    public decimal IncreasedBlackPrice { get; set; }
-    public decimal IncreasedColorPrice { get; set; }
+    public decimal BlackCopyPrice { get; set; }
+    public decimal ColorCopyPrice { get; set; }
+
+    // public decimal MinimumBlackCharge { get; set; }
+    public decimal MinimumCharge { get; set; }
 
     public DateOnly StartDate { get; set; }
     public int BillDay { get; set; }
     public DateOnly? EndDate { get; set; }
+
+    public ICollection<MonthlyReading> MonthlyReadings { get; set; } = [];
 }

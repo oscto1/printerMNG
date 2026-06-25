@@ -3,14 +3,12 @@ public record ContractSummaryDto(
     int Id,
     string ClientName,
     string PrinterModel,
+    string? PDFPath,
     bool IsColorPrinter,
     bool IsActive,
-    int MinimumBlackCopies,
-    int MinimumColorCopies,
-    decimal NormalBlackPrice,
-    decimal NormalColorPrice,
-    decimal IncreasedBlackPrice,
-    decimal IncreasedColorPrice,
+    decimal BlackCopyPrice,
+    decimal ColorCopyPrice,
+    decimal MinimumCharge,
     DateOnly StartDate,
     int BillDay
 );

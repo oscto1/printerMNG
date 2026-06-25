@@ -11,6 +11,7 @@ app.MapPrintersEndpoints();
 app.MapBrandsEndpoints();
 app.MapClientsEndpoints();
 app.MapContractsEndpoints();
+app.MapMonthlyReadingsEndpoints();
 
 app.UseExceptionHandler(exceptionApp =>
 {

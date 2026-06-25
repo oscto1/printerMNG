@@ -10,4 +10,12 @@ public class PrinterMNGContext(DbContextOptions<PrinterMNGContext> options) : Db
     public DbSet<Brand> Brands => Set<Brand>();
     public DbSet<Client> Clients => Set<Client>();
     public DbSet<Contract> Contracts => Set<Contract>();
+    public DbSet<MonthlyReading> MonthlyReadings => Set<MonthlyReading>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<MonthlyReading>()
+            .HasIndex(mr => new { mr.ContractId, mr.Month })
+            .IsUnique();
+    }
 }

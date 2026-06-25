@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrinterMNG.Api.Data;
 
@@ -10,9 +11,11 @@ using PrinterMNG.Api.Data;
 namespace PrinterMNG.Api.Data.Migrations
 {
     [DbContext(typeof(PrinterMNGContext))]
-    partial class PrinterMNGContextModelSnapshot : ModelSnapshot
+    [Migration("20260625014313_MonthlyReadingsEntityAdded")]
+    partial class MonthlyReadingsEntityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.8");
@@ -71,14 +74,8 @@ namespace PrinterMNG.Api.Data.Migrations
                     b.Property<int>("BillDay")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("BlackCopyPrice")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("ClientId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("ColorCopyPrice")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("ContractPdfPath")
                         .HasColumnType("TEXT");
@@ -86,10 +83,25 @@ namespace PrinterMNG.Api.Data.Migrations
                     b.Property<DateOnly?>("EndDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("IncreasedBlackPrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("IncreasedColorPrice")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("MinimumCharge")
+                    b.Property<int>("MinimumBlackCopies")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MinimumColorCopies")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("NormalBlackPrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("NormalColorPrice")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PrinterId")
