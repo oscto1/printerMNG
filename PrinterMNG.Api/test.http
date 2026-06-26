@@ -140,13 +140,13 @@ Accept: application/json
 
 {
   "contractId": 3,
-  "month": "2026-11",
+  "month": "2026-04",
   "blackCounter": 5000,
   "colorCounter": 3000,
   "notes":"adasdasdd"
 }
 
 ###
-DELETE http://localhost:5280/contracts/3/readings/6
+DELETE http://localhost:5280/contracts/3/readings/14
 Content-Type: application/json
 Accept: application/json
