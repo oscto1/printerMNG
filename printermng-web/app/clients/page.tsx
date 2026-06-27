@@ -1,10 +1,16 @@
 import { getClients } from "../lib/api";
-import { ClientDetails } from "../types/client";
+import { ClientDetails } from "../types/ClientDetails";
 import Link from "next/link";
 
 export default async function ClientsPage()
 {
-    const clients: ClientDetails[] = await getClients();
+    var clients: ClientDetails[] = [];
+    try{
+        clients = await getClients();
+    }catch (error) {
+        console.error(error);
+    }
+    
 
     return (
         <main className="p-8">
@@ -29,10 +35,7 @@ export default async function ClientsPage()
 
                     {clients.map(client => (
 
-                        <tr
-                            key={client.id}
-                            className="border-b hover:bg-gray-100"
-                        >
+                        <tr key={client.id} className="border-b hover:bg-gray-100">
                             <td className="p-2">
                                 {client.document}
                             </td>

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Dtos.Clients;
+using PrinterMNG.Api.Dtos.Contracts;
+using PrinterMNG.Api.Dtos.Printers;
 using PrinterMNG.Api.Models;
 
 namespace PrinterMNG.Api.Endpoints;
@@ -84,6 +86,27 @@ public static class ClientsEndpoints
             await dbContext.Clients.Where(client => client.Id == id).ExecuteDeleteAsync();
 
             return Results.NoContent();
+        });
+
+        // CLIENTS CONTRACTS -------------------------------------------------------
+        // GET /clients/1/contracts
+
+        group.MapGet("/{id}/contracts", async (int id, PrinterMNGContext dbContext) =>
+        {
+            return await dbContext.Contracts
+                            .Include(contract => contract.Printer)
+                            .Where(contract => contract.ClientId == id)
+                            .Select(contract => new ContractDetailsDto(
+                                contract.Id,
+                                contract.ClientId,
+                                new PrinterDetailsDto(contract.Printer.Id, contract.Printer.BrandId, contract.Printer.Model, contract.Printer.IsColorPrinter),
+                                contract.BlackCopyPrice,
+                                contract.ColorCopyPrice,
+                                contract.MinimumCharge,
+                                contract.BillDay
+                            ))  
+                            .AsNoTracking()
+                            .ToListAsync();
         });
     }
 }

@@ -1,9 +1,11 @@
+using PrinterMNG.Api.Dtos.Printers;
+
 namespace PrinterMNG.Api.Dtos.Contracts;
 
 public record ContractDetailsDto(
     int Id,
     int ClientId,
-    int PrinterId,
+    PrinterDetailsDto Printer,
     decimal BlackCopyPrice,
     decimal ColorCopyPrice,
     decimal MinimumCharge,

@@ -1,7 +1,7 @@
 export interface ClientDetails {
-    id: string,
+    id: number,
     document: string,
     name: string,
     phone: string,
-    location: string,
+    location: string
 }

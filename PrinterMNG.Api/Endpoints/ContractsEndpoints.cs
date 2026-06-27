@@ -19,13 +19,19 @@ public static class ContractsEndpoints
         group.MapGet("/", async (PrinterMNGContext dbContext) =>
         {
             return await dbContext.Contracts
-                    .Select(contract => new ContractDetailsDto(
+                    .Include(contract => contract.Printer)
+                    .Include(contract => contract.Client)
+                    .Select(contract => new ContractSummaryDto(
                         contract.Id,
-                        contract.ClientId,
-                        contract.PrinterId,
+                        contract.Client.Name,
+                        contract.Printer.Model,
+                        null,
+                        contract.Printer.IsColorPrinter,
+                        contract.IsActive,
                         contract.BlackCopyPrice,
                         contract.ColorCopyPrice,
                         contract.MinimumCharge,
+                        contract.StartDate,
                         contract.BillDay
                     ))
                     .AsNoTracking()
@@ -65,13 +71,21 @@ public static class ContractsEndpoints
         // POST /contracts/
         group.MapPost("/", async (CreateContractDto newContract, PrinterMNGContext dbContext) =>
         {
+            var printer = await dbContext.Printers.FindAsync(newContract.PrinterId);
+
+            decimal colorCopyPrice = 0;
+            if(printer is not null && printer.IsColorPrinter)
+            {
+                colorCopyPrice = newContract.ColorCopyPrice;
+            }
+
             Contract contract = new()
             {
                 IsActive = true,
                 ClientId = newContract.ClientId,
                 PrinterId = newContract.PrinterId,
                 BlackCopyPrice = newContract.BlackCopyPrice,
-                ColorCopyPrice = newContract.ColorCopyPrice,
+                ColorCopyPrice = colorCopyPrice,
                 MinimumCharge = newContract.MinimumCharge,
                 StartDate = newContract.StartDate,
                 BillDay = newContract.BillDay
@@ -87,17 +101,24 @@ public static class ContractsEndpoints
         group.MapPut("/{id}", async (int id, UpdateContractDto newContract, PrinterMNGContext dbContext) =>
         {
             var contract = await dbContext.Contracts.FindAsync(id);
+            var printer = await dbContext.Printers.FindAsync(newContract.PrinterId);
 
             if(contract is null)
             {
                 return Results.NotFound();
             }
 
+            decimal colorCopyPrice = 0;
+            if(printer is not null && printer.IsColorPrinter)
+            {
+                colorCopyPrice = newContract.ColorCopyPrice;
+            }
+
             contract.ClientId = newContract.ClientId;
             contract.PrinterId = newContract.PrinterId;
             contract.IsActive = newContract.IsActive;
             contract.BlackCopyPrice = newContract.BlackCopyPrice;
-            contract.ColorCopyPrice = newContract.ColorCopyPrice;
+            contract.ColorCopyPrice = colorCopyPrice;
             contract.MinimumCharge = newContract.MinimumCharge;
             contract.StartDate = newContract.StartDate;
             contract.BillDay = newContract.BillDay;
