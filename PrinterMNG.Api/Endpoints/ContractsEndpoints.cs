@@ -23,6 +23,7 @@ public static class ContractsEndpoints
                     .Include(contract => contract.Client)
                     .Select(contract => new ContractSummaryDto(
                         contract.Id,
+                        contract.Client.Id,
                         contract.Client.Name,
                         contract.Printer.Model,
                         null,
@@ -51,6 +52,7 @@ public static class ContractsEndpoints
             {
                 return Results.Ok(new ContractSummaryDto(
                     contr.Id,
+                    contr.Client.Id,
                     contr.Client.Name,
                     contr.Printer.Model,
                     contr.ContractPdfPath,

@@ -7,7 +7,7 @@ public record ReadingSummaryDto(
     int ContractId,
     DateOnly Month,
     int BlackCounter,
-    int Colorcounter,
+    int ColorCounter,
     int BlackCopiesUsed,
     int ColorCopiesUsed,
     decimal BlackCharge,

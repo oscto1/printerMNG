@@ -1,6 +1,7 @@
 namespace PrinterMNG.Api.Dtos.Contracts;
 public record ContractSummaryDto(
     int Id,
+    int IdClient,
     string ClientName,
     string PrinterModel,
     string? PDFPath,

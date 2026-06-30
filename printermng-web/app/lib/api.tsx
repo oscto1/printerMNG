@@ -1,5 +1,7 @@
 import { ClientDetails } from "../types/ClientDetails";
 import { ContractDetails } from "../types/ContractDetails";
+import { ContractSummary } from "../types/ContractSummary";
+import { ReadingSummary } from "../types/ReadingSummary";
 
 const API_URL = "http://localhost:5280"
 
@@ -33,4 +35,25 @@ export async function getClient(id: string): Promise<{client: ClientDetails; con
             client : clientData,
             contracts: contractsList,
             };
+}
+
+export default async function getContract(idClient: number, idContract: number): Promise<{contract: ContractSummary; readings: ReadingSummary[];}>{
+    const contractResponse = await fetch(`${API_URL}/contracts/${idContract}`);
+    const readingsResponse = await fetch(`${API_URL}/contracts/${idContract}/readings`);
+
+    if(!readingsResponse.ok){
+        throw new Error(`Failed to fetch contract details.`);
+    }
+
+    if(!readingsResponse.ok){
+        throw new Error(`Failed to fetch readings for this contract.`);
+    }
+
+    const contractSummary : ContractSummary = await contractResponse.json();
+    const readingsList : ReadingSummary[] = await readingsResponse.json();
+
+    return{
+        contract: contractSummary,
+        readings: readingsList
+    }
 }

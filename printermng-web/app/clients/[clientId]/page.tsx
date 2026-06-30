@@ -1,12 +1,13 @@
 import { getClient } from "@/app/lib/api";
 import Image from "next/image";
+import Link from "next/link";
 
-export default async function ClientPage({ params, }: { params: Promise<{ id: string }>})
+export default async function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
 {
-    const { id } = await params;
+    const { clientId } = await params;
 
     try{
-        const { client, contracts } = await getClient(id);
+        const { client, contracts } = await getClient(clientId);
 
         console.log(contracts);
 
@@ -28,11 +29,13 @@ export default async function ClientPage({ params, }: { params: Promise<{ id: st
                             <th className="text-center p-2">Color copy price</th>
                             <th className="text-center p-2">Minimum charge</th>
                             <th className="text-center p-2">Bill day</th>
+                            <th className="text-center p-2">Manage contract</th>
                         </tr>
-                </thead>
+                    </thead>
             
                 <tbody>
                     {contracts.map(contract => (
+                        
                     <tr key={contract.id}>
                         <td className="text-center">{contract.printer.modelName}</td>
                         <td className="text-center"><Image src={contract.printer.isColorPrinter ? "/img/color.png" : "/img/black.png"} alt="Logo" width={20} height={20}></Image></td>
@@ -40,6 +43,7 @@ export default async function ClientPage({ params, }: { params: Promise<{ id: st
                         <td className="text-center">{contract.printer.isColorPrinter ? contract.colorCopyPrice : "-"}</td>
                         <td className="text-center">{contract.minimumCharge}</td>
                         <td className="text-center">{contract.billDay}</td>
+                        <td className="text-center"><Link href={`/clients/${client.id}/contracts/${contract.id}`}>MANAGE</Link></td>
                     </tr>
                     ))}
                 </tbody>
