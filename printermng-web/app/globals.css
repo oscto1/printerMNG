@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #EDEDED; 
   --foreground: #171717;
 }
 
@@ -12,10 +12,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #EDEDED;
   }
 }
 
@@ -23,4 +23,64 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+main {
+  padding: 35px;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px; /* Space between rows */
+    border: none;
+}
+
+thead th {
+    padding: 12px;
+    border: none;
+}
+
+tbody td {
+    background: #fff;
+    padding: 16px;
+    border: none;
+}
+
+/* Rounded corners for each row */
+tbody td:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+tbody td:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+tbody tr {
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.editButton.editing {
+  background-color: #6CF562;
+}
+
+.editButton.editing {
+  background-color: #4ECF44;
+}
+
+input{
+  background-color: #EDEDED;
+  width: 100px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

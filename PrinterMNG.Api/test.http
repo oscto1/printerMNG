@@ -144,7 +144,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "contractId": 3,
+  "contractId": 4,
   "month": "2026-04",
   "blackCounter": 5000,
   "colorCounter": 3000,

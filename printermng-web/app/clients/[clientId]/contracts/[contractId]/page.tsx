@@ -1,7 +1,8 @@
 import getContract from "@/app/lib/api";
-import formatDate from "@/app/lib/utils";
-import { read } from "fs";
 import Image from "next/image";
+
+import ReadingsTable from "@/app/components/Tables/ReadingsTable";
+import { read } from "fs";
 
 
 export default async function ContractPage({params, }: { params: Promise<{clientId: number, contractId: number}>})
@@ -26,39 +27,8 @@ export default async function ContractPage({params, }: { params: Promise<{client
                 <h2>Bill day: {contract.billDay}</h2>
 
                 <h1>Readings</h1>
-                <table className="w-full border">
-                    <thead>
-                        <tr className="border-b">
-                            <th className="text-center p-2">Month</th>
-                            <th className="text-center p-2">Black copy counter</th>
-                            <th className="text-center p-2">Black copies used</th>
-                            <th className="text-center p-2">Black copies charge</th>
-                            <th className="text-center p-2">Color copy counter</th>
-                            <th className="text-center p-2">Color copies used</th>
-                            <th className="text-center p-2">Color copies charge</th>
-                            <th className="text-center p-2">Total charge</th>
-                            <th className="text-center p-2">Notes</th>
-                        </tr>
-                    </thead>
 
-                    <tbody>
-                        {
-                            readings.map(reading => (
-                                <tr key={reading.id}>
-                                    <td className="text-center">{formatDate(reading.month)}</td>
-                                    <td className="text-center">{reading.blackCounter}</td>
-                                    <td className="text-center">{reading.blackCopiesUsed}</td>
-                                    <td className="text-center">${reading.blackCharge}</td>
-                                    <td className="text-center">{contract.isColorPrinter ? reading.colorCounter : "-"}</td>
-                                    <td className="text-center">{contract.isColorPrinter ? reading.colorCopiesUsed : "-"}</td>
-                                    <td className="text-center">{contract.isColorPrinter ? "$" + reading.colorCharge : "-"}</td>
-                                    <td className="text-center">${reading.totalCharge}</td>
-                                    <td className="text-center">{reading.notes}</td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
+                <ReadingsTable contract={contract} readings={readings}></ReadingsTable>
             </main>
         );
     }catch(err)

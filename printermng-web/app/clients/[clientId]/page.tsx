@@ -1,6 +1,5 @@
 import { getClient } from "@/app/lib/api";
-import Image from "next/image";
-import Link from "next/link";
+import ClientsContractsTable from "@/app/components/Tables/ClientsContractsTable";
 
 export default async function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
 {
@@ -20,34 +19,7 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
 
                 <h2>Contracts</h2>
 
-                <table className="w-full border">
-                    <thead>
-                        <tr className="border-b">
-                            <th className="text-center p-2">Printer</th>
-                            <th className="text-center p-2">Color</th>
-                            <th className="text-center p-2">Black copy price</th>
-                            <th className="text-center p-2">Color copy price</th>
-                            <th className="text-center p-2">Minimum charge</th>
-                            <th className="text-center p-2">Bill day</th>
-                            <th className="text-center p-2">Manage contract</th>
-                        </tr>
-                    </thead>
-            
-                <tbody>
-                    {contracts.map(contract => (
-                        
-                    <tr key={contract.id}>
-                        <td className="text-center">{contract.printer.modelName}</td>
-                        <td className="text-center"><Image src={contract.printer.isColorPrinter ? "/img/color.png" : "/img/black.png"} alt="Logo" width={20} height={20}></Image></td>
-                        <td className="text-center">{contract.blackCopyPrice}</td>
-                        <td className="text-center">{contract.printer.isColorPrinter ? contract.colorCopyPrice : "-"}</td>
-                        <td className="text-center">{contract.minimumCharge}</td>
-                        <td className="text-center">{contract.billDay}</td>
-                        <td className="text-center"><Link href={`/clients/${client.id}/contracts/${contract.id}`}>MANAGE</Link></td>
-                    </tr>
-                    ))}
-                </tbody>
-                </table>
+                <ClientsContractsTable clientId={client.id} contracts={contracts}></ClientsContractsTable>
                 
             </main>
         );

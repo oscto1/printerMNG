@@ -5,6 +5,7 @@ namespace PrinterMNG.Api.Dtos.Contracts;
 public record ContractDetailsDto(
     int Id,
     int ClientId,
+    bool IsActive,
     PrinterDetailsDto Printer,
     decimal BlackCopyPrice,
     decimal ColorCopyPrice,

@@ -99,6 +99,7 @@ public static class ClientsEndpoints
                             .Select(contract => new ContractDetailsDto(
                                 contract.Id,
                                 contract.ClientId,
+                                contract.IsActive,
                                 new PrinterDetailsDto(contract.Printer.Id, contract.Printer.BrandId, contract.Printer.Model, contract.Printer.IsColorPrinter),
                                 contract.BlackCopyPrice,
                                 contract.ColorCopyPrice,
