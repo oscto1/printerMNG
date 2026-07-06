@@ -5,7 +5,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddValidation();
 builder.AddPrinterMNGdb();
 
+var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        name: myAllowSpecificOrigins,
+        policy =>
+        {
+           policy.WithOrigins("http://localhost:3000")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod(); 
+        });
+});
+
+
 var app = builder.Build();
+
+app.UseCors(myAllowSpecificOrigins);
 
 app.MapPrintersEndpoints();
 app.MapBrandsEndpoints();
