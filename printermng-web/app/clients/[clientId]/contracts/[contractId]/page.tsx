@@ -1,9 +1,8 @@
-import getContract from "@/app/lib/api";
+import { getContract } from "@/app/lib/api";
 import Image from "next/image";
 
-import ReadingsTable from "@/app/components/Tables/ReadingsTable";
-import { read } from "fs";
-
+import ReadingsTable from "@/app/components/Readings/ReadingsTable";
+import ReadingsActions from "@/app/components/Readings/ReadingsActions";
 
 export default async function ContractPage({params, }: { params: Promise<{clientId: number, contractId: number}>})
 {
@@ -12,7 +11,6 @@ export default async function ContractPage({params, }: { params: Promise<{client
     try{
         const { contract, readings } = await getContract(clientId, contractId);
         
-        console.log(readings);
         return(
             <main>
                 <h1>Contract</h1>
@@ -28,6 +26,7 @@ export default async function ContractPage({params, }: { params: Promise<{client
 
                 <h1>Readings</h1>
 
+                <ReadingsActions contractId={contract.id}></ReadingsActions>
                 <ReadingsTable contract={contract} readings={readings}></ReadingsTable>
             </main>
         );

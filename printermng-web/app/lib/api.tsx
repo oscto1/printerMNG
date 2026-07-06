@@ -1,6 +1,7 @@
 import { ClientDetails } from "../types/ClientDetails";
 import { ContractDetails } from "../types/ContractDetails";
 import { ContractSummary } from "../types/ContractSummary";
+import { CreateReading } from "../types/CreateReading";
 import { ReadingSummary } from "../types/ReadingSummary";
 
 const API_URL = "http://localhost:5280"
@@ -37,7 +38,7 @@ export async function getClient(id: string): Promise<{client: ClientDetails; con
             };
 }
 
-export default async function getContract(idClient: number, idContract: number): Promise<{contract: ContractSummary; readings: ReadingSummary[];}>{
+export async function getContract(idClient: number, idContract: number): Promise<{contract: ContractSummary; readings: ReadingSummary[];}>{
     const contractResponse = await fetch(`${API_URL}/contracts/${idContract}`);
     const readingsResponse = await fetch(`${API_URL}/contracts/${idContract}/readings`);
 
@@ -56,4 +57,20 @@ export default async function getContract(idClient: number, idContract: number):
         contract: contractSummary,
         readings: readingsList
     }
+}
+
+export async function createReading(newReading: CreateReading){
+    const response = await fetch(`${API_URL}/monthly-readings`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newReading)
+    });
+
+    if(!response.ok)
+    {
+        throw new Error(`THERE WAS AN ERROR!`);
+    }
+
 }
