@@ -6,33 +6,30 @@ import { MONTHS, currentDate } from "@/app/lib/utils";
 import { CreateReading } from "@/app/types/CreateReading";
 import { createReading } from "@/app/lib/api";
 import { useRouter } from "next/navigation";
+import { useError } from "@/app/context/ErrorContext";
 
 
 export default function ReadingsActions({contractId, }: {contractId: number}){
     const [openCreateReading, setOpenCreateReading] = useState(false);
 
-    const [openErrorModal, setOpenErrorModal] = useState(false);
+    // const [openErrorModal, setOpenErrorModal] = useState(false);
 
-    const [error, setError] = useState<string | null>(null);
+    // const [error, setError] = useState<string | null>(null);
+
+    const { showError } = useError();
 
     const [newReading, setNewReading] = useState({ contractId: contractId, month: currentDate(), blackCounter: 0, colorCounter: 0, notes: "" } as CreateReading);
 
     const router = useRouter();
     const handleSave = async (reading: CreateReading) => {
         try{
-            setError(null);
             await createReading(reading);
             setOpenCreateReading(false);
             
             router.refresh();
         }catch(err)
         {
-            setOpenErrorModal(true);
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred.");
-            }
+            showError(err);
         }
     }
 
@@ -124,7 +121,7 @@ export default function ReadingsActions({contractId, }: {contractId: number}){
                 }
                 }>Save</button>     
             </Modal>
-            <Modal open={openErrorModal} onClose={() => setOpenErrorModal(false)}>ERROR! {error}</Modal>
+            {/* <Modal open={openErrorModal} onClose={() => setOpenErrorModal(false)}>ERROR! {error}</Modal> */}
         </>      
     );
 }

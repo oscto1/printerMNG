@@ -4,6 +4,7 @@ import { ContractDetails } from "../types/ContractDetails";
 import { ContractSummary } from "../types/ContractSummary";
 import { CreateReading } from "../types/CreateReading";
 import { ReadingSummary } from "../types/ReadingSummary";
+import { read } from "fs";
 
 const API_URL = "http://localhost:5280"
 
@@ -71,12 +72,24 @@ export async function createReading(newReading: CreateReading){
 
     if(!response.ok)
     {
-        const body = await response.json();
-        getErrors(body);
-        throw new Error(getErrors(body));
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
     }
 
 }
+
+export async function deleteReading(contractId: number, readingId: number){
+    const response = await fetch(`${API_URL}/contracts/${contractId}/readings/${readingId}`, {
+        method: "DELETE"
+    });
+
+    if(!response.ok){
+        const errMessage = await getErrorMessage(response, getErrors);
+        throw new Error(errMessage);
+    }
+}
+
 
 function getErrors(body: any) : string {
     var errorString: string = "\n";
@@ -98,5 +111,44 @@ function getErrors(body: any) : string {
     }    
 
     return errorString;
-    // if(body.json() ===)
+}
+
+
+/**
+ * Safely extracts the error message from a fetch Response object.
+ * Handles valid JSON, empty bodies, plain text, and network failures.
+ */
+async function getErrorMessage(response: Response, getErrorsHelper?: (body: any) => string): Promise<string> {
+  try {
+    const contentType = response.headers.get("content-type");
+
+    if (contentType && contentType.includes("application/json")) {
+
+      const rawText = await response.text();
+      if (!rawText.trim()) {
+        return `Server returned an empty JSON response (Status ${response.status})`;
+      }
+
+      const body = JSON.parse(rawText);
+      
+      if (getErrorsHelper) {
+        return getErrorsHelper(body);
+      }
+      return body.message || body.error || JSON.stringify(body);
+    }
+
+    // Fallback for plain text or HTML error pages
+    const textFallback = await response.text();
+    if (textFallback.trim()) {
+      // Truncate text if it's a massive HTML crash page
+      return textFallback.length > 150 ? `${textFallback.substring(0, 150)}...` : textFallback;
+    }
+
+    // Last fallback if the body is completely empty - Like a not allowed method
+    return `Request failed with status ${response.status} (${response.statusText})`;
+    
+  } catch (parseError) {
+    // Catch block in case response.text() or JSON.parse fails unexpectedly
+    return `Failed to parse server response (Status ${response.status})`;
+  }
 }
