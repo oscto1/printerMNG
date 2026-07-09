@@ -5,21 +5,29 @@ import Modal from "../Modal";
 import { MONTHS, currentDate } from "@/app/lib/utils";
 import { CreateReading } from "@/app/types/CreateReading";
 import { createReading } from "@/app/lib/api";
+import { useRouter } from "next/navigation";
 
 
 export default function ReadingsActions({contractId, }: {contractId: number}){
-    const [open, setOpen] = useState(false);
+    const [openCreateReading, setOpenCreateReading] = useState(false);
+
+    const [openErrorModal, setOpenErrorModal] = useState(false);
 
     const [error, setError] = useState<string | null>(null);
 
     const [newReading, setNewReading] = useState({ contractId: contractId, month: currentDate(), blackCounter: 0, colorCounter: 0, notes: "" } as CreateReading);
 
+    const router = useRouter();
     const handleSave = async (reading: CreateReading) => {
         try{
             setError(null);
             await createReading(reading);
+            setOpenCreateReading(false);
+            
+            router.refresh();
         }catch(err)
         {
+            setOpenErrorModal(true);
             if (err instanceof Error) {
                 setError(err.message);
             } else {
@@ -30,9 +38,9 @@ export default function ReadingsActions({contractId, }: {contractId: number}){
 
     return(
         <>
-            <button className="bg-[#7AE972] hover:bg-[#4ECF44] rounded px-3 py-2 text-sm text-white cursor-pointer" onClick={() => {setOpen(true)}}>ADD NEW READING</button>
-
-            <Modal open={open} onClose={() => setOpen(false)}>
+            <button className="bg-[#7AE972] hover:bg-[#4ECF44] rounded px-3 py-2 text-sm text-white cursor-pointer" onClick={() => {setOpenCreateReading(true)}}>ADD NEW READING</button>
+            
+            <Modal open={openCreateReading} onClose={() => setOpenCreateReading(false)}>
                 {/* <form action="">
                     <select name="" id="">
                         {MONTHS.map((option, index) => (
@@ -54,7 +62,7 @@ export default function ReadingsActions({contractId, }: {contractId: number}){
 
                                             setNewReading({
                                                 ...newReading,
-                                                month: `${newReading.month.split("-")[0]}-${String(monthIndex + 1).padStart(2, "0")}-01`
+                                                month: `${newReading.month.split("-")[0]}-${String(monthIndex + 1).padStart(2, "0")}`
                                             });
                                         }}
                                         >
@@ -73,7 +81,7 @@ export default function ReadingsActions({contractId, }: {contractId: number}){
                                         onChange={(e)=>{
                                             setNewReading({
                                                 ...newReading,
-                                                month: `${e.target.value}-${newReading.month.split("-")[1]}-01`
+                                                month: `${e.target.value}-${newReading.month.split("-")[1]}`
                                             });
                                         }}
                                     />
@@ -112,18 +120,11 @@ export default function ReadingsActions({contractId, }: {contractId: number}){
                 </form>
                 <button className="bg-[#7AE972] hover:bg-[#4ECF44] rounded px-3 py-2 text-sm text-white cursor-pointer" onClick={() => 
                 {
-                    if(error){
-                        return(
-                            <Modal open={true} onClose={() => setOpen(false)}>ERROR! {error}</Modal>
-                        );
-                    }
-
                     handleSave(newReading);
                 }
-                }>Save</button>
-                
-                
-            </Modal>  
+                }>Save</button>     
+            </Modal>
+            <Modal open={openErrorModal} onClose={() => setOpenErrorModal(false)}>ERROR! {error}</Modal>
         </>      
     );
 }

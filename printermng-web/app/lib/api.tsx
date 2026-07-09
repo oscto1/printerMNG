@@ -1,3 +1,4 @@
+import { error } from "console";
 import { ClientDetails } from "../types/ClientDetails";
 import { ContractDetails } from "../types/ContractDetails";
 import { ContractSummary } from "../types/ContractSummary";
@@ -70,7 +71,32 @@ export async function createReading(newReading: CreateReading){
 
     if(!response.ok)
     {
-        throw new Error(`THERE WAS AN ERROR!`);
+        const body = await response.json();
+        getErrors(body);
+        throw new Error(getErrors(body));
     }
 
+}
+
+function getErrors(body: any) : string {
+    var errorString: string = "\n";
+
+    if(body["errors"]){
+        if(typeof body["errors"] === 'object')
+        {
+            Object.values(body["errors"] as string[]).forEach((error: string) => {
+                errorString += "- " + error;
+                errorString += "\n";
+            });
+            console.log(body);
+        }else{
+            errorString += body["errors"];
+        }
+    }else
+    {
+        errorString += "- " + body;
+    }    
+
+    return errorString;
+    // if(body.json() ===)
 }

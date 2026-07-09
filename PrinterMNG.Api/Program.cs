@@ -42,12 +42,12 @@ app.UseExceptionHandler(exceptionApp =>
         if (exception is BadHttpRequestException)
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            await context.Response.WriteAsJsonAsync(new { error = "Bad request." });
+            await context.Response.WriteAsJsonAsync(new { errors = "Bad request." });
         }
         else
         {
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsJsonAsync(new { error = "Unexpected server error." });
+            await context.Response.WriteAsJsonAsync(new { errors = "Unexpected server error." });
         }
     });
 });
