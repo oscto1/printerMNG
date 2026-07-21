@@ -268,6 +268,8 @@ public static class ContractsEndpoints
                         blackCharge = blackCopiesUsed * contract.BlackCopyPrice;
                         colorCharge = colorCopiesUsed * contract.ColorCopyPrice;
 
+                        totalCharge = blackCharge + colorCharge;
+
                         if(!contract.Printer.IsColorPrinter)
                         {
                             colorCounter = 0;
@@ -283,7 +285,7 @@ public static class ContractsEndpoints
                         lastReading.ColorCounter = colorCounter;
                         lastReading.BlackCharge = blackCharge;
                         lastReading.ColorCharge = colorCharge;
-                        lastReading.TotalCharge = colorCharge;
+                        lastReading.TotalCharge = totalCharge > contract.MinimumCharge ? totalCharge : contract.MinimumCharge;
                         lastReading.BlackCopiesUsed = blackCopiesUsed;
                         lastReading.ColorCopiesUsed = colorCopiesUsed;
                         lastReading.Notes = editedReading.Notes;
