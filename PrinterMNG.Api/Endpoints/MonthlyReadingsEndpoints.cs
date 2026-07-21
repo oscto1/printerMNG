@@ -71,6 +71,7 @@ public static class MonthlyReadingsEndpoints
                 decimal colorCharge = 0;
                 decimal totalCharge = 0;
 
+                colorCounter = contract.Printer.IsColorPrinter ? colorCounter : 0;
                 if(prevReading is not null)
                 {
                     if(blackCounter < prevReading.BlackCounter)
@@ -87,10 +88,8 @@ public static class MonthlyReadingsEndpoints
                     
                     if(newMonth <= prevReading.Month)
                     {
-                        return Results.BadRequest("Cannot create a reading previous to the last one.");
+                        return Results.BadRequest("Cannot create a reading with a date previous to the last one.");
                     }
-
-                    colorCounter = contract.Printer.IsColorPrinter ? colorCounter : 0;
 
                     blackCopiesUsed = blackCounter - prevReading.BlackCounter;
                     colorCopiesUsed = colorCounter - prevReading.ColorCounter;

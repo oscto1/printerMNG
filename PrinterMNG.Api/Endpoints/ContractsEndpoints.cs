@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -171,7 +172,17 @@ public static class ContractsEndpoints
         // DELETE /contracts/1/readings/1
         group.MapDelete("{id}/readings/{idRead}", async (int id, int idRead, PrinterMNGContext dbContext) =>
         {
-            var lastReading = await dbContext.MonthlyReadings
+            var contract = await dbContext.Contracts
+                .Include(contract => contract.Printer)
+                .Where(contract => contract.Id == id)
+                .FirstOrDefaultAsync();
+
+            if(contract is not null && !contract.IsActive)
+            {
+                return Results.BadRequest("The contract is not active!");
+            }
+
+            MonthlyReading? lastReading = await dbContext.MonthlyReadings
                                         .Where(reading => reading.ContractId == id)
                                         .OrderByDescending(reading => reading.Month)
                                         .AsNoTracking()
@@ -185,7 +196,7 @@ public static class ContractsEndpoints
                 }
                 else
                 {
-                    return Results.BadRequest("Only can delete the last reading!");
+                    return Results.BadRequest("only can delete last reading!");
                 }
             }
             
@@ -193,6 +204,104 @@ public static class ContractsEndpoints
             return Results.NoContent();
         });
 
-        
+        // PUT contracts/1/readings/1
+        group.MapPut("/{id}/readings/{idReading}", async (int id, int idReading, UpdateReadingDto editedReading, PrinterMNGContext dbContext) =>
+        {
+            var contract = await dbContext.Contracts
+                .Include(contract => contract.Printer)
+                .Where(contract => contract.Id == id)
+                .FirstOrDefaultAsync();
+
+            if(contract is not null)
+            {
+                if(!contract.IsActive)
+                {
+                    return Results.BadRequest("The contract is not active!");
+                }
+                
+                MonthlyReading? lastReading = await dbContext.MonthlyReadings
+                                            .Where(reading => reading.ContractId == id)
+                                            .OrderByDescending(reading => reading.Month)
+                                            .FirstOrDefaultAsync();
+
+                MonthlyReading? previousReading = await dbContext.MonthlyReadings
+                                                .Where(reading => reading.ContractId == id)
+                                                .OrderByDescending(reading => reading.Month)
+                                                .AsNoTracking()
+                                                .Skip(1)
+                                                .FirstOrDefaultAsync();
+
+                if(lastReading is not null)
+                {
+                    if(lastReading.Id == idReading)
+                    {
+                        int blackCounter = editedReading.BlackCounter;
+                        int colorCounter = editedReading.ColorCounter;
+                        int blackCopiesUsed = 0;
+                        int colorCopiesUsed = 0;
+                        decimal blackCharge = 0;
+                        decimal colorCharge = 0;
+                        decimal totalCharge = 0;
+                        DateOnly newMonth = DateOnly.ParseExact($"{editedReading.Month}-01", "yyyy-MM-dd");
+
+                    // TODO: Test editing when there's only one reading
+                        if (newMonth <= previousReading?.Month)
+                        {
+                            return Results.BadRequest("The date of the reading cannot be previous to the last one.");
+                        }
+
+                        if (blackCounter < previousReading?.BlackCounter)
+                        {
+                            return Results.BadRequest("Black counter cannot be lower than previous reading.");
+                        }
+
+                        if (colorCounter < previousReading?.ColorCounter)
+                        {
+                            return Results.BadRequest("Color counter cannot be lower than previous reading.");
+                        }
+
+                        if(previousReading is not null) 
+                        {
+                            blackCopiesUsed = blackCounter - previousReading.BlackCounter;
+                            colorCopiesUsed = colorCounter - previousReading.ColorCounter;
+                        }
+                        blackCharge = blackCopiesUsed * contract.BlackCopyPrice;
+                        colorCharge = colorCopiesUsed * contract.ColorCopyPrice;
+
+                        if(!contract.Printer.IsColorPrinter)
+                        {
+                            colorCounter = 0;
+                            colorCopiesUsed = 0;
+                            colorCharge = 0;
+                        }
+
+                        totalCharge = blackCharge + colorCharge;
+
+
+                        lastReading.Month = newMonth;
+                        lastReading.BlackCounter = blackCounter;
+                        lastReading.ColorCounter = colorCounter;
+                        lastReading.BlackCharge = blackCharge;
+                        lastReading.ColorCharge = colorCharge;
+                        lastReading.TotalCharge = colorCharge;
+                        lastReading.BlackCopiesUsed = blackCopiesUsed;
+                        lastReading.ColorCopiesUsed = colorCopiesUsed;
+                        lastReading.Notes = editedReading.Notes;
+                        
+                        await dbContext.SaveChangesAsync();
+ 
+                        return Results.NoContent();
+
+                    }
+                    else
+                    {
+                        return Results.BadRequest("There was an error editing this reading!");
+                    }
+                }
+            }
+            
+            return Results.BadRequest("Couldn't edit the reading. Check the validity of the data");
+  
+        });
     }
 }

@@ -117,9 +117,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "isActive": false,
+  "isActive": true,
   "clientId": 1,
-  "printerId": 2,
+  "printerId": 1,
   "blackCopyPrice": 300,
   "colorCopyPrice": 500,
   "minimumCharge": 400000,
@@ -152,6 +152,19 @@ Accept: application/json
 }
 
 ###
-DELETE http://localhost:5280/contracts/3/readings/14
+PUT http://localhost:5280/contracts/4/readings/18
 Content-Type: application/json
 Accept: application/json
+
+###
+DELETE http://localhost:5280/contracts/4/readings/18
+Content-Type: application/json
+Accept: application/json
+
+{
+  "contractId": 4,
+  "month": "2026-04",
+  "blackCounter": 5000,
+  "colorCounter": 3000,
+  "notes":"adasdasdd"
+}
