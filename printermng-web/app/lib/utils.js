@@ -18,3 +18,9 @@ export function currentDate() {
 
   return `${year}-${month}`;
 }
+
+export const formatMoney = new Intl.NumberFormat('es-CO', {
+  style: 'currency',
+  currency: 'COP',
+  minimumFractionDigits: 0
+});

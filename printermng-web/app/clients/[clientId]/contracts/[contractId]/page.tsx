@@ -1,6 +1,6 @@
 import { getContract } from "@/app/lib/api";
 import Image from "next/image";
-
+import { formatMoney } from "@/app/lib/utils";
 import ReadingsTable from "@/app/components/Readings/ReadingsTable";
 import ReadingsActions from "@/app/components/Readings/ReadingsActions";
 
@@ -19,9 +19,9 @@ export default async function ContractPage({params, }: { params: Promise<{client
                     <h2>{contract.printerModel}</h2>
                     <Image src={contract.isColorPrinter ? "/img/color.png" : "/img/color.png"} width={25} height={25} alt="color"></Image>
                 </div>
-                <h2>Minimum charge: ${contract.minimumCharge}</h2>
-                <h2>Black copy price: ${ contract.blackCopyPrice }</h2>
-                <h2>{contract.isColorPrinter ? "Color copy price: $" + contract.colorCopyPrice : ""}</h2>
+                <h2>Minimum charge: {formatMoney.format(contract.minimumCharge)}</h2>
+                <h2>Black copy price: {formatMoney.format(contract.blackCopyPrice)}</h2>
+                <h2>{contract.isColorPrinter ? "Color copy price: " + formatMoney.format(contract.colorCopyPrice) : ""}</h2>
                 <h2>Bill day: {contract.billDay}</h2>
 
                 <h1>Readings</h1>

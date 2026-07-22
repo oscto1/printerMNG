@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { ReadingSummary } from "../../types/ReadingSummary";
 import { ContractSummary } from "../../types/ContractSummary";
-import { formatDate } from "../../lib/utils";
+import { formatDate, formatMoney } from "../../lib/utils";
 import Image from "next/image";
 import { MONTHS } from "../../lib/utils";
 import { CreateReading } from "@/app/types/CreateReading";
@@ -149,7 +149,7 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
                                                                                                             }}></input> 
                                                                                                         : reading.blackCounter}</td>
                                             <td className="text-center shadow-[inset_0_-2px_0_0_#A3A3A3]">{reading.blackCopiesUsed}</td>
-                                            <td className="text-center">{(index === 0 && isEditing) ? "-" : "$"+reading.blackCharge}</td>
+                                            <td className="text-center">{(index === 0 && isEditing) ? "-" : formatMoney.format(reading.blackCharge)}</td>
                                             <td className="text-center">{(!contract.isColorPrinter) ? " -" : (index === 0 && isEditing) ? <input className="text-center" min={0} type="number" value={editedReading.colorCounter}
                                                                                                                                                 onChange={(e)=>{
                                                                                                                                                     setEditedReading({
@@ -159,14 +159,14 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
                                                                                                                                                 }}></input>
                                                                                                                                         : reading.colorCounter}</td>
                                             <td className="text-center text-center shadow-[inset_0_-2px_0_0_#A3A3A3]">{contract.isColorPrinter ? reading.colorCopiesUsed : "-"}</td>
-                                            <td className="text-center">{(!contract.isColorPrinter || (index === 0 && isEditing)) ? "-" : "$" + reading.colorCharge}</td>
+                                            <td className="text-center">{(!contract.isColorPrinter || (index === 0 && isEditing)) ? "-" : formatMoney.format(reading.colorCharge) }</td>
                                             <td className="relative text-center rounded-tr-lg">{(index === 0 && (<button className={`absolute top-1/2 -right-10 -translate-y-1/2 rounded px-3 py-2 text-sm text-white bg-[#FC6A6A] hover:bg-[#E04F4F] cursor-pointer`}
                                                                                                                 onClick={() => {
                                                                                                                                 handleClickDelete(reading.id);
                                                                                                                             }}>
                                                                                                             <Image src={"/img/trash.svg"} width={18} height={18} alt="logo"></Image>
                                                                                                             </button>))}
-                                                                                        {(index === 0 && isEditing) ? "-" : "$"+reading.totalCharge}
+                                                                                        {(index === 0 && isEditing) ? "-" : formatMoney.format(reading.totalCharge)}
                                             </td>
                                             
                                             {/* <td className="text-center">{reading.notes}</td> */}

@@ -8,8 +8,6 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
     try{
         const { client, contracts } = await getClient(clientId);
 
-        console.log(contracts);
-
         return(
             <main>
                 <h1>{client.name}</h1>

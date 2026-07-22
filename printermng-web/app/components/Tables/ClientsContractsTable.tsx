@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { ContractDetails } from "@/app/types/ContractDetails";
 import Image from "next/image";
+import { formatMoney } from "@/app/lib/utils";
 
 export default function ClientsContractsTable({clientId, contracts}: {clientId: number, contracts: ContractDetails[]})
 {
@@ -28,9 +29,9 @@ export default function ClientsContractsTable({clientId, contracts}: {clientId: 
                             <td className={`text-center text-white align-middle ${contract.isActive ? "!bg-[#85ED4C]" : "!bg-[#ED544C]"} w-25`}>{contract.isActive ? "Active" : "Inactive"}</td>
                             <td className="text-center align-middle">{contract.printer.modelName}</td>
                             <td className="text-center align-middle"><Image src={contract.printer.isColorPrinter ? "/img/color.png" : "/img/black.png"} alt="Logo" width={20} height={20}></Image></td>
-                            <td className="text-center align-middle">${contract.blackCopyPrice}</td>
-                            <td className="text-center align-middle">{contract.printer.isColorPrinter ? "$"+contract.colorCopyPrice : "-"}</td>
-                            <td className="text-center align-middle">${contract.minimumCharge}</td>
+                            <td className="text-center align-middle">{formatMoney.format(contract.blackCopyPrice)}</td>
+                            <td className="text-center align-middle">{contract.printer.isColorPrinter ? formatMoney.format(contract.colorCopyPrice) : "-"}</td>
+                            <td className="text-center align-middle">{formatMoney.format(contract.minimumCharge)}</td>
                             <td className="text-center align-middle">{contract.billDay}</td>
                         </tr>
                         ))}
