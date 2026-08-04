@@ -1,6 +1,6 @@
 import { getClients } from "../lib/api";
 import { ClientDetails } from "../types/ClientDetails";
-import Link from "next/link";
+import ClientsTable from "../components/Tables/ClientsTable";
 
 export default async function ClientsPage()
 {
@@ -10,7 +10,6 @@ export default async function ClientsPage()
     }catch (error) {
         console.error(error);
     }
-    
 
     return (
         <main className="p-8">
@@ -19,50 +18,7 @@ export default async function ClientsPage()
                 Clients
             </h1>
 
-            <table className="w-full border">
-
-                <thead>
-                    <tr className="border-b">
-                        <th className="text-center p-2">Document</th>
-                        <th className="text-center p-2">Name</th>
-                        <th className="text-center p-2">Phone</th>
-                        <th className="text-center p-2">Location</th>
-                        <th className="text-center p-2">Show more</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    {clients.map(client => (
-
-                        <tr key={client.id} className="border-b hover:bg-gray-100">
-                            <td className="p-2">
-                                {client.document}
-                            </td>
-                            <td className="p-2">
-                                {client.name}
-                            </td>
-
-                            <td className="p-2">
-                                {client.phone}
-                            </td>
-
-                            <td className="p-2">
-                                {client.location}
-                            </td>
-
-                            <td>
-                                <Link href={`/clients/${client.id}`}>
-                                    See client...
-                                </Link>
-                            </td>
-                        </tr>
-
-                    ))}
-
-                </tbody>
-
-            </table>
+            <ClientsTable clients={clients}></ClientsTable>
 
         </main>
     );
