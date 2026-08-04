@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { ContractDetails } from "@/app/types/ContractDetails";
 import Image from "next/image";
 import { formatMoney } from "@/app/lib/utils";
+import React from "react";
 
 export default function ClientsContractsTable({clientId, contracts}: {clientId: number, contracts: ContractDetails[]})
 {
@@ -17,7 +18,7 @@ export default function ClientsContractsTable({clientId, contracts}: {clientId: 
                                 <th className="text-center p-2">Color</th>
                                 <th className="text-center p-2">Black copy price</th>
                                 <th className="text-center p-2">Color copy price</th>
-                                <th className="text-center p-2">Minimum charge</th>
+                                <th className="text-center p-2">Fixed charge</th>
                                 <th className="text-center p-2">Bill day</th>
                             </tr>
                         </thead>
@@ -25,15 +26,22 @@ export default function ClientsContractsTable({clientId, contracts}: {clientId: 
                     <tbody>
                         {contracts.map(contract => (
                             
-                        <tr className="hover:scale-101 cursor-pointer" key={contract.id} onClick={() => {router.push(`/clients/${clientId}/contracts/${contract.id}`)}}>
-                            <td className={`text-center text-white align-middle ${contract.isActive ? "!bg-[#85ED4C]" : "!bg-[#ED544C]"} w-25`}>{contract.isActive ? "Active" : "Inactive"}</td>
-                            <td className="text-center align-middle">{contract.printer.modelName}</td>
-                            <td className="text-center align-middle"><Image src={contract.printer.isColorPrinter ? "/img/color.png" : "/img/black.png"} alt="Logo" width={20} height={20}></Image></td>
-                            <td className="text-center align-middle">{formatMoney.format(contract.blackCopyPrice)}</td>
-                            <td className="text-center align-middle">{contract.printer.isColorPrinter ? formatMoney.format(contract.colorCopyPrice) : "-"}</td>
-                            <td className="text-center align-middle">{formatMoney.format(contract.minimumCharge)}</td>
-                            <td className="text-center align-middle">{contract.billDay}</td>
-                        </tr>
+                        <React.Fragment key={contract.id}>
+                            <tr className="hover:scale-101 cursor-pointer shadow-md shadow-gray-300" key={contract.id} onClick={() => {router.push(`/clients/${clientId}/contracts/${contract.id}`)}}>
+                                <td className={`text-center text-white rounded-l-lg align-middle ${contract.isActive ? "!bg-[#85ED4C]" : "!bg-[#ED544C]"} w-25`}>{contract.isActive ? "Active" : "Inactive"}</td>
+                                <td className="text-center align-middle">{contract.printer.modelName}</td>
+                                <td className="text-center align-middle"><Image className="d-block mx-auto" src={contract.printer.isColorPrinter ? "/img/color.png" : "/img/black.png"} alt="Logo" width={20} height={20}></Image></td>
+                                <td className="text-center align-middle">{formatMoney.format(contract.blackCopyPrice)}</td>
+                                <td className="text-center align-middle">{contract.printer.isColorPrinter ? formatMoney.format(contract.colorCopyPrice) : "-"}</td>
+                                <td className="text-center align-middle">{formatMoney.format(contract.minimumCharge)}</td>
+                                <td className="text-center align-middle rounded-r-lg">{contract.billDay}</td>
+                            </tr>
+
+                            <tr className="h-4  !bg-transparent rowSpacer">
+                                <td className="!p-0" colSpan={8}></td>
+                            </tr>
+                        </React.Fragment>
+                        
                         ))}
                     </tbody>
                     </table>

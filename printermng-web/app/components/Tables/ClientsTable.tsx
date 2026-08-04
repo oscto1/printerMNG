@@ -1,6 +1,7 @@
 "use client"
 import { useRouter } from "next/navigation"
 import { ClientDetails } from "@/app/types/ClientDetails";
+import React from "react";
 
 export default function ClientsTable({clients}: {clients: ClientDetails[]}){
 
@@ -22,25 +23,28 @@ export default function ClientsTable({clients}: {clients: ClientDetails[]}){
 
                     {clients.map(client => (
 
-                        // <Link href={`/clients/${client.id}`}>
-                            <tr key={client.id} className="hover:scale-101 cursor-pointer" onClick={() => {router.push(`clients/${client.id}`)}}>
-                                <td className="p-2">
+                        <React.Fragment key={client.id}>
+                            <tr key={client.id} className="hover:scale-101 cursor-pointer shadow-md shadow-gray-300" onClick={() => {router.push(`clients/${client.id}`)}}>
+                                <td className="p-2 rounded-l-lg text-center">
                                     {client.document}
                                 </td>
-                                <td className="p-2">
+                                <td className="p-2 text-center">
                                     {client.name}
                                 </td>
 
-                                <td className="p-2">
+                                <td className="p-2 text-center">
                                     {client.phone}
                                 </td>
 
-                                <td className="p-2">
+                                <td className="p-2 rounded-r-lg text-center">
                                     {client.location}
                                 </td>
                             </tr>
-                        // </Link>
 
+                            <tr className="h-3  !bg-transparent rowSpacer">
+                                <td className="!p-0" colSpan={8}></td>
+                            </tr>
+                        </React.Fragment>
                     ))}
 
                 </tbody>
