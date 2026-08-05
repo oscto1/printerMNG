@@ -2,11 +2,29 @@
 import type { CreateClient } from "@/app/types/Clients/CreateClient";
 import { useState } from "react"
 import Modal from "../Modal";
+import { createClient } from "@/app/lib/api";
+import { useRouter } from "next/navigation";
+import { useError } from "@/app/context/ErrorContext";
 
 export default function CreateClientAction(){
     const [openCreateClient, setOpenCreateClient] = useState(false);
     const [newClient, setNewClient] = useState({document: "", name: "", phone: "", location: ""} as CreateClient);
     
+    const { showError } = useError();
+
+    const router = useRouter();
+    const handleCreateClient = async (client: CreateClient) => {
+        try{
+            await createClient(client);
+            setOpenCreateClient(false);
+            router.refresh();
+        }
+        catch(err){
+            console.log(err);
+            showError(err);
+        }
+    }
+
     return(
         <>
             <button className="bg-[#7AE972] hover:bg-[#4ECF44] rounded px-3 py-2 text-sm text-white cursor-pointer" onClick={() => {setOpenCreateClient(true)}}>ADD NEW CLIENT</button>
@@ -60,7 +78,11 @@ export default function CreateClientAction(){
                 </form>
                 
 
-                <button className="bg-[#7AE972] hover:bg-[#4ECF44] rounded px-3 py-2 text-sm text-white cursor-pointer" onClick={() => {console.log(newClient)}}>Create</button>   
+                <button className="bg-[#7AE972] hover:bg-[#4ECF44] rounded px-3 py-2 text-sm text-white cursor-pointer" 
+                    onClick={() => {
+                        handleCreateClient(newClient);
+                    }}
+                >Create</button>   
             </Modal>
         </>
     )

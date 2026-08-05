@@ -5,6 +5,7 @@ import { ContractSummary } from "../types/Contracts/ContractSummary";
 import { CreateReading } from "../types/Readings/CreateReading";
 import { ReadingSummary } from "../types/Readings/ReadingSummary";
 import { read } from "fs";
+import { CreateClient } from "../types/Clients/CreateClient";
 
 const API_URL = "http://localhost:5280"
 
@@ -90,18 +91,36 @@ export async function deleteReading(contractId: number, readingId: number){
     }
 }
 
+export async function createClient(newClient: CreateClient){
+    const response = await fetch(`${API_URL}/clients`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newClient)
+    });
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+}
+
 
 function getErrors(body: any) : string {
     var errorString: string = "\n";
-
+    
     if(body["errors"]){
+        console.log(body["errors"]);
         if(typeof body["errors"] === 'object')
         {
             Object.values(body["errors"] as string[]).forEach((error: string) => {
                 errorString += "- " + error;
                 errorString += "\n";
             });
-            console.log(body);
+
         }else{
             errorString += body["errors"];
         }

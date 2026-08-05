@@ -11,7 +11,7 @@ public record CreateClientDto(
     string Name,
 
     [Required][StringLength(10, MinimumLength = 10)]
-    [RegularExpression(@"^3\d+$", ErrorMessage = "Phone characters must be numbers")]
+    [RegularExpression(@"^3\d+$", ErrorMessage = "Phone characters must be numbers and start with number 3")]
     string Phone,
 
     [Required][StringLength(30, MinimumLength = 3)]

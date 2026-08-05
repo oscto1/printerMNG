@@ -33,7 +33,7 @@ export function ErrorProvider({children}: {children: React.ReactNode}){
         <ErrorContext.Provider value={{showError}}>
             {children}
             <Modal open={isOpen} onClose={closeError}>
-                <h1 className="mt-5 mb-3">ERROR!</h1>
+                <h1 className="text-heading md:text-2xl lg:text-2xl mb-2">ERROR!</h1>
                 <p>{errorMessage}</p>
                  
             </Modal>
