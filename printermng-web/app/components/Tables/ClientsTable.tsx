@@ -1,6 +1,6 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { ClientDetails } from "@/app/types/ClientDetails";
+import { ClientDetails } from "@/app/types/Clients/ClientDetails";
 import React from "react";
 
 export default function ClientsTable({clients}: {clients: ClientDetails[]}){

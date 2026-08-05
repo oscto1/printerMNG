@@ -1,9 +1,9 @@
 import { error } from "console";
-import { ClientDetails } from "../types/ClientDetails";
-import { ContractDetails } from "../types/ContractDetails";
-import { ContractSummary } from "../types/ContractSummary";
-import { CreateReading } from "../types/CreateReading";
-import { ReadingSummary } from "../types/ReadingSummary";
+import { ClientDetails } from "../types/Clients/ClientDetails";
+import { ContractDetails } from "../types/Contracts/ContractDetails";
+import { ContractSummary } from "../types/Contracts/ContractSummary";
+import { CreateReading } from "../types/Readings/CreateReading";
+import { ReadingSummary } from "../types/Readings/ReadingSummary";
 import { read } from "fs";
 
 const API_URL = "http://localhost:5280"

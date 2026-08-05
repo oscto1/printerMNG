@@ -1,4 +1,4 @@
-import { PrinterDetails } from "./PrinterDetails";
+import { PrinterDetails } from "../Printers/PrinterDetails"
 
 export interface ContractDetails
 {

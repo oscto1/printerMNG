@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { ContractDetails } from "@/app/types/ContractDetails";
+import { ContractDetails } from "@/app/types/Contracts/ContractDetails";
 import Image from "next/image";
 import { formatMoney } from "@/app/lib/utils";
 import React from "react";

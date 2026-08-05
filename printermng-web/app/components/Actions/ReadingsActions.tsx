@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Modal from "../Modal";
 import { MONTHS, currentDate } from "@/app/lib/utils";
-import { CreateReading } from "@/app/types/CreateReading";
+import { CreateReading } from "@/app/types/Readings/CreateReading";
 import { createReading } from "@/app/lib/api";
 import { useRouter } from "next/navigation";
 import { useError } from "@/app/context/ErrorContext";

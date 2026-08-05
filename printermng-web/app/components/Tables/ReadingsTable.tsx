@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { ReadingSummary } from "../../types/ReadingSummary";
-import { ContractSummary } from "../../types/ContractSummary";
+import { ReadingSummary } from "../../types/Readings/ReadingSummary";
+import { ContractSummary } from "../../types/Contracts/ContractSummary";
 import { formatDate, formatMoney } from "../../lib/utils";
 import Image from "next/image";
 import { MONTHS } from "../../lib/utils";
-import { CreateReading } from "@/app/types/CreateReading";
+import { CreateReading } from "@/app/types/Readings/CreateReading";
 import Modal from "../Modal";
 import { deleteReading } from "@/app/lib/api";
 import { useRouter } from "next/navigation";
