@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #EDEDED; 
+  --background: #F5F6FB; 
   --foreground: #171717;
 }
 
@@ -15,7 +15,7 @@
 @media (prefers-color-scheme: light) {
   :root {
     --background: #0a0a0a;
-    --foreground: #EDEDED;
+    --foreground: #F5F6FB;
   }
 }
 
@@ -31,23 +31,27 @@ main {
 }
 
 table {
+    margin-top: 10px;
+    background-color: rgb(255, 255, 255); 
+    border-radius: 10px;
+    padding: 5px;
     width: 100%;
     border-collapse: separate;
-    /* border-spacing: 0 12px; Space between rows */ 
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; 
+    border-spacing: 0 0px;
     border: none;
 }
 
 thead th {
     padding: 12px;
-    border: none;
+    /* border: none; */
 }
 
 tbody td {
-
     padding: 16px;
-    border: none;
+    /* border: none; */
 }
-
+ 
 /* Rounded corners for each row
 tbody td:first-child {
     border-radius: 10px 0 0 10px;
@@ -58,8 +62,8 @@ tbody td:last-child {
 } */
 
 tbody tr {
-  background-color: white;
-  /* box-shadow: 0 2px 8px rgba(0,0,0,.08); */
+  background-color: rgb(245, 248, 245);
+  /* box-shadow: 0 2px 8px rgba(0,0,0,.08);*/ 
 }
 
 .editButton.editing {

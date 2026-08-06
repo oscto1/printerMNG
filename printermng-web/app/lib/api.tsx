@@ -6,6 +6,8 @@ import { CreateReading } from "../types/Readings/CreateReading";
 import { ReadingSummary } from "../types/Readings/ReadingSummary";
 import { read } from "fs";
 import { CreateClient } from "../types/Clients/CreateClient";
+import { PrinterSummary } from "../types/Printers/PrinterSummary";
+import { CreateContract } from "../types/Contracts/CreateContract";
 
 const API_URL = "http://localhost:5280"
 
@@ -108,6 +110,36 @@ export async function createClient(newClient: CreateClient){
     }
 }
 
+
+export async function getPrinters(): Promise<PrinterSummary[]>{
+    const response = await fetch(`${API_URL}/printers`);
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+
+    return response.json();
+}
+
+export async function createContract(newContract: CreateContract){
+    const response = await fetch(`${API_URL}/contracts`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newContract)
+    });
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+}
 
 function getErrors(body: any) : string {
     var errorString: string = "\n";

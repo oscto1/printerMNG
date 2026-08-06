@@ -1,5 +1,6 @@
 import { getClient } from "@/app/lib/api";
 import ClientsContractsTable from "@/app/components/Tables/ClientsContractsTable";
+import CreateContractAction from "@/app/components/Actions/Contracts/CreateContractAction";
 
 export default async function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
 {
@@ -17,6 +18,7 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
 
                 <h2>Contracts</h2>
 
+                <CreateContractAction clientId={client.id}></CreateContractAction>
                 <ClientsContractsTable clientId={client.id} contracts={contracts}></ClientsContractsTable>
                 
             </main>

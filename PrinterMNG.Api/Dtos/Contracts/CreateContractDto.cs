@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography.X509Certificates;
 
 namespace PrinterMNG.Api.Dtos.Contracts;
 
@@ -7,7 +6,7 @@ public record CreateContractDto(
     [Required][Range(1,10000)]
     int ClientId,
     
-    [Required][Range(1,10000)]
+    [Required][Range(1,10000, ErrorMessage = "Select a valid printer.")]
     int PrinterId,
 
     [StringLength(80, MinimumLength = 3)]

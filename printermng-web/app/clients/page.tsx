@@ -1,7 +1,7 @@
 import { getClients } from "../lib/api";
 import { ClientDetails } from "../types/Clients/ClientDetails";
 import ClientsTable from "../components/Tables/ClientsTable";
-import CreateClientAction from "../components/Actions/ClientsActions";
+import CreateClientAction from "../components/Actions/Clients/CreateClientAction";
 
 export default async function ClientsPage()
 {

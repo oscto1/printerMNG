@@ -74,6 +74,7 @@ public static class ContractsEndpoints
         // POST /contracts/
         group.MapPost("/", async (CreateContractDto newContract, PrinterMNGContext dbContext) =>
         {
+            //TODO: Validate if client belongs to this user
             var printer = await dbContext.Printers.FindAsync(newContract.PrinterId);
 
             decimal colorCopyPrice = 0;

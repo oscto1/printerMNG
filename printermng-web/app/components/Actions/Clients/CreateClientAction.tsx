@@ -1,7 +1,7 @@
 "use client"
 import type { CreateClient } from "@/app/types/Clients/CreateClient";
 import { useState } from "react"
-import Modal from "../Modal";
+import Modal from "../../Modal";
 import { createClient } from "@/app/lib/api";
 import { useRouter } from "next/navigation";
 import { useError } from "@/app/context/ErrorContext";
@@ -9,6 +9,7 @@ import { useError } from "@/app/context/ErrorContext";
 export default function CreateClientAction(){
     const [openCreateClient, setOpenCreateClient] = useState(false);
     const [newClient, setNewClient] = useState({document: "", name: "", phone: "", location: ""} as CreateClient);
+
     
     const { showError } = useError();
 
