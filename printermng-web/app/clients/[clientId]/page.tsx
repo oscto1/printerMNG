@@ -1,6 +1,8 @@
 import { getClient } from "@/app/lib/api";
 import ClientsContractsTable from "@/app/components/Tables/ClientsContractsTable";
 import CreateContractAction from "@/app/components/Actions/Contracts/CreateContractAction";
+import PageContext, { UrlItem } from "@/app/components/PageContext";
+import Header, { HeaderRightItem } from "@/app/components/Header";
 
 export default async function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
 {
@@ -9,18 +11,40 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
     try{
         const { client, contracts } = await getClient(clientId);
 
+        const url = [
+            {label: "Clients", value: "/clients"} as UrlItem, 
+            {label: client.name, value: `/clients/${clientId}`} as UrlItem
+        ];
+
+        const rightItems : HeaderRightItem[] = [
+            { imgUrl: "/img/location.svg", text: client.location},
+            { imgUrl: "/img/phone.svg", text: client.phone}
+        ]
+
         return(
-            <main>
-                <h1>{client.name}</h1>
-                <h2>{client.document}</h2>
-                <h2>{client.location}</h2>
-                <h2>{client.phone}</h2>
+            <main className="w-full mx-auto px-4 py-8 space-y-6">
+    
+                <PageContext 
+                    url={url} title="Client Overview"
+                    description="View detailed client profile information, manage contact data, and oversee all associated contracts.">
+                </PageContext>
 
-                <h2>Contracts</h2>
+                <Header 
+                    title={client.name}
+                    leftData={[`Document ID: ${client.document}`]}
+                    rightItems={rightItems}
+                    >  
+                </Header>
 
-                <CreateContractAction clientId={client.id}></CreateContractAction>
-                <ClientsContractsTable clientId={client.id} contracts={contracts}></ClientsContractsTable>
-                
+                <div className="pt-4 space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-xl font-bold text-gray-900 tracking-tight">Contracts</h2>
+                        <CreateContractAction clientId={client.id} />
+                    </div>
+
+                    <ClientsContractsTable clientId={client.id} contracts={contracts} />
+                </div>
+
             </main>
         );
     }catch(err)

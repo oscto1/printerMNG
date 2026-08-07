@@ -85,7 +85,7 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
                                 readings.map((reading, index) => (
                                     <React.Fragment key={reading.id}>
                                         <tr key={reading.id}>
-                                            <td className="relative text-center w-30 rounded-tl-lg border-t-2 border-b-1 border-l-2 border-solid border-gray-500">
+                                            <td className="relative text-center w-30 rounded-tl-lg border-t-2 border-b-1 border-l-2 border-solid border-gray-200">
                                                 {index === 0 && (
                                                 <button
                                                     onClick={() => {
@@ -141,7 +141,7 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
                                             </td>
 
                                             {/* <td className="text-center">{formatDate(reading.month)}</td> */}
-                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-500">
+                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-200">
                                                 {(index === 0 && isEditing)? <input className="text-center w-25" min={0} type="number" 
                                                                                                             value={editedReading.blackCounter} 
                                                                                                             onChange={(e)=>{ 
@@ -151,9 +151,9 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
                                                                                                                 })
                                                                                                             }}></input> 
                                                                                                         : reading.blackCounter}</td>
-                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-500 bg-[#EAECEB]">{reading.blackCopiesUsed}</td>
-                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-500">{(index === 0 && isEditing) ? "-" : formatMoney.format(reading.blackCharge)}</td>
-                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-500">{(!contract.isColorPrinter) ? " -" : (index === 0 && isEditing) ? <input className="text-center" min={0} type="number" value={editedReading.colorCounter}
+                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-200 bg-[#EAECEB]">{reading.blackCopiesUsed}</td>
+                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-200">{(index === 0 && isEditing) ? "-" : formatMoney.format(reading.blackCharge)}</td>
+                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-200">{(!contract.isColorPrinter) ? " -" : (index === 0 && isEditing) ? <input className="text-center" min={0} type="number" value={editedReading.colorCounter}
                                                                                                                                                 onChange={(e)=>{
                                                                                                                                                     setEditedReading({
                                                                                                                                                         ...editedReading,
@@ -161,9 +161,9 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
                                                                                                                                                     })
                                                                                                                                                 }}></input>
                                                                                                                                         : reading.colorCounter}</td>
-                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-500 bg-[#EAECEB]">{contract.isColorPrinter ? reading.colorCopiesUsed : "-"}</td>
-                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-500">{(!contract.isColorPrinter || (index === 0 && isEditing)) ? "-" : formatMoney.format(reading.colorCharge) }</td>
-                                            <td className="relative text-center rounded-tr-lg border-t-2 border-r-2 border-b-1 border-solid border-gray-500">{(index === 0 && (<button className={`absolute top-1/2 -right-10 -translate-y-1/2 rounded px-3 py-2 text-sm text-white bg-[#FC6A6A] hover:bg-[#E04F4F] cursor-pointer`}
+                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-200 bg-[#EAECEB]">{contract.isColorPrinter ? reading.colorCopiesUsed : "-"}</td>
+                                            <td className="text-center border-t-2 border-b-1 border-solid border-gray-200">{(!contract.isColorPrinter || (index === 0 && isEditing)) ? "-" : formatMoney.format(reading.colorCharge) }</td>
+                                            <td className="relative text-center rounded-tr-lg border-t-2 border-r-2 border-b-1 border-solid border-gray-200">{(index === 0 && (<button className={`absolute top-1/2 -right-10 -translate-y-1/2 rounded px-3 py-2 text-sm text-white bg-[#FC6A6A] hover:bg-[#E04F4F] cursor-pointer`}
                                                                                                                 onClick={() => {
                                                                                                                                 handleClickDelete(reading.id);
                                                                                                                             }}>
@@ -177,7 +177,7 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
 
                                         {/* 2. Unified Notes Row (Styled as the bottom of the card) */}
                                             <tr className="">
-                                                <td colSpan={8} className="text-left text-xs text-gray-500 px-6 py-2.5 rounded-b-lg border-b-2 border-l-2 border-r-2 border-solid border-gray-500">
+                                                <td colSpan={8} className="text-left text-xs text-gray-500 px-6 py-2.5 rounded-b-lg border-b-2 border-l-2 border-r-2 border-solid border-gray-200">
                                                     <span className="font-semibold text-gray-700 mr-2">Notes:</span>
                                                     {(isEditing && index === 0) ? <input className="p-10 w-full mt-2" type="text" value={editedReading.notes} onChange={(e)=>{
                                                                                                                                                     setEditedReading({

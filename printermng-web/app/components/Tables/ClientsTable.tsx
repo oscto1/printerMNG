@@ -25,18 +25,18 @@ export default function ClientsTable({clients}: {clients: ClientDetails[]}){
 
                         <React.Fragment key={client.id}>
                             <tr key={client.id} className="hover:scale-101 cursor-pointer" onClick={() => {router.push(`clients/${client.id}`)}}>
-                                <td className="p-2 rounded-l-lg text-center border-t-2 border-b-2 border-l-2 border-solid border-gray-500">
+                                <td className="p-2 rounded-l-lg text-center border-t-2 border-b-2 border-l-2 border-solid border-gray-200">
                                     {client.document}
                                 </td>
-                                <td className="p-2 text-center border-t-2 border-b-2 border-solid border-gray-500">
+                                <td className="p-2 text-center border-t-2 border-b-2 border-solid border-gray-200">
                                     {client.name}
                                 </td>
 
-                                <td className="p-2 text-center border-t-2 border-b-2 border-solid border-gray-500">
+                                <td className="p-2 text-center border-t-2 border-b-2 border-solid border-gray-200">
                                     {client.phone}
                                 </td>
 
-                                <td className="p-2 rounded-r-lg text-center border-t-2 border-b-2 border-r-2 border-solid border-gray-500">
+                                <td className="p-2 rounded-r-lg text-center border-t-2 border-b-2 border-r-2 border-solid border-gray-200">
                                     {client.location}
                                 </td>
                             </tr>

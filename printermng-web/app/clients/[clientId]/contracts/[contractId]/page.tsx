@@ -3,30 +3,47 @@ import Image from "next/image";
 import { formatMoney } from "@/app/lib/utils";
 import ReadingsTable from "@/app/components/Tables/ReadingsTable";
 import ReadingsActions from "@/app/components/Actions/ReadingsActions";
+import PageContext, { UrlItem } from "@/app/components/PageContext";
+import Header, {HeaderRightItem} from "@/app/components/Header";
 
 export default async function ContractPage({params, }: { params: Promise<{clientId: number, contractId: number}>})
 {
     const { clientId, contractId } = await params;
 
+    
     try{
         const { contract, readings } = await getContract(clientId, contractId);
         
+        const url : UrlItem[] = [
+            {label: "Clients", value: "/clients"},
+            {label: contract.clientName, value: `/clients/${clientId}`},
+            {label: contract.printerModel, value: ``}
+        ]
+
+        const rightItems : HeaderRightItem[] = [
+            {imgUrl: contract.isColorPrinter ? "/img/color.png" : "/img/black.png", text: contract.printerModel}
+        ]
+
         return(
-            <main>
-                <h1>Contract</h1>
-                <h2>{contract.clientName}</h2>
-                <div>
-                    <h2>{contract.printerModel}</h2>
-                    <Image src={contract.isColorPrinter ? "/img/color.png" : "/img/color.png"} width={25} height={25} alt="color"></Image>
+            <main className="w-full mx-auto px-4 py-8 space-y-6">
+                
+                <PageContext url={url} title="Contract" description=""></PageContext>
+
+
+                <Header title={`${contract.clientName}`} 
+                        leftData={[
+                            `Fixed charge: ${formatMoney.format(contract.minimumCharge)}`,
+                            `Black copy price: ${formatMoney.format(contract.blackCopyPrice)}`,
+                            contract.isColorPrinter ? "Color copy price: " + formatMoney.format(contract.colorCopyPrice) : "",
+                            `Bill day: ${contract.billDay}`
+                            ]}
+                        rightItems={rightItems}>
+                </Header>
+
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-gray-900 tracking-tight">Readings</h2>
+                    <ReadingsActions contractId={contract.id}></ReadingsActions>
                 </div>
-                <h2>Fixed charge: {formatMoney.format(contract.minimumCharge)}</h2>
-                <h2>Black copy price: {formatMoney.format(contract.blackCopyPrice)}</h2>
-                <h2>{contract.isColorPrinter ? "Color copy price: " + formatMoney.format(contract.colorCopyPrice) : ""}</h2>
-                <h2>Bill day: {contract.billDay}</h2>
-
-                <h1>Readings</h1>
-
-                <ReadingsActions contractId={contract.id}></ReadingsActions>
                 <ReadingsTable contract={contract} readings={readings}></ReadingsTable>
             </main>
         );

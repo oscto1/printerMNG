@@ -6,6 +6,7 @@ import { getPrinters } from "@/app/lib/api";
 import { PrinterSummary } from "@/app/types/Printers/PrinterSummary";
 import { createContract } from "@/app/lib/api";
 import { useError } from "@/app/context/ErrorContext";
+import { useRouter } from "next/navigation";
 
 export default function CreateContract({clientId} : {clientId: number}){
     const today = new Date().toISOString().split("T")[0];
@@ -35,9 +36,12 @@ export default function CreateContract({clientId} : {clientId: number}){
 
     }, []);
 
+    const router = useRouter()
     const handleCreateContract = async () => {
         try{
             await createContract(newContract);
+            setOpenCreateContract(false);
+            router.refresh();
         }
         catch(err){
             showError(err);

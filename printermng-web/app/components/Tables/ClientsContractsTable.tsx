@@ -28,13 +28,13 @@ export default function ClientsContractsTable({clientId, contracts}: {clientId: 
                             
                         <React.Fragment key={contract.id}>
                             <tr className="hover:scale-101 cursor-pointer" key={contract.id} onClick={() => {router.push(`/clients/${clientId}/contracts/${contract.id}`)}}>
-                                <td className={`text-center text-white border-t-2 border-b-2 border-l-2 border-solid border-gray-500 rounded-l-lg align-middle ${contract.isActive ? "!bg-[#85ED4C]" : "!bg-[#ED544C]"} w-25`}>{contract.isActive ? "Active" : "Inactive"}</td>
-                                <td className="text-center border-t-2 border-b-2 border-solid border-gray-500 align-middle">{contract.printer.modelName}</td>
-                                <td className="text-center border-t-2 border-b-2 border-solid border-gray-500 align-middle"><Image className="d-block mx-auto" src={contract.printer.isColorPrinter ? "/img/color.png" : "/img/black.png"} alt="Logo" width={20} height={20}></Image></td>
-                                <td className="text-center border-t-2 border-b-2 border-solid border-gray-500 align-middle">{formatMoney.format(contract.blackCopyPrice)}</td>
-                                <td className="text-center border-t-2 border-b-2 border-solid border-gray-500 align-middle">{contract.printer.isColorPrinter ? formatMoney.format(contract.colorCopyPrice) : "-"}</td>
-                                <td className="text-center border-t-2 border-b-2 border-solid border-gray-500 align-middle">{formatMoney.format(contract.minimumCharge)}</td>
-                                <td className="text-center border-t-2 border-b-2 border-solid border-r-2 border-gray-500 align-middle rounded-r-lg">{contract.billDay}</td>
+                                <td className={`text-center text-white border-t-2 border-b-2 border-l-2 border-solid border-gray-200 rounded-l-lg align-middle ${contract.isActive ? "!bg-[#85ED4C]" : "!bg-[#ED544C]"} w-25`}>{contract.isActive ? "Active" : "Inactive"}</td>
+                                <td className="text-center border-t-2 border-b-2 border-solid border-gray-200 align-middle">{contract.printer.modelName}</td>
+                                <td className="text-center border-t-2 border-b-2 border-solid border-gray-200 align-middle"><Image className="d-block mx-auto" src={contract.printer.isColorPrinter ? "/img/color.png" : "/img/black.png"} alt="Logo" width={20} height={20}></Image></td>
+                                <td className="text-center border-t-2 border-b-2 border-solid border-gray-200 align-middle">{formatMoney.format(contract.blackCopyPrice)}</td>
+                                <td className="text-center border-t-2 border-b-2 border-solid border-gray-200 align-middle">{contract.printer.isColorPrinter ? formatMoney.format(contract.colorCopyPrice) : "-"}</td>
+                                <td className="text-center border-t-2 border-b-2 border-solid border-gray-200 align-middle">{formatMoney.format(contract.minimumCharge)}</td>
+                                <td className="text-center border-t-2 border-b-2 border-solid border-r-2 border-gray-200 align-middle rounded-r-lg">{contract.billDay}</td>
                             </tr>
 
                             <tr className="h-4  !bg-transparent rowSpacer">
