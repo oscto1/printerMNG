@@ -1,5 +1,4 @@
 import { getContract } from "@/app/lib/api";
-import Image from "next/image";
 import { formatMoney } from "@/app/lib/utils";
 import ReadingsTable from "@/app/components/Tables/ReadingsTable";
 import ReadingsActions from "@/app/components/Actions/ReadingsActions";

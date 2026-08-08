@@ -3,6 +3,7 @@ import ClientsContractsTable from "@/app/components/Tables/ClientsContractsTable
 import CreateContractAction from "@/app/components/Actions/Contracts/CreateContractAction";
 import PageContext, { UrlItem } from "@/app/components/PageContext";
 import Header, { HeaderRightItem } from "@/app/components/Header";
+import EditClientAction from "@/app/components/Actions/Clients/EditClientAction";
 
 export default async function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
 {
@@ -21,6 +22,13 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
             { imgUrl: "/img/phone.svg", text: client.phone}
         ]
 
+        const currentClientData = {
+            document: client.document,
+            name: client.name,
+            phone: client.phone,
+            location: client.location
+        }
+
         return(
             <main className="w-full mx-auto px-4 py-8 space-y-6">
     
@@ -28,6 +36,8 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
                     url={url} title="Client Overview"
                     description="View detailed client profile information, manage contact data, and oversee all associated contracts.">
                 </PageContext>
+
+                <EditClientAction clientId={Number(clientId)} currentClientData={currentClientData}></EditClientAction>
 
                 <Header 
                     title={client.name}

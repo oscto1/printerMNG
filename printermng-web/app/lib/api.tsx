@@ -8,6 +8,7 @@ import { read } from "fs";
 import { CreateClient } from "../types/Clients/CreateClient";
 import { PrinterSummary } from "../types/Printers/PrinterSummary";
 import { CreateContract } from "../types/Contracts/CreateContract";
+import { EditClient } from "../types/Clients/EditClient";
 
 const API_URL = "http://localhost:5280"
 
@@ -110,6 +111,22 @@ export async function createClient(newClient: CreateClient){
     }
 }
 
+export async function editClient(clientId: number, editedClient: EditClient){
+    const response = await fetch(`${API_URL}/clients/${clientId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(editedClient)
+    });
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+}
 
 export async function getPrinters(): Promise<PrinterSummary[]>{
     const response = await fetch(`${API_URL}/printers`);
