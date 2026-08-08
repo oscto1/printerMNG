@@ -10,6 +10,7 @@ import { PrinterSummary } from "../types/Printers/PrinterSummary";
 import { CreateContract } from "../types/Contracts/CreateContract";
 import { EditClient } from "../types/Clients/EditClient";
 import { EditContract } from "../types/Contracts/EditContract";
+import { EditReading } from "../types/Readings/EditReading";
 
 const API_URL = "http://localhost:5280"
 
@@ -83,6 +84,23 @@ export async function createReading(newReading: CreateReading){
     }
 
 }
+
+export async function editReading(contractId: number, readingId: number, reading: EditReading){
+    const response = await fetch(`${API_URL}/contracts/${contractId}/readings/${readingId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(reading)
+    });
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+}   
 
 export async function deleteReading(contractId: number, readingId: number){
     const response = await fetch(`${API_URL}/contracts/${contractId}/readings/${readingId}`, {

@@ -28,7 +28,9 @@ export default function Header({title, leftData, rightItems}: {title: string, le
                 <div className="flex flex-wrap items-center mb-auto gap-3 text-sm text-gray-600">
                     {
                         rightItems?.map((item, index) => (
-                            <div key={index} className={`flex items-center gap-2 bg-${(item.bgColor !== undefined ? "["+item.bgColor+"]" : "gray-50")} px-3 py-2 rounded-lg border border-gray-100 shadow-2xs`}>
+                            <div key={index} 
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 shadow-2xs"
+                            style={{ backgroundColor: item.bgColor !== undefined ? item.bgColor : "#f9fafb" }}>
                                 {item.imgUrl !== null && item.imgUrl !== undefined  ? <Image src={item.imgUrl} alt={"icon"+index} width={15} height={15}></Image> : ""}
                                 
                                 <span className="font-medium text-gray-700">{item.text}</span>

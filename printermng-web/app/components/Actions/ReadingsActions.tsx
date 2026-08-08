@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useError } from "@/app/context/ErrorContext";
 
 
-export default function ReadingsActions({contractId, }: {contractId: number}){
+export default function ReadingsActions({contractId, contractIsActive}: {contractId: number, contractIsActive: boolean}){
     const [openCreateReading, setOpenCreateReading] = useState(false);
 
     // const [openErrorModal, setOpenErrorModal] = useState(false);
@@ -26,7 +26,7 @@ export default function ReadingsActions({contractId, }: {contractId: number}){
             await createReading(reading);
             setOpenCreateReading(false);
             
-            router.refresh();
+            window.location.reload();
         }catch(err)
         {
             showError(err);
@@ -35,7 +35,13 @@ export default function ReadingsActions({contractId, }: {contractId: number}){
 
     return(
         <>
-            <button className="bg-[#7AE972] hover:bg-[#4ECF44] rounded px-3 py-2 text-sm text-white cursor-pointer" onClick={() => {setOpenCreateReading(true)}}>ADD NEW READING</button>
+            {
+                (contractIsActive ? 
+                    <button className="bg-[#7AE972] hover:bg-[#4ECF44] rounded px-3 py-2 text-sm text-white cursor-pointer" onClick={() => {setOpenCreateReading(true)}}>ADD NEW READING</button>
+                    : ""
+                )
+            }
+            
             
             <Modal open={openCreateReading} onClose={() => setOpenCreateReading(false)}>
                 {/* <form action="">

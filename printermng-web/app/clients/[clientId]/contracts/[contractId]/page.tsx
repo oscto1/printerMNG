@@ -59,7 +59,7 @@ export default async function ContractPage({params, }: { params: Promise<{client
 
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold text-gray-900 tracking-tight">Readings</h2>
-                    <ReadingsActions contractId={contract.id}></ReadingsActions>
+                    <ReadingsActions contractId={contract.id} contractIsActive={contract.isActive}></ReadingsActions>
                 </div>
                 <ReadingsTable contract={contract} readings={readings}></ReadingsTable>
             </main>

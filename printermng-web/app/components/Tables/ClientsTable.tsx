@@ -20,8 +20,9 @@ export default function ClientsTable({clients}: {clients: ClientDetails[]}){
                 </thead>
 
                 <tbody>
-
-                    {clients.map(client => (
+                {
+                    (clients.length > 0) ?
+                    clients.map(client => (
 
                         <React.Fragment key={client.id}>
                             <tr key={client.id} className="hover:scale-101 cursor-pointer" onClick={() => {router.push(`clients/${client.id}`)}}>
@@ -45,7 +46,14 @@ export default function ClientsTable({clients}: {clients: ClientDetails[]}){
                                 <td className="!p-0" colSpan={8}></td>
                             </tr>
                         </React.Fragment>
-                    ))}
+                    ))
+                    :
+                    <tr>
+                        <td colSpan={8} className="text-center text-m text-gray-500 px-6 py-2.5 rounded-b-lg border-2 border-solid border-gray-200">
+                            There are no clients yet
+                        </td>
+                    </tr>
+                }
 
                 </tbody>
 

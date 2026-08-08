@@ -24,7 +24,9 @@ export default function ClientsContractsTable({clientId, contracts}: {clientId: 
                         </thead>
                 
                     <tbody>
-                        {contracts.map(contract => (
+                    {
+                        (contracts.length > 0) ?
+                        contracts.map(contract => (
                             
                         <React.Fragment key={contract.id}>
                             <tr className="hover:scale-101 cursor-pointer" key={contract.id} onClick={() => {router.push(`/clients/${clientId}/contracts/${contract.id}`)}}>
@@ -41,8 +43,14 @@ export default function ClientsContractsTable({clientId, contracts}: {clientId: 
                                 <td className="!p-0" colSpan={8}></td>
                             </tr>
                         </React.Fragment>
-                        
-                        ))}
+                        ))
+                        :
+                        <tr>
+                            <td colSpan={8} className="text-center text-m text-gray-500 px-6 py-2.5 rounded-b-lg border-2 border-solid border-gray-200">
+                                This client has on contracts yet
+                            </td>
+                        </tr>
+                    }
                     </tbody>
                     </table>
     );
