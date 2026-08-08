@@ -128,6 +128,19 @@ export async function editClient(clientId: number, editedClient: EditClient){
     }
 }
 
+export async function deleteClient(clientId: number){
+    const response = await fetch(`${API_URL}/clients/${clientId}`, {
+        method: "DELETE",
+    });
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+}
+
 export async function getPrinters(): Promise<PrinterSummary[]>{
     const response = await fetch(`${API_URL}/printers`);
 

@@ -29,7 +29,7 @@ export default function EditClientAction({clientId, currentClientData}: {clientI
 
     return(
         <>
-            <button className="bg-gray-300 hover:bg-gray-400 rounded px-3 py-2 text-sm text-gray-800 cursor-pointer" onClick={() => {setOpenEditClient(true)}}>EDIT CLIENT</button>
+            <button className="bg-gray-500 hover:bg-gray-700 rounded px-3 py-2 text-sm text-white cursor-pointer" onClick={() => {setOpenEditClient(true)}}>EDIT CLIENT</button>
 
             <Modal open={openEditClient} onClose={() => setOpenEditClient(false)}>
                 <form action="">

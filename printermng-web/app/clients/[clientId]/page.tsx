@@ -4,6 +4,7 @@ import CreateContractAction from "@/app/components/Actions/Contracts/CreateContr
 import PageContext, { UrlItem } from "@/app/components/PageContext";
 import Header, { HeaderRightItem } from "@/app/components/Header";
 import EditClientAction from "@/app/components/Actions/Clients/EditClientAction";
+import DeleteClientAction from "@/app/components/Actions/Clients/DeleteClientAction";
 
 export default async function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
 {
@@ -37,7 +38,11 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
                     description="View detailed client profile information, manage contact data, and oversee all associated contracts.">
                 </PageContext>
 
-                <EditClientAction clientId={Number(clientId)} currentClientData={currentClientData}></EditClientAction>
+                <div className="flex gap-2">
+                    <EditClientAction clientId={Number(clientId)} currentClientData={currentClientData}></EditClientAction>
+                    <DeleteClientAction clientId={Number(clientId)}></DeleteClientAction>
+                </div>
+                
 
                 <Header 
                     title={client.name}
