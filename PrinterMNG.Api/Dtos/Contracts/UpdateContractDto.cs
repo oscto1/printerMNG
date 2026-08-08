@@ -6,7 +6,7 @@ public record UpdateContractDto(
     [Required][Range(1,10000)]
     int ClientId,
     
-    [Required][Range(1,10000)]
+    [Required][Range(1,10000, ErrorMessage = "Select a valid printer.")]
     int PrinterId,
 
     [StringLength(80, MinimumLength = 3)]

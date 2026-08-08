@@ -9,6 +9,7 @@ import { CreateClient } from "../types/Clients/CreateClient";
 import { PrinterSummary } from "../types/Printers/PrinterSummary";
 import { CreateContract } from "../types/Contracts/CreateContract";
 import { EditClient } from "../types/Clients/EditClient";
+import { EditContract } from "../types/Contracts/EditContract";
 
 const API_URL = "http://localhost:5280"
 
@@ -161,6 +162,36 @@ export async function createContract(newContract: CreateContract){
             "Content-Type": "application/json"
         },
         body: JSON.stringify(newContract)
+    });
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+}
+
+export async function deleteContract(contractId: number){
+    const response = await fetch(`${API_URL}/contracts/${contractId}`, {
+        method: "DELETE",
+    });
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+}
+
+export async function editContract(contractId: number, contract: EditContract){
+    const response = await fetch(`${API_URL}/contracts/${contractId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(contract)
     });
 
     if(!response.ok)

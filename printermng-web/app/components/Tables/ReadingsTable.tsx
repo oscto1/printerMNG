@@ -85,7 +85,7 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
                                 readings.map((reading, index) => (
                                     <React.Fragment key={reading.id}>
                                         <tr key={reading.id}>
-                                            <td className="relative text-center w-30 rounded-tl-lg border-t-2 border-b-1 border-l-2 border-solid border-gray-200">
+                                            <td className="bg-[#94FF97] relative text-center w-30 rounded-tl-lg border-t-2 border-b-1 border-l-2 border-solid border-gray-200">
                                                 {index === 0 && (
                                                 <button
                                                     onClick={() => {
