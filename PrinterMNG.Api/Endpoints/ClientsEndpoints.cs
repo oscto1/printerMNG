@@ -72,7 +72,7 @@ public static class ClientsEndpoints
             client.Document = newClient.Document;
             client.Name = newClient.Name;
             client.Phone = newClient.Phone;
-            client.Document = newClient.Document;
+            client.Location = newClient.Location;
 
             await dbContext.SaveChangesAsync();
 
