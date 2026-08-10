@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrinterMNG.Api.Data;
 
@@ -10,9 +11,11 @@ using PrinterMNG.Api.Data;
 namespace PrinterMNG.Api.Data.Migrations
 {
     [DbContext(typeof(PrinterMNGContext))]
-    partial class PrinterMNGContextModelSnapshot : ModelSnapshot
+    [Migration("20260810220734_PrinterAndBrandDeletionRules")]
+    partial class PrinterAndBrandDeletionRules
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.8");
@@ -182,7 +185,7 @@ namespace PrinterMNG.Api.Data.Migrations
                     b.HasOne("PrinterMNG.Api.Models.Client", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PrinterMNG.Api.Models.Printer", "Printer")

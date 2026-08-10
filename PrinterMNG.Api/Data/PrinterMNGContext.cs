@@ -17,5 +17,30 @@ public class PrinterMNGContext(DbContextOptions<PrinterMNGContext> options) : Db
         modelBuilder.Entity<MonthlyReading>()
             .HasIndex(mr => new { mr.ContractId, mr.Month })
             .IsUnique();
+
+          
+        // PREVENTS A *PRINTER* FROM BEING DELETED IF REFERENCED BY A *CONTRACT*.
+        // Deleting a Contract is still allowed.
+        modelBuilder.Entity<Contract>()
+            .HasOne(c => c.Printer)
+            .WithMany()
+            .HasForeignKey(c => c.PrinterId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // PREVENTS A *BRAND* FROM BEING DELETED IF REFERENCED BY A *PRINTER*.
+        // Deleting a Contract is still allowed.
+        modelBuilder.Entity<Printer>()
+            .HasOne(p => p.Brand)
+            .WithMany()
+            .HasForeignKey(p => p.BrandId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // PREVENTS A *CLIENT* FROM BEING DELETED IF REFERENCED BY A *CONTRACT*.
+        // Deleting a Contract is still allowed.
+        modelBuilder.Entity<Contract>()
+            .HasOne(c => c.Client)
+            .WithMany()
+            .HasForeignKey(c => c.ClientId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

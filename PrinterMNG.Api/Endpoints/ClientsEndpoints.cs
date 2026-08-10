@@ -83,6 +83,13 @@ public static class ClientsEndpoints
         // DELETE /clients/1
         group.MapDelete("/{id}", async (int id, PrinterMNGContext dbContext) =>
         {
+            bool hasContracts = await dbContext.Contracts.AnyAsync(c => c.ClientId == id);
+
+            if(hasContracts)
+            {
+                return Results.Conflict("Can't delete client because it has some contracts!");
+            }
+
             await dbContext.Clients.Where(client => client.Id == id).ExecuteDeleteAsync();
 
             return Results.NoContent();

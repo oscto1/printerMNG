@@ -1,4 +1,5 @@
 ﻿// using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Dtos.Printers;
@@ -93,8 +94,17 @@ public static class PrintersEndpoints
         // DELETE /printers/1
         group.MapDelete("/{id}", async (int id, PrinterMNGContext dbContext) =>
         {
-            await dbContext.Printers.Where(printer => printer.Id == id).ExecuteDeleteAsync();
+            
+            bool hasContracts = await dbContext.Contracts.AnyAsync(c => c.PrinterId == id);
 
+            if(hasContracts)
+            {
+                return Results.Conflict("Can't delete printer because some contracts are using it!");
+            }
+
+            await dbContext.Printers.Where(printer => printer.Id == id).ExecuteDeleteAsync();
+            
+            
             return Results.NoContent();     
         });
     }
