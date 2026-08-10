@@ -28,7 +28,7 @@ export default function CreateContract({clientId} : {clientId: number}){
                 setPrinterList(printers);
 
             } catch (err) {
-                console.error(err);
+                showError(err);
             }
         };
 

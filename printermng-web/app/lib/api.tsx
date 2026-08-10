@@ -1,16 +1,18 @@
-import { error } from "console";
 import { ClientDetails } from "../types/Clients/ClientDetails";
 import { ContractDetails } from "../types/Contracts/ContractDetails";
 import { ContractSummary } from "../types/Contracts/ContractSummary";
 import { CreateReading } from "../types/Readings/CreateReading";
 import { ReadingSummary } from "../types/Readings/ReadingSummary";
-import { read } from "fs";
 import { CreateClient } from "../types/Clients/CreateClient";
 import { PrinterSummary } from "../types/Printers/PrinterSummary";
 import { CreateContract } from "../types/Contracts/CreateContract";
 import { EditClient } from "../types/Clients/EditClient";
 import { EditContract } from "../types/Contracts/EditContract";
 import { EditReading } from "../types/Readings/EditReading";
+import { Brand } from "../types/Printers/Brand";
+import { CreatePrinter } from "../types/Printers/CreatePrinter";
+import { PrinterDetails } from "../types/Printers/PrinterDetails";
+import { EditPrinter } from "../types/Printers/EditPrinter";
 
 const API_URL = "http://localhost:5280"
 
@@ -64,6 +66,47 @@ export async function getContract(idClient: number, idContract: number): Promise
     return{
         contract: contractSummary,
         readings: readingsList
+    }
+}
+
+export async function getPrinter(idPrinter: number): Promise<PrinterDetails>{
+    const response = await fetch(`${API_URL}/printers/${idPrinter}`);
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+
+    return response.json();
+}
+
+export async function editPrinter(printerId: number, printer: EditPrinter){
+    const response = await fetch(`${API_URL}/printers/${printerId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(printer)
+    });
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+}
+
+export async function deletePrinter(printerId: number){
+    const response = await fetch(`${API_URL}/printers/${printerId}`, {
+        method: "DELETE"
+    });
+
+    if(!response.ok){
+        const errMessage = await getErrorMessage(response, getErrors);
+        throw new Error(errMessage);
     }
 }
 
@@ -160,6 +203,19 @@ export async function deleteClient(clientId: number){
     }
 }
 
+export async function getBrands(): Promise<Brand[]>{
+    const response = await fetch(`${API_URL}/brands`);
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
+
+    return response.json();
+}
+
 export async function getPrinters(): Promise<PrinterSummary[]>{
     const response = await fetch(`${API_URL}/printers`);
 
@@ -171,6 +227,23 @@ export async function getPrinters(): Promise<PrinterSummary[]>{
     }
 
     return response.json();
+}
+
+export async function createPrinter(newPrinter: CreatePrinter){
+    const response = await fetch(`${API_URL}/printers`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newPrinter)
+    });
+
+    if(!response.ok)
+    {
+        const errMessage = await getErrorMessage(response, getErrors);
+
+        throw new Error(errMessage);
+    }
 }
 
 export async function createContract(newContract: CreateContract){
