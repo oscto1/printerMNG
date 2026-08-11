@@ -5,7 +5,7 @@ import { useError } from "@/app/context/ErrorContext";
 import { deleteContract } from "@/app/lib/api";
 import { useRouter } from "next/navigation";
 
-export default function DeleteContractAction({contractId}:{contractId: number}){
+export default function DeleteContractAction({contractId, clientId}:{contractId: number, clientId: number}){
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
     const { showError } = useError();
@@ -15,7 +15,7 @@ export default function DeleteContractAction({contractId}:{contractId: number}){
         try{
             await deleteContract(contractId);
             setOpenDeleteModal(false);
-            router.push("/clients");
+            router.push(`/clients/${clientId}`);
         }catch(err){
             showError(err);
         }

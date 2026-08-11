@@ -6,6 +6,7 @@ import PageContext, { UrlItem } from "@/app/components/PageContext";
 import Header, {HeaderRightItem} from "@/app/components/Header";
 import DeleteContractAction from "@/app/components/Actions/Contracts/DeleteContractAction";
 import EditContractAction from "@/app/components/Actions/Contracts/EditContractAction";
+import Navbar from "@/app/components/Navbar";
 
 export default async function ContractPage({params, }: { params: Promise<{clientId: number, contractId: number}>})
 {
@@ -39,12 +40,13 @@ export default async function ContractPage({params, }: { params: Promise<{client
 
         return(
             <main className="w-full mx-auto px-4 py-8 space-y-6">
-                
+                <Navbar></Navbar>
+
                 <PageContext url={url} title="Contract" description=""></PageContext>
 
                 <div className="flex gap-2">
                     <EditContractAction contractId={contract.id} currentContractData={currentContractData}></EditContractAction>
-                    <DeleteContractAction contractId={contract.id}></DeleteContractAction>
+                    <DeleteContractAction clientId={clientId} contractId={contract.id}></DeleteContractAction>
                 </div>
 
                 <Header title={`${contract.clientName}`} 

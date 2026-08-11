@@ -8,6 +8,7 @@ import { useError } from "../context/ErrorContext";
 import { Brand } from "../types/Printers/Brand";
 import PrintersTable from "../components/Tables/PrintersTable";
 import CreatePrinterAction from "../components/Actions/Printers/CreatePrinterAction";
+import Navbar from "../components/Navbar";
 
 export default function PrintersPage(){
     const url : UrlItem[] = [
@@ -36,6 +37,7 @@ export default function PrintersPage(){
 
     return(
         <main className="w-full mx-auto px-4 py-8 space-y-6">
+            <Navbar></Navbar>
             <PageContext url={url} title={"Printers"} description="Change description"></PageContext>
 
             <CreatePrinterAction brands={brandList}></CreatePrinterAction>

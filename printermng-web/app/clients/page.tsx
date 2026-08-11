@@ -3,6 +3,7 @@ import { ClientDetails } from "../types/Clients/ClientDetails";
 import ClientsTable from "../components/Tables/ClientsTable";
 import CreateClientAction from "../components/Actions/Clients/CreateClientAction";
 import PageContext, { UrlItem } from "../components/PageContext";
+import Navbar from "../components/Navbar";
 
 
 export default async function ClientsPage()
@@ -20,7 +21,7 @@ export default async function ClientsPage()
 
     return (
         <main className="w-full mx-auto px-4 py-8 space-y-6">
-
+            <Navbar></Navbar>
             <PageContext url={url} title="Clients" 
                         description="AAAAAAAAAAAAAAAAAAAAAAAAAAAAA"></PageContext>
 

@@ -5,6 +5,7 @@ import PageContext, { UrlItem } from "@/app/components/PageContext";
 import Header, { HeaderRightItem } from "@/app/components/Header";
 import EditClientAction from "@/app/components/Actions/Clients/EditClientAction";
 import DeleteClientAction from "@/app/components/Actions/Clients/DeleteClientAction";
+import Navbar from "@/app/components/Navbar";
 
 export default async function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
 {
@@ -33,6 +34,7 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
         return(
             <main className="w-full mx-auto px-4 py-8 space-y-6">
     
+                <Navbar></Navbar>
                 <PageContext 
                     url={url} title="Client Overview"
                     description="View detailed client profile information, manage contact data, and oversee all associated contracts.">

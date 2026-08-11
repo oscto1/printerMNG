@@ -6,6 +6,7 @@ import { PrinterDetails } from "@/app/types/Printers/PrinterDetails";
 import Header from "@/app/components/Header";
 import EditPrinterAction from "@/app/components/Actions/Printers/EditPrinterAction";
 import DeletePrinterAction from "@/app/components/Actions/Printers/DeletePrinterAction";
+import Navbar from "@/app/components/Navbar";
 
 export default async function PrinterPage({params}: {params: Promise<{printerId: number}>}){
     
@@ -23,6 +24,7 @@ export default async function PrinterPage({params}: {params: Promise<{printerId:
 
         return(
             <main className="w-full mx-auto px-4 py-8 space-y-6">
+                <Navbar></Navbar>
                 <PageContext title="Printer Overview" url={url} description=""></PageContext>
 
                 <div className="flex gap-2">
