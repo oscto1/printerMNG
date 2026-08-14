@@ -1,19 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+// import Link from "next/link";
+// import { usePathname, useRouter } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
+    const locale = useLocale();
 
-    const t = useTranslations("common");
+    const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+
+
+    const t = useTranslations();
 
     const isActive = (path: string) => {
-        const firstSegment = pathname.split("/").filter(Boolean)[1] || "";
+        const firstSegment = pathname.split("/").filter(Boolean)[0] || "";
         const targetSegment = path.split("/").filter(Boolean)[0] || "";
+        console.log(firstSegment);
         return firstSegment === targetSegment;
     };
 
@@ -24,6 +32,16 @@ export default function Navbar() {
               : "hover:bg-gray-300"
         }`;
 
+    
+
+    const changeLanguage = (newLocale: "en" | "es") => {
+      router.replace(pathname, {
+          locale: newLocale
+      });
+
+      setIsLanguageOpen(false);
+    };
+
     return (
       <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
         <nav className="relative flex items-center justify-between rounded-full bg-gray-200 px-4 py-2">
@@ -33,16 +51,34 @@ export default function Navbar() {
             <a href="/home" className="text-gray-700 font-bold">PrinterMNG</a>
           </div>
 
-          {/* Desktop navigation on the right */}
+          {/* Desktop navigation on the middle */}
           <div className="hidden items-center gap-1.5 md:flex">
             <Link  href="/printers" className={navLinkClasses("/printers") + " text-gray-700"}>
-              {t("printers")}
+              {t("common.printers")}
             </Link>
 
             <Link href="/clients" className={navLinkClasses("/clients") + " text-gray-700"}>
-              {t("clients")}
+              {t("common.clients")}
             </Link>
           </div>
+
+          {/* Language change in the right */}
+          <div className="relative">
+            <button onClick={() => {setIsLanguageOpen(!isLanguageOpen)}} className="flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 transition">
+                {t("languageName")}
+                <svg className={`h-4 w-4 transition-transform ${isLanguageOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor"  viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+
+            {isLanguageOpen && (
+                <div className="absolute right-0 mt-4 w-40 rounded-xl border border-gray-300 bg-white shadow-lg overflow-hidden">
+                    <button className="block w-full px-4 py-2 text-left hover:bg-gray-100" onClick={() => changeLanguage("en")}>English</button>
+
+                    <button className="block w-full px-4 py-2 text-left hover:bg-gray-100" onClick={() => changeLanguage("es")}>Español</button>
+                </div>
+            )}
+        </div>
 
           {/* Mobile menu button */}
           <button
@@ -87,7 +123,7 @@ export default function Navbar() {
                     isActive("/printers") ? "bg-white shadow-sm" : "hover:bg-gray-300"
                   }`}
                 >
-                  {t("printers")}
+                  {t("common.printers")}
                 </Link>
 
                 <Link
@@ -97,7 +133,7 @@ export default function Navbar() {
                     isActive("/clients") ? "bg-white shadow-sm" : "hover:bg-gray-300"
                   }`}
                 >
-                  {t("clients")}
+                  {t("common.clients")}
                 </Link>
               </div>
             </div>
