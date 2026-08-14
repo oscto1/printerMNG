@@ -1,0 +1,91 @@
+{
+    "common": {
+        "create": "Crear",
+        "save": "Guardar",
+        "delete": "Borrar",
+        "cancel": "Cancelar",
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "printers": "Impresoras",
+        "clients": "Clientes",
+        "contract": "Contrato"
+    },
+    "clients" : {
+        "title" : "Clientes",
+        "description" : "Consulte y gestione la información de contacto de todos los clientes registrados. Agregue un nuevo cliente o seleccione un cliente para gestionar sus datos y contratos.",
+        "clientOverview": "Resumen de cliente",
+        "singleClientDescription": "Gestione la información del cliente, agregue un nuevo contrato y consulte sus contratos activos. Edite o elimine el cliente, o seleccione un contrato para ver sus detalles.",
+        "addClient" : "CREAR NUEVO CLIENTE",
+        "deleteClient": "BORRAR CLIENTE",
+        "editClient": "EDITAR CLIENTE",
+        "tableTitle": "Lista de clientes",
+        "document": "Documento",
+        "name": "Nombre",
+        "phone": "Telefono",
+        "location": "Ubicación",
+        "errNoClients": "Aún no hay clientes.",
+        "deleteWarn1": "¿Seguro que desea borrar este cliente?",
+        "deleteWarn2": "Esta acción es irreversible. ¡Se perderán todos sus contratos y lecturas!"
+    },
+    "contracts": {
+        "title": "Contratos",
+        "description" : "Consulte y gestione el contrato y sus lecturas mensuales. Actualize o elimine el contrato, o edite y elimine la lectura más reciente.",
+        "contractOverview": "Resumen de contrato",
+
+        "addContract" : "CREAR NUEVO CONTRATO",
+        "deleteContract": "BORRAR CONTRATO",
+        "editContract": "ACTUALIZAR CONTRATO",
+
+        "status": "Estado",
+        "printer": "Impresora",
+        "color": "Color",
+        "blackPrice": "Precio de copia B & W",
+        "colorPrice": "Precio de copia Color",
+        "fixedCharge": "Cargo fijo",
+        "startDate": "Fecha de inicio",
+        "billDay": "Día de corte",
+        "errNoContracts": "Este cliente aún no tiene contratos.",
+        "deleteWarn1": "¿Seguro que desea borrar este contrato?",
+        "deleteWarn2": "Esta acción es irreversible. ¡Se perderán todas sus lecturas!"
+    },
+    "printers": {
+        "title": "Impresoras",
+        "description": "Consulte y gestione las impresoras registradas en el sistema. Agregue nuevas impresoras o seleccione una impresora para ver y gestionar su información.",
+
+        "printerOverview": "Resumen de impresora",
+        "singlePrinterDescription": "Consulte y gestione la información de la impresora. Actualize o elimine la impresora y revise sus datos.",
+
+        "addPrinter" : "CREAR NUEVA IMPRESORA",
+        "deletePrinter": "BORRAR IMPRESORA",
+        "editPrinter": "EDITAR IMPRESORA",
+        "brand": "Marca",
+        "name": "Modelo",
+        "color":"Impresora color",
+
+        "selectPrinter": "Seleccione una impresora",
+        "selectBrand": "Seleccione una marca",
+        "colorPrinters": "Impresoras a color",
+        "blackPrinters": "Impresoras B & N",
+        "errNoPrinters": "Aún no hay impresoras",
+        "deleteWarn1": "¿Seguro que desea borrar esta impresora?",
+        "deleteWarn2": "Esta acción es irreversible."
+    },
+    "readings": {
+        "title": "Lecturas",
+        "addReading" : "CREAR NUEVA LECTURA",
+        "deleteReading": "BORRAR LECTURA",
+        "editReading": "EDITAR LECTURA",
+
+        "month": "Mes",
+        "blackCounter": "Contador B & N",
+        "blackCopiesUsed": "Copias B & N sacadas",
+        "blackCharge": "Cobro copias B & N",
+        "colorCounter": "Contador color",
+        "colorCopiesUsed": "Copias color sacadas",
+        "colorCharge": "Cobro copias color",
+        "totalCharge": "Cobro total",
+        "notes": "Notas",
+        "errNoReadings": "Este contrato aún no tiene lecturas",
+        "deleteWarn1": "¿Seguro que desea borrar esta lectura?"
+    }
+}

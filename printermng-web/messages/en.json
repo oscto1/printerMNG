@@ -1,0 +1,91 @@
+{
+    "common": {
+        "create": "Create",
+        "save": "Save",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "active": "Active",
+        "inactive": "Inactive",
+        "printers": "Printers",
+        "clients": "Clients",
+        "contract": "Contract"
+    },
+    "clients" : {
+        "title" : "Clients",
+        "description" : "View and manage the contact information of all registered clients. Add a new client or select a client to manage their data and contracts.",
+        "clientOverview": "Client Overview",
+        "singleClientDescription": "Manage the client's information, add a new contract and view their active contracts. Edit or delete the client, or select a contract to view its details.",
+        "addClient" : "CREATE NEW CLIENT",
+        "deleteClient": "DELETE CLIENT",
+        "editClient": "EDIT CLIENT",
+        "tableTitle": "Clients List",
+        "document": "Document",
+        "name": "Name",
+        "phone": "Phone",
+        "location": "Location",
+        "errNoClients": "There are no clients yet",
+        "deleteWarn1": "Are you sure you want to delete this client?",
+        "deleteWarn2": "This action is irreversible. All contracts and readings will be lost!"
+    },
+    "contracts": {
+        "title": "Contracts",
+        "description" : "View and manage the contract and its monthly readings. Update or delete the contract, or edit and delete the Most Recent reading.",
+        "contractOverview": "Contract Overview",
+
+        "addContract" : "CREATE NEW CONTRACT",
+        "deleteContract": "DELETE CONTRACT",
+        "editContract": "EDIT CONTRACT",
+
+        "status": "Status",
+        "printer": "Printer",
+        "color": "Color",
+        "blackPrice": "B & W Copy Price",
+        "colorPrice": "Color Copy Price",
+        "fixedCharge": "Fixed charge",
+        "startDate": "Start date",
+        "billDay": "Bill day",
+        "errNoContracts": "This client has on contracts yet",
+        "deleteWarn1": "Are you sure you want to delete this contract?",
+        "deleteWarn2": "This action is irreversible. All readings will be lost!"
+    },
+    "printers": {
+        "title": "Printers",
+        "description": "View and manage the printers registered in the system. Add new printers or select a printer to view and manage its information.",
+
+        "printerOverview": "Printer Overview",
+        "singlePrinterDescription": "View and manage the printer's information. Update or delete the printer and review its details.",
+
+        "addPrinter" : "CREATE NEW PRINTER",
+        "deletePrinter": "DELETE PRINTER",
+        "editPrinter": "EDIT PRINTER",
+        "brand": "Brand",
+        "name": "Model name",
+        "color":"Color printer",
+
+        "selectPrinter": "Select a printer",
+        "selectBrand": "Select a brand",
+        "colorPrinters": "Color printers",
+        "blackPrinters": "Black & White Printers",
+        "errNoPrinters": "There are no printers yet",
+        "deleteWarn1": "Are you sure you want to delete this printer?",
+        "deleteWarn2": "This action is irreversible.!"
+    },
+    "readings": {
+        "title": "Readings",
+        "addReading" : "CREATE NEW READING",
+        "deleteReading": "DELETE READING",
+        "editReading": "EDIT READING",
+
+        "month": "Month",
+        "blackCounter": "Black copy counter",
+        "blackCopiesUsed": "Black copies used",
+        "blackCharge": "Black copies charge",
+        "colorCounter": "Color copy counter",
+        "colorCopiesUsed": "Color copies used",
+        "colorCharge": "Color copies charge",
+        "totalCharge": "Total charge",
+        "notes": "Notes",
+        "errNoReadings": "This contract does not have readings yet",
+        "deleteWarn1": "Are you sure you want to delete reading?"
+    }
+}
