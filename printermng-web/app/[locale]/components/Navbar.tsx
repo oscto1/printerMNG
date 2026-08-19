@@ -21,7 +21,6 @@ export default function Navbar() {
     const isActive = (path: string) => {
         const firstSegment = pathname.split("/").filter(Boolean)[0] || "";
         const targetSegment = path.split("/").filter(Boolean)[0] || "";
-        console.log(firstSegment);
         return firstSegment === targetSegment;
     };
 

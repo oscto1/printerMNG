@@ -16,9 +16,11 @@ public static class DataExtensions
 
     public static void AddPrinterMNGdb(this WebApplicationBuilder builder)
     {
+        
+
         var connString = builder.Configuration.GetConnectionString("PrinterMNG");
         builder.Services.AddScoped<PrinterMNGContext>();
-        builder.Services.AddSqlite<PrinterMNGContext>(
+        builder.Services.AddNpgsql<PrinterMNGContext>(
             connString, 
             optionsAction: options => options.UseSeeding((context, _) =>
             {
