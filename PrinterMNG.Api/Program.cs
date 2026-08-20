@@ -1,6 +1,5 @@
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Endpoints;
-using PrinterMNG.Api.Endpoints.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddValidation();
@@ -55,7 +54,7 @@ app.UseExceptionHandler(exceptionApp =>
     });
 });
 
-app.MigrateDb();
+await app.MigrateDb();
 
 app.Run();
 

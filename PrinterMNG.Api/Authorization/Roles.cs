@@ -1,4 +1,4 @@
-namespace PrinterMNG.Api.Models;
+namespace PrinterMNG.Api.Authorization;
 
 public class Roles
 {
