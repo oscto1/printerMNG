@@ -1,9 +1,11 @@
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Endpoints;
+using PrinterMNG.Api.Endpoints.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddValidation();
 builder.AddPrinterMNGdb();
+builder.AddIdentity();
 
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -24,6 +26,7 @@ var app = builder.Build();
 
 app.UseCors(myAllowSpecificOrigins);
 
+app.MapAuthEndpoints();
 app.MapPrintersEndpoints();
 app.MapBrandsEndpoints();
 app.MapClientsEndpoints();

@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using PrinterMNG.Api.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 
 namespace PrinterMNG.Api.Data;
 
-public class PrinterMNGContext(DbContextOptions<PrinterMNGContext> options) : DbContext(options)
+public class PrinterMNGContext(DbContextOptions<PrinterMNGContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Printer> Printers => Set<Printer>();
     public DbSet<Brand> Brands => Set<Brand>();
@@ -14,10 +15,16 @@ public class PrinterMNGContext(DbContextOptions<PrinterMNGContext> options) : Db
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        // modelBuilder.Entity<ApplicationUser>();
+
+        // modelBuilder.HasDefaultSchema("identity");
+
+        // MAKES MONTH UNIQUE FOR EACH CONTRACTID
         modelBuilder.Entity<MonthlyReading>()
             .HasIndex(mr => new { mr.ContractId, mr.Month })
             .IsUnique();
-
           
         // PREVENTS A *PRINTER* FROM BEING DELETED IF REFERENCED BY A *CONTRACT*.
         // Deleting a Contract is still allowed.

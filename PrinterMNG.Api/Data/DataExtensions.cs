@@ -1,23 +1,27 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PrinterMNG.Api.Models;
 
 namespace PrinterMNG.Api.Data;
 public static class DataExtensions
 {
-    public static void MigrateDb(this WebApplication app)
+    public static async Task MigrateDb(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
 
         var dbContext = scope.ServiceProvider.GetRequiredService<PrinterMNGContext>();
 
-        dbContext.Database.Migrate();
+        await dbContext.Database.MigrateAsync();
 
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        if(!await roleManager.RoleExistsAsync(Roles.Admin))
+        {
+            await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+        }
     }
 
     public static void AddPrinterMNGdb(this WebApplicationBuilder builder)
     {
-        
-
         var connString = builder.Configuration.GetConnectionString("PrinterMNG");
         builder.Services.AddScoped<PrinterMNGContext>();
         builder.Services.AddNpgsql<PrinterMNGContext>(
@@ -35,5 +39,11 @@ public static class DataExtensions
                 }
             })
         );
+    }
+
+    public static void AddIdentity(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<PrinterMNGContext>();
     }
 }
