@@ -20,7 +20,7 @@ Authorization: Bearer
 }
 
 ###
-PUT http://localhost:5280/printers/3
+PUT http://localhost:5280/printers/1
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer 
@@ -98,11 +98,13 @@ Authorization: Bearer
 GET http://localhost:5280/contracts
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 ###
-GET http://localhost:5280/contracts/3
+GET http://localhost:5280/contracts/8
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 ### 
 POST http://localhost:5280/contracts
@@ -111,8 +113,8 @@ Accept: application/json
 Authorization: Bearer 
 
 {
-  "clientId": 1,
-  "printerId": 10,
+  "clientId": 5,
+  "printerId": 2,
   "blackCopyPrice": 300,
   "colorCopyPrice": 500,
   "minimumCharge": 400000,
@@ -121,9 +123,10 @@ Authorization: Bearer
 }
 
 ###
-PUT http://localhost:5280/contracts/4
+PUT http://localhost:5280/contracts/6
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 {
   "isActive": true,
@@ -137,9 +140,10 @@ Accept: application/json
 }
 
 ### 
-DELETE http://localhost:5280/contracts/1
+DELETE http://localhost:5280/contracts/7
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 ### MONTHLY READINGS -----------------------------------------------------------------
 GET http://localhost:5280/monthly-readings/6
@@ -201,7 +205,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "username": "test",
+  "username": "testq",
   "password": "Pass123*"
 }
 

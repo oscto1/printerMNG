@@ -19,10 +19,13 @@ public static class ContractsEndpoints
         var group = app.MapGroup("/contracts");
  
         // GET /contracts/
-        group.MapGet("/", async (PrinterMNGContext dbContext) =>
+        group.MapGet("/", async (PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             return await dbContext.Contracts
                     .Include(contract => contract.Printer)
+                    .Where(contract => contract.Client.AdminId == userId)
                     .Include(contract => contract.Client)
                     .Select(contract => new ContractSummaryDto(
                         contract.Id,
@@ -40,15 +43,18 @@ public static class ContractsEndpoints
                     ))
                     .AsNoTracking()
                     .ToListAsync();
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
         // GET /contracts/1
-        group.MapGet("/{id}", async (int id, PrinterMNGContext dbContext) =>
+        group.MapGet("/{id}", async (int id, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var contr = await dbContext.Contracts
                 .Include(contract => contract.Client)
                 .Include(contract => contract.Printer)
-                .Where(contract => contract.Id == id)
+                .Where(contract => contract.Id == id && contract.Client.AdminId == userId)
                 .FirstOrDefaultAsync();
 
             if(contr is not null)
@@ -71,7 +77,9 @@ public static class ContractsEndpoints
 
             return Results.NotFound();
             
-        }).WithName(GetContractEndpointName);
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin))
+        .WithName(GetContractEndpointName);
 
         // POST /contracts/
         group.MapPost("/", async (CreateContractDto newContract, PrinterMNGContext dbContext, HttpContext httpContext) =>
@@ -81,10 +89,10 @@ public static class ContractsEndpoints
 
             if(!isClientOwner)
             {
-                return Results.NotFound();
+                return Results.BadRequest(new {errors = "CLIENT_NOT_FOUND"});
             }
 
-            var printer = await dbContext.Printers.FindAsync(newContract.PrinterId);
+            var printer = await dbContext.Printers.FirstOrDefaultAsync(p => p.Id == newContract.PrinterId && p.AdminId == userId);
 
             if(printer is null)
             {
@@ -117,14 +125,29 @@ public static class ContractsEndpoints
         .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
         // PUT /contracts/1
-        group.MapPut("/{id}", async (int id, UpdateContractDto newContract, PrinterMNGContext dbContext) =>
+        group.MapPut("/{id}", async (int id, UpdateContractDto newContract, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
-            var contract = await dbContext.Contracts.FindAsync(id);
-            var printer = await dbContext.Printers.FindAsync(newContract.PrinterId);
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var contract = await dbContext.Contracts.FirstOrDefaultAsync(c => c.Client.AdminId == userId && c.Id == id);
 
             if(contract is null)
             {
                 return Results.NotFound();
+            }
+
+            bool isClientOwner = await dbContext.Clients.AnyAsync(c => c.AdminId == userId && c.Id == newContract.ClientId);
+            
+            if(!isClientOwner)
+            {
+                return Results.BadRequest(new {errors = "CLIENT_NOT_FOUND"});
+            }
+
+            var printer = await dbContext.Printers.FirstOrDefaultAsync(p => p.Id == newContract.PrinterId && p.AdminId == userId);
+
+            if(printer is null)
+            {
+                return Results.BadRequest(new {errors = "PRINTER_NOT_FOUND"});
             }
 
             decimal colorCopyPrice = 0;
@@ -146,15 +169,19 @@ public static class ContractsEndpoints
             await dbContext.SaveChangesAsync();
             
             return Results.NoContent();
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
 
         // DELETE /contracts/1
-        group.MapDelete("/{id}", async (int id, PrinterMNGContext dbContext) =>
+        group.MapDelete("/{id}", async (int id, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
-            await dbContext.Contracts.Where(contract => contract.Id == id).ExecuteDeleteAsync();
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            await dbContext.Contracts.Where(contract => contract.Id == id && contract.Client.AdminId == userId).ExecuteDeleteAsync();
             return Results.NoContent();
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
 
         // Readings by contract -----------------------------------------------------------
