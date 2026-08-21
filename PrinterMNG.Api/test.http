@@ -1,14 +1,17 @@
 GET http://localhost:5280/printers
 Accept: application/json
+Authorization: Bearer 
 
 ###
-GET http://localhost:5280/printers/1
+GET http://localhost:5280/printers/3
 Accept: application/json
+Authorization: Bearer 
 
 ###
 POST http://localhost:5280/printers
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 {
   "brandId": 1,
@@ -17,20 +20,22 @@ Accept: application/json
 }
 
 ###
-PUT http://localhost:5280/printers/1
+PUT http://localhost:5280/printers/3
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 {
-  "brandId": 2,
+  "brandId": 1,
   "modelName": "Test updated",
-  "isColorPrinter": false
+  "isColorPrinter": true
 }
 
 ###
-DELETE http://localhost:5280/printers/4
+DELETE http://localhost:5280/printers/3
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 ### BRANDS --------------------------------------------------------------------------------
 GET http://localhost:5280/brands
@@ -41,20 +46,20 @@ Accept: application/json
 GET http://localhost:5280/clients
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyTU5HLldlYiIsImlzcyI6IlByaW50ZXJNTkcuQXBpIiwiZXhwIjoxNzg3Mjc1OTQwLCJzdWIiOiJkOTY4NzYyZi05NjZmLTQ1NDctOTcyMy1kNTJlOGMxZWE1MTgiLCJuYW1lIjoidGVzdCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiaWF0IjoxNzg3Mjc1MDQwLCJuYmYiOjE3ODcyNzUwNDB9.0ubQTRw7a28dACR8gCeNsRLHx0txKrJ1kJNhG5eico4
+Authorization: Bearer 
 
 
 ###
 GET http://localhost:5280/clients/1
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyTU5HLldlYiIsImlzcyI6IlByaW50ZXJNTkcuQXBpIiwiZXhwIjoxNzg3Mjc1OTQwLCJzdWIiOiJkOTY4NzYyZi05NjZmLTQ1NDctOTcyMy1kNTJlOGMxZWE1MTgiLCJuYW1lIjoidGVzdCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiaWF0IjoxNzg3Mjc1MDQwLCJuYmYiOjE3ODcyNzUwNDB9.0ubQTRw7a28dACR8gCeNsRLHx0txKrJ1kJNhG5eico4
+Authorization: Bearer 
 
 ###
 POST http://localhost:5280/clients
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyTU5HLldlYiIsImlzcyI6IlByaW50ZXJNTkcuQXBpIiwiZXhwIjoxNzg3Mjc1MTc3LCJzdWIiOiI3OWY0ZjhjNi03ZmE4LTQ0OTUtYWUzMC1hMWY1ZTkxMjgzMDkiLCJuYW1lIjoidGVzdHEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImlhdCI6MTc4NzI3NDI3NywibmJmIjoxNzg3Mjc0Mjc3fQ.MfKzswsxS4DesDkSb0UgBcTaVZaOMSxoVqFiOneOz2U
+Authorization: Bearer 
 
 {
   "document": "126772",
@@ -67,7 +72,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyT
 PUT http://localhost:5280/clients/1
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyTU5HLldlYiIsImlzcyI6IlByaW50ZXJNTkcuQXBpIiwiZXhwIjoxNzg3Mjc2NTIyLCJzdWIiOiI3OWY0ZjhjNi03ZmE4LTQ0OTUtYWUzMC1hMWY1ZTkxMjgzMDkiLCJuYW1lIjoidGVzdHEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImlhdCI6MTc4NzI3NTYyMiwibmJmIjoxNzg3Mjc1NjIyfQ.o4rAjkZYzW0TSfjqBLAUA_86Qo8Rcn5VlRQ-oC6eAC0
+Authorization: Bearer 
 
 
 {
@@ -78,14 +83,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyT
 }
 
 ###
-DELETE http://localhost:5280/clients/4
+DELETE http://localhost:5280/clients/6
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 ###
 GET http://localhost:5280/clients/1/contracts
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 ###  CONTRACTS ------------------------------------------------------------------------
 GET http://localhost:5280/contracts
@@ -101,10 +108,11 @@ Accept: application/json
 POST http://localhost:5280/contracts
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 {
   "clientId": 1,
-  "printerId": 2,
+  "printerId": 10,
   "blackCopyPrice": 300,
   "colorCopyPrice": 500,
   "minimumCharge": 400000,
@@ -193,10 +201,10 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "username": "testq",
+  "username": "test",
   "password": "Pass123*"
 }
 
 ###
 GET http://localhost:5280/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyTU5HLldlYiIsImlzcyI6IlByaW50ZXJNTkcuQXBpIiwiZXhwIjoxNzg3MjczNzMwLCJzdWIiOiI3OWY0ZjhjNi03ZmE4LTQ0OTUtYWUzMC1hMWY1ZTkxMjgzMDkiLCJuYW1lIjoidGVzdHEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImlhdCI6MTc4NzI3MjgzMCwibmJmIjoxNzg3MjcyODMwfQ._c15cgy73EtkUPl2C9ve9lkW3NSpkyx6cLiSNvhsGco
+Authorization: Bearer 

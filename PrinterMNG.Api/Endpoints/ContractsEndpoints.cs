@@ -1,7 +1,9 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using PrinterMNG.Api.Authorization;
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Dtos.Contracts;
 using PrinterMNG.Api.Dtos.MonthlyReadings;
@@ -72,10 +74,22 @@ public static class ContractsEndpoints
         }).WithName(GetContractEndpointName);
 
         // POST /contracts/
-        group.MapPost("/", async (CreateContractDto newContract, PrinterMNGContext dbContext) =>
+        group.MapPost("/", async (CreateContractDto newContract, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
-            //TODO: Validate if client belongs to this user
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool isClientOwner = await dbContext.Clients.AnyAsync(c => c.AdminId == userId && c.Id == newContract.ClientId);
+
+            if(!isClientOwner)
+            {
+                return Results.NotFound();
+            }
+
             var printer = await dbContext.Printers.FindAsync(newContract.PrinterId);
+
+            if(printer is null)
+            {
+                return Results.BadRequest(new {errors = "PRINTER_NOT_FOUND"});
+            }
 
             decimal colorCopyPrice = 0;
             if(printer is not null && printer.IsColorPrinter)
@@ -99,7 +113,8 @@ public static class ContractsEndpoints
             await dbContext.SaveChangesAsync();
 
             return Results.CreatedAtRoute(GetContractEndpointName, new { id = contract.Id });
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
         // PUT /contracts/1
         group.MapPut("/{id}", async (int id, UpdateContractDto newContract, PrinterMNGContext dbContext) =>

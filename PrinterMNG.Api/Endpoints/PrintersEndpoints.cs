@@ -1,6 +1,9 @@
 ﻿// using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Security.Claims;
+using System.Security.Principal;
 using Microsoft.EntityFrameworkCore;
+using PrinterMNG.Api.Authorization;
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Dtos.Printers;
 using PrinterMNG.Api.Models;
@@ -15,10 +18,13 @@ public static class PrintersEndpoints
     {
         var group = app.MapGroup("/printers");
         // GET /printers
-        group.MapGet("/", async (PrinterMNGContext dbContext) =>
+        group.MapGet("/", async (PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
-            return await dbContext.Printers
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            List<PrinterSummaryDto> printers = await dbContext.Printers
                 .Include(printer => printer.Brand)
+                .Where(p => p.AdminId == userId)
                 .Select(printer => new PrinterSummaryDto(
                     printer.Id,
                     printer.Brand!.Name,
@@ -27,13 +33,17 @@ public static class PrintersEndpoints
                 ))
                 .AsNoTracking()
                 .ToListAsync();
-        });
+                
+            return Results.Ok(printers);
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
 
         // GET /printers/1
-        group.MapGet("/{id}", async (int id, PrinterMNGContext dbContext) => {
+        group.MapGet("/{id}", async (int id, PrinterMNGContext dbContext, HttpContext httpContext) => {
 
-            var printer = await dbContext.Printers.FindAsync(id);
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var printer = await dbContext.Printers.FirstOrDefaultAsync(p => p.AdminId == userId && p.Id == id);
 
             if (printer != null)
             {
@@ -43,17 +53,20 @@ public static class PrintersEndpoints
             {
                 return Results.NotFound();
             }
-        }).WithName(GetPrinterEndpointName);
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin))
+        .WithName(GetPrinterEndpointName);
 
 
         // POST /printers
-        group.MapPost("/", async (CreatePrinterDto newPrinter, PrinterMNGContext dbContext) =>
+        group.MapPost("/", async (CreatePrinterDto newPrinter, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
             Printer printer = new()
             {
                 Model = newPrinter.ModelName,
                 BrandId = newPrinter.BrandId,
                 IsColorPrinter = newPrinter.IsColorPrinter,
+                AdminId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!
             };
 
             dbContext.Printers.Add(printer);
@@ -68,13 +81,15 @@ public static class PrintersEndpoints
 
 
             return Results.CreatedAtRoute(GetPrinterEndpointName, new { id = printerDto.Id }, printerDto);    
-        });
+        }).RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
         // PUT /printers/1
-        group.MapPut("/{id}", async (int id, UpdatePrinterDto updatedPrinter, PrinterMNGContext dbContext) =>
+        group.MapPut("/{id}", async (int id, UpdatePrinterDto updatedPrinter, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var printer = await dbContext.Printers.FirstOrDefaultAsync(p => p.AdminId == userId && p.Id == id);
 
-            var printer = await dbContext.Printers.FindAsync(id);
+            // var printer = await dbContext.Printers.FindAsync(id);
 
             if (printer is null)
             {
@@ -88,25 +103,27 @@ public static class PrintersEndpoints
             await dbContext.SaveChangesAsync();
 
             return Results.NoContent();
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
 
         // DELETE /printers/1
-        group.MapDelete("/{id}", async (int id, PrinterMNGContext dbContext) =>
+        group.MapDelete("/{id}", async (int id, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
-            
-            bool hasContracts = await dbContext.Contracts.AnyAsync(c => c.PrinterId == id);
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool hasContracts = await dbContext.Contracts.AnyAsync(c => c.PrinterId == id && c.Client.AdminId == userId);
 
             if(hasContracts)
             {
                 return Results.Conflict("Can't delete printer because some contracts are using it!");
             }
 
-            await dbContext.Printers.Where(printer => printer.Id == id).ExecuteDeleteAsync();
+            await dbContext.Printers.Where(printer => printer.Id == id && printer.AdminId == userId).ExecuteDeleteAsync();
             
             
             return Results.NoContent();     
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
     }
 }
 
