@@ -1,10 +1,12 @@
+using System.Security.Claims;
+using PrinterMNG.Api.Authorization;
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddValidation();
 builder.AddPrinterMNGdb();
-builder.AddIdentity();
+builder.AddAuth();
 
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -55,6 +57,15 @@ app.UseExceptionHandler(exceptionApp =>
 });
 
 await app.MigrateDb();
+
+app.MapGet("/me", (ClaimsPrincipal claimsPrincipal) =>
+{
+    return Results.Ok(claimsPrincipal.Claims.ToDictionary(c => c.Type, c => c.Value));
+})
+.RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
 

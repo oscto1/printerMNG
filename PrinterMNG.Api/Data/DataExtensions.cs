@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using PrinterMNG.Api.Models;
 using PrinterMNG.Api.Authorization;
 using PrinterMNG.Api.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace PrinterMNG.Api.Data;
 public static class DataExtensions
@@ -59,7 +62,7 @@ public static class DataExtensions
         );
     }
 
-    public static void AddIdentity(this WebApplicationBuilder builder)
+    public static void AddAuth(this WebApplicationBuilder builder)
     {
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<PrinterMNGContext>();
@@ -70,5 +73,36 @@ public static class DataExtensions
                 !string.IsNullOrWhiteSpace(options.SecretKey),
                 "JWT SecretKey must be configured.")
             .ValidateOnStart();
+
+        builder.Services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()!;
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtOptions.Issuer,
+
+                    ValidateAudience = true,
+                    ValidAudience = jwtOptions.Audience,
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtOptions.SecretKey)
+                    ),
+
+                    ValidateLifetime = true,
+
+                    ClockSkew = TimeSpan.FromMinutes(1)
+                };
+            });
+
+        builder.Services.AddAuthorization();
     }
 }

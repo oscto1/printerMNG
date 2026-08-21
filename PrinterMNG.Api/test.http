@@ -41,25 +41,24 @@ Accept: application/json
 GET http://localhost:5280/clients
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyTU5HLldlYiIsImlzcyI6IlByaW50ZXJNTkcuQXBpIiwiZXhwIjoxNzg3Mjc1OTQwLCJzdWIiOiJkOTY4NzYyZi05NjZmLTQ1NDctOTcyMy1kNTJlOGMxZWE1MTgiLCJuYW1lIjoidGVzdCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiaWF0IjoxNzg3Mjc1MDQwLCJuYmYiOjE3ODcyNzUwNDB9.0ubQTRw7a28dACR8gCeNsRLHx0txKrJ1kJNhG5eico4
 
-###
-GET http://localhost:5280/clients
-Content-Type: application/json
-Accept: application/json
 
 ###
 GET http://localhost:5280/clients/1
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyTU5HLldlYiIsImlzcyI6IlByaW50ZXJNTkcuQXBpIiwiZXhwIjoxNzg3Mjc1OTQwLCJzdWIiOiJkOTY4NzYyZi05NjZmLTQ1NDctOTcyMy1kNTJlOGMxZWE1MTgiLCJuYW1lIjoidGVzdCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiaWF0IjoxNzg3Mjc1MDQwLCJuYmYiOjE3ODcyNzUwNDB9.0ubQTRw7a28dACR8gCeNsRLHx0txKrJ1kJNhG5eico4
 
 ###
 POST http://localhost:5280/clients
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyTU5HLldlYiIsImlzcyI6IlByaW50ZXJNTkcuQXBpIiwiZXhwIjoxNzg3Mjc1MTc3LCJzdWIiOiI3OWY0ZjhjNi03ZmE4LTQ0OTUtYWUzMC1hMWY1ZTkxMjgzMDkiLCJuYW1lIjoidGVzdHEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImlhdCI6MTc4NzI3NDI3NywibmJmIjoxNzg3Mjc0Mjc3fQ.MfKzswsxS4DesDkSb0UgBcTaVZaOMSxoVqFiOneOz2U
 
 {
   "document": "126772",
-  "name": "Nombre Apellido",
+  "name": "TESTQ",
   "phone": "3949312119",
   "location": "Locccccation"
 }
@@ -68,6 +67,8 @@ Accept: application/json
 PUT http://localhost:5280/clients/1
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyTU5HLldlYiIsImlzcyI6IlByaW50ZXJNTkcuQXBpIiwiZXhwIjoxNzg3Mjc2NTIyLCJzdWIiOiI3OWY0ZjhjNi03ZmE4LTQ0OTUtYWUzMC1hMWY1ZTkxMjgzMDkiLCJuYW1lIjoidGVzdHEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImlhdCI6MTc4NzI3NTYyMiwibmJmIjoxNzg3Mjc1NjIyfQ.o4rAjkZYzW0TSfjqBLAUA_86Qo8Rcn5VlRQ-oC6eAC0
+
 
 {
   "document": "326772",
@@ -175,3 +176,27 @@ Accept: application/json
   "colorCounter": 3000,
   "notes":"adasdasdd"
 }
+
+### AUTH -------------------------------------------------------------------------------------
+POST http://localhost:5280/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "testq",
+  "password": "Pass123*"
+}
+
+###
+POST http://localhost:5280/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "testq",
+  "password": "Pass123*"
+}
+
+###
+GET http://localhost:5280/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJQcmludGVyTU5HLldlYiIsImlzcyI6IlByaW50ZXJNTkcuQXBpIiwiZXhwIjoxNzg3MjczNzMwLCJzdWIiOiI3OWY0ZjhjNi03ZmE4LTQ0OTUtYWUzMC1hMWY1ZTkxMjgzMDkiLCJuYW1lIjoidGVzdHEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImlhdCI6MTc4NzI3MjgzMCwibmJmIjoxNzg3MjcyODMwfQ._c15cgy73EtkUPl2C9ve9lkW3NSpkyx6cLiSNvhsGco

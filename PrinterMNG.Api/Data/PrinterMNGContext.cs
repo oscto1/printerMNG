@@ -17,9 +17,14 @@ public class PrinterMNGContext(DbContextOptions<PrinterMNGContext> options) : Id
     {
         base.OnModelCreating(modelBuilder);
 
-        // modelBuilder.Entity<ApplicationUser>();
+        modelBuilder.Entity<Client>()   
+            .HasOne(c => c.Admin)
+            .WithMany()
+            .HasForeignKey(c => c.AdminId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        // modelBuilder.HasDefaultSchema("identity");
+        modelBuilder.Entity<Client>()
+            .HasIndex(c => c.AdminId);
 
         // MAKES MONTH UNIQUE FOR EACH CONTRACTID
         modelBuilder.Entity<MonthlyReading>()
