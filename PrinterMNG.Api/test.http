@@ -146,28 +146,34 @@ Accept: application/json
 Authorization: Bearer 
 
 ### MONTHLY READINGS -----------------------------------------------------------------
-GET http://localhost:5280/monthly-readings/6
+GET http://localhost:5280/monthly-readings/1
+Authorization: Bearer 
+
 
 ###
-GET http://localhost:5280/contracts/3/readings
+GET http://localhost:5280/contracts/6/readings
+Authorization: Bearer 
+
 
 ###
 POST http://localhost:5280/monthly-readings
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 {
-  "contractId": 4,
-  "month": "2026-04",
+  "contractId": 8,
+  "month": "2026-06",
   "blackCounter": 5000,
   "colorCounter": 3000,
   "notes":"adasdasdd"
 }
 
 ###
-PUT http://localhost:5280/contracts/3/readings/24
+PUT http://localhost:5280/contracts/8/readings/6
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
 {
   "month": "2026-10",
@@ -177,17 +183,11 @@ Accept: application/json
 }
 
 ###
-DELETE http://localhost:5280/contracts/4/readings/18
+DELETE http://localhost:5280/contracts/8/readings/6
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer 
 
-{
-  "contractId": 4,
-  "month": "2026-04",
-  "blackCounter": 5000,
-  "colorCounter": 3000,
-  "notes":"adasdasdd"
-}
 
 ### AUTH -------------------------------------------------------------------------------------
 POST http://localhost:5280/register
@@ -205,7 +205,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "username": "testq",
+  "username": "test",
   "password": "Pass123*"
 }
 

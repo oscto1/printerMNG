@@ -89,6 +89,8 @@ public static class PrintersEndpoints
             var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var printer = await dbContext.Printers.FirstOrDefaultAsync(p => p.AdminId == userId && p.Id == id);
 
+            bool hasContracts = await dbContext.Contracts.AnyAsync(c => c.PrinterId == id && c.Client.AdminId == userId);
+
             // var printer = await dbContext.Printers.FindAsync(id);
 
             if (printer is null)
@@ -96,6 +98,11 @@ public static class PrintersEndpoints
                 return Results.NotFound();
             }
 
+            if (hasContracts)
+            {
+                // "Can't update printer because some contracts are using it!
+                return Results.BadRequest(new { errors = "UPDATE_PRINTER_HAS_CONTRACTS"});
+            }
             printer.BrandId = updatedPrinter.BrandId;
             printer.Model = updatedPrinter.ModelName;
             printer.IsColorPrinter = updatedPrinter.IsColorPrinter;
@@ -115,7 +122,8 @@ public static class PrintersEndpoints
 
             if(hasContracts)
             {
-                return Results.Conflict("Can't delete printer because some contracts are using it!");
+                // "Can't delete printer because some contracts are using it!"
+                return Results.Conflict(new { errors = "DELETE_PRINTER_HAS_CONTRACTS"});
             }
 
             await dbContext.Printers.Where(printer => printer.Id == id && printer.AdminId == userId).ExecuteDeleteAsync();

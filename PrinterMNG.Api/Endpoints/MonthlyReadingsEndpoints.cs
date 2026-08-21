@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using PrinterMNG.Api.Authorization;
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Dtos.MonthlyReadings;
 using PrinterMNG.Api.Models;
@@ -12,9 +14,11 @@ public static class MonthlyReadingsEndpoints
     {
         var group = app.MapGroup("monthly-readings");
 
-        group.MapGet("/{id}", async (int id, PrinterMNGContext dbContext) =>
+        group.MapGet("/{id}", async (int id, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
-            var reading = await dbContext.MonthlyReadings.FindAsync(id);
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var reading = await dbContext.MonthlyReadings.FirstOrDefaultAsync(mr => mr.Id == id && mr.Contract.Client.AdminId == userId);
 
             if(reading is null)
             {
@@ -37,21 +41,25 @@ public static class MonthlyReadingsEndpoints
 
             return Results.Ok(readingRes);
 
-        }).WithName(GetMonthlyReadingEndpointName);
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin))
+        .WithName(GetMonthlyReadingEndpointName);
 
 
-        group.MapPost("/", async (CreateReadingDto newReading, PrinterMNGContext dbContext) =>
+        group.MapPost("/", async (CreateReadingDto newReading, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var contract = await dbContext.Contracts
                 .Include(contract => contract.Printer)
-                .Where(contract => contract.Id == newReading.ContractId)
+                .Where(contract => contract.Id == newReading.ContractId && contract.Client.AdminId == userId)
                 .FirstOrDefaultAsync();
 
             if(contract is not null)
             {
                 if(!contract.IsActive)
                 {
-                    return Results.Conflict("The contract is not active");
+                    return Results.Conflict(new { errors = "CONTRACT_NOT_ACTIVE" });
                 }
 
                 DateOnly newMonth = DateOnly.ParseExact($"{newReading.Month}-01", "yyyy-MM-dd");
@@ -75,19 +83,22 @@ public static class MonthlyReadingsEndpoints
                 {
                     if(blackCounter < prevReading.BlackCounter)
                     {
-                        return Results.BadRequest("Black counter cannot be lower than previous reading.");
+                        // return Results.BadRequest("Black counter cannot be lower than previous reading.");
+                        return Results.BadRequest(new { errors = "BLACK_COUNTER_READING_INVALID" });
                     }
                     // blackCounter = prevReading.BlackCounter;
                     
                     if(colorCounter < prevReading.ColorCounter)
                     {
-                        return Results.BadRequest("Color counter cannot be lower than previous reading.");
+                        // return Results.BadRequest("Color counter cannot be lower than previous reading.");
+                        return Results.BadRequest(new { errors = "COLOR_COUNTER_READING_INVALID" });
                     }
                     // colorCounter = prevReading.ColorCounter;
                     
                     if(newMonth <= prevReading.Month)
                     {
-                        return Results.BadRequest("Cannot create a reading with a date previous to the last one.");
+                        // return Results.BadRequest("Cannot create a reading with a date previous to the last one.");
+                        return Results.BadRequest(new { errors = "DATE_READING_INVALID" });
                     }
 
                     blackCopiesUsed = blackCounter - prevReading.BlackCounter;
@@ -109,9 +120,9 @@ public static class MonthlyReadingsEndpoints
                     ColorCopiesUsed = colorCopiesUsed,
                     BlackCharge = blackCharge,
                     ColorCharge = colorCharge,
-                    TotalCharge = totalCharge > contract.MinimumCharge ? totalCharge : contract.MinimumCharge,
+                    TotalCharge = ((totalCharge > contract.MinimumCharge) || prevReading is null) ? totalCharge : contract.MinimumCharge,
                     Notes = newReading.Notes,
-                    CreatedAt = DateTime.Now,
+                    CreatedAt = DateTime.UtcNow,
                 };
 
                 dbContext.MonthlyReadings.Add(reading);
@@ -121,9 +132,11 @@ public static class MonthlyReadingsEndpoints
             }
             else
             {
-                return Results.BadRequest("The contract with the given id doesn't exist!");
+                // return Results.BadRequest("The contract with the given id doesn't exist!");
+                return Results.BadRequest(new { errors= "CONTRACT_NOT_FOUND" });
             }
             // return Results.CreatedAtRoute(GetContractEndpointName, new { id = contract.Id });
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
     }
 }

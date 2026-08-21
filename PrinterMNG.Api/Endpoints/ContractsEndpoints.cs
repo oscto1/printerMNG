@@ -186,10 +186,12 @@ public static class ContractsEndpoints
 
         // Readings by contract -----------------------------------------------------------
         // GET /contracts/1/readings
-        group.MapGet("/{id}/readings", async (int id, PrinterMNGContext dbContext) =>
+        group.MapGet("/{id}/readings", async (int id, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var readings = await dbContext.MonthlyReadings
-                                            .Where(reading => reading.ContractId == id)
+                                            .Where(reading => reading.ContractId == id && reading.Contract.Client.AdminId == userId)
                                             .OrderByDescending(reading => reading.Month)
                                             .Select(reading => new ReadingSummaryDto(
                                                 reading.Id,
@@ -209,66 +211,89 @@ public static class ContractsEndpoints
                                             .ToListAsync();
 
             return Results.Ok(readings);
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
 
         // DELETE /contracts/1/readings/1
-        group.MapDelete("{id}/readings/{idRead}", async (int id, int idRead, PrinterMNGContext dbContext) =>
+        group.MapDelete("{id}/readings/{idRead}", async (int id, int idRead, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var contract = await dbContext.Contracts
+                .Where(contract => contract.Id == id && contract.Client.AdminId == userId)
                 .Include(contract => contract.Printer)
-                .Where(contract => contract.Id == id)
                 .FirstOrDefaultAsync();
 
-            if(contract is not null && !contract.IsActive)
+            if (contract is null)
             {
-                return Results.BadRequest("The contract is not active!");
+                return Results.BadRequest(new { errors = "CONTRACT_NOT_FOUND" });
             }
 
-            MonthlyReading? lastReading = await dbContext.MonthlyReadings
-                                        .Where(reading => reading.ContractId == id)
-                                        .OrderByDescending(reading => reading.Month)
-                                        .AsNoTracking()
-                                        .FirstOrDefaultAsync();
-
-            if(lastReading is not null)
+            if (contract is not null && !contract.IsActive)
             {
-                if(lastReading.Id == idRead)
+                return Results.BadRequest(new { errors = "CONTRACT_NOT_ACTIVE" });
+            }
+
+            MonthlyReading? lastReading = null;
+
+            if(contract is not null)
+            {
+                lastReading = await dbContext.MonthlyReadings
+                                .Where(reading => reading.ContractId == contract.Id && reading.Contract.Client.AdminId == userId )
+                                .OrderByDescending(reading => reading.Month)
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync();
+
+                if (lastReading is not null && lastReading.Id == idRead)
                 {
-                    await dbContext.MonthlyReadings.Where(reading => reading.Id == idRead).ExecuteDeleteAsync();
-                }
-                else
-                {
-                    return Results.BadRequest("only can delete last reading!");
+                    Console.WriteLine("Somehow found a reading");
+                    if (lastReading.Id == idRead)
+                    {
+                        await dbContext.MonthlyReadings.Where(reading => reading.Id == idRead).ExecuteDeleteAsync();
+                    }
+                    else
+                    {
+                        // return Results.BadRequest("only can delete last reading!");
+                        return Results.BadRequest(new { errors = "ONLY_LAST_READING_CAN_BE_DELETED" });
+                    }
                 }
             }
-            
-
             return Results.NoContent();
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin)); ;
+
+
 
         // PUT contracts/1/readings/1
-        group.MapPut("/{id}/readings/{idReading}", async (int id, int idReading, UpdateReadingDto editedReading, PrinterMNGContext dbContext) =>
+        group.MapPut("/{id}/readings/{idReading}", async (int id, int idReading, UpdateReadingDto editedReading, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var contract = await dbContext.Contracts
                 .Include(contract => contract.Printer)
-                .Where(contract => contract.Id == id)
+                .Where(contract => contract.Id == id && contract.Client.AdminId == userId)
                 .FirstOrDefaultAsync();
+
+            if (contract is null)
+            {
+                return Results.BadRequest(new { errors = "CONTRACT_NOT_FOUND" });
+            }
 
             if(contract is not null)
             {
                 if(!contract.IsActive)
                 {
-                    return Results.BadRequest("The contract is not active!");
+                    return Results.BadRequest(new { errors = "CONTRACT_NOT_ACTIVE" });
                 }
                 
                 MonthlyReading? lastReading = await dbContext.MonthlyReadings
-                                            .Where(reading => reading.ContractId == id)
+                                            .Where(reading => reading.ContractId == contract.Id && reading.Contract.Client.AdminId == userId)
                                             .OrderByDescending(reading => reading.Month)
                                             .FirstOrDefaultAsync();
 
                 MonthlyReading? previousReading = await dbContext.MonthlyReadings
-                                                .Where(reading => reading.ContractId == id)
+                                                .Where(reading => reading.ContractId == contract.Id && reading.Contract.Client.AdminId == userId)
                                                 .OrderByDescending(reading => reading.Month)
                                                 .AsNoTracking()
                                                 .Skip(1)
@@ -290,17 +315,17 @@ public static class ContractsEndpoints
                     // TODO: Test editing when there's only one reading
                         if (newMonth <= previousReading?.Month)
                         {
-                            return Results.BadRequest("The date of the reading cannot be previous to the last one.");
+                            return Results.BadRequest(new { errors = "DATE_READING_INVALID" });
                         }
 
                         if (blackCounter < previousReading?.BlackCounter)
                         {
-                            return Results.BadRequest("Black counter cannot be lower than previous reading.");
+                            return Results.BadRequest(new { errors = "BLACK_COUNTER_READING_INVALID" });
                         }
 
                         if (colorCounter < previousReading?.ColorCounter)
                         {
-                            return Results.BadRequest("Color counter cannot be lower than previous reading.");
+                            return Results.BadRequest(new { errors = "COLOR_COUNTER_READING_INVALID" });
                         }
 
                         if(previousReading is not null) 
@@ -328,7 +353,7 @@ public static class ContractsEndpoints
                         lastReading.ColorCounter = colorCounter;
                         lastReading.BlackCharge = blackCharge;
                         lastReading.ColorCharge = colorCharge;
-                        lastReading.TotalCharge = totalCharge > contract.MinimumCharge ? totalCharge : contract.MinimumCharge;
+                        lastReading.TotalCharge = ((totalCharge > contract.MinimumCharge) || previousReading is null) ? totalCharge : contract.MinimumCharge;
                         lastReading.BlackCopiesUsed = blackCopiesUsed;
                         lastReading.ColorCopiesUsed = colorCopiesUsed;
                         lastReading.Notes = editedReading.Notes;
@@ -340,13 +365,20 @@ public static class ContractsEndpoints
                     }
                     else
                     {
-                        return Results.BadRequest("There was an error editing this reading!");
+                        return Results.BadRequest(new { errors = "COULD_NOT_UPDATE_READING_IN" });
                     }
                 }
             }
+            else
+            {
+                return Results.BadRequest(new { errors = "CONTRACT_NOT_FOUND" });
+            }
             
-            return Results.BadRequest("Couldn't edit the reading. Check the validity of the data");
+            // return Results.BadRequest("Couldn't edit the reading. Check the validity of the data");
+            return Results.BadRequest(new { errors = "COULD_NOT_UPDATE_READING" });
+            
   
-        });
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
     }
 }
