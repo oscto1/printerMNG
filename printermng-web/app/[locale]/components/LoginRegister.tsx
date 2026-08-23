@@ -99,8 +99,6 @@ export default function LoginRegister() {
 
             if (mode === 'login') { 
                 response = await login(credentials);
-                console.log(response);
-                // TODO: Store token in cookies
             } else { 
                 response = await register(credentials);
                 setSuccess("Account created successfully. You can now sign in.");

@@ -300,6 +300,7 @@ export async function editContract(contractId: number, contract: EditContract){
 export async function login(credentials: Credentials) {
     const response = await fetch(`${API_URL}/login`, {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
@@ -314,7 +315,6 @@ export async function login(credentials: Credentials) {
         throw new Error(JSON.stringify(errList));
     }
 
-    return response.json();
 }
 
 export async function register(credentials: Credentials){

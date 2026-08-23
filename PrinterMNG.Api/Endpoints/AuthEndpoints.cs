@@ -1,5 +1,3 @@
-
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Identity;
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Dtos.Auth;
@@ -49,7 +47,7 @@ public static class AuthEndpoints
             return Results.Ok();
         });
 
-        app.MapPost("/login", async (LoginUserDto userBody, UserManager<ApplicationUser> userManager, IOptions<JwtOptions> jwtOptions) =>
+        app.MapPost("/login", async (LoginUserDto userBody, UserManager<ApplicationUser> userManager, IOptions<JwtOptions> jwtOptions, HttpContext httpContext) =>
         {
             var user = await userManager.FindByNameAsync(userBody.Username);
 
@@ -84,7 +82,15 @@ public static class AuthEndpoints
 
             var accessToken = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Results.Ok(new { accessToken });
+            httpContext.Response.Cookies.Append("access_token", accessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite =  SameSiteMode.None,
+                Expires = DateTimeOffset.UtcNow.AddMinutes(jwtOptions.Value.ExpirationInMinutes)
+            });
+
+            return Results.Ok();
         }); 
     }
 }
