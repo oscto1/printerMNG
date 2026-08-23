@@ -1,3 +1,9 @@
+export const hasUppercase = /[A-Z]/;
+export const hasLowercase = /[a-z]/;
+export const hasNumber = /\d/;
+export const hasSpecial = /[^a-zA-Z0-9]/;
+export const usernameRegex = /^[a-zA-Z0-9_]{3,18}$/;
+
 export const MONTHS = [
             "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
             "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"

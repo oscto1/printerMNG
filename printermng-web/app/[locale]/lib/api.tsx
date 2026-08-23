@@ -13,6 +13,7 @@ import { Brand } from "../types/Printers/Brand";
 import { CreatePrinter } from "../types/Printers/CreatePrinter";
 import { PrinterDetails } from "../types/Printers/PrinterDetails";
 import { EditPrinter } from "../types/Printers/EditPrinter";
+import { Credentials } from "../types/Auth/Login";
 
 const API_URL = "http://localhost:5280"
 
@@ -74,9 +75,9 @@ export async function getPrinter(idPrinter: number): Promise<PrinterDetails>{
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 
     return response.json();
@@ -93,9 +94,9 @@ export async function editPrinter(printerId: number, printer: EditPrinter){
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 }
 
@@ -105,8 +106,9 @@ export async function deletePrinter(printerId: number){
     });
 
     if(!response.ok){
-        const errMessage = await getErrorMessage(response, getErrors);
-        throw new Error(errMessage);
+        const errList = await getErrorMessage(response, getErrors);
+
+        throw new Error(JSON.stringify(errList));
     }
 }
 
@@ -121,9 +123,9 @@ export async function createReading(newReading: CreateReading){
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 
 }
@@ -139,9 +141,9 @@ export async function editReading(contractId: number, readingId: number, reading
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 }   
 
@@ -151,8 +153,9 @@ export async function deleteReading(contractId: number, readingId: number){
     });
 
     if(!response.ok){
-        const errMessage = await getErrorMessage(response, getErrors);
-        throw new Error(errMessage);
+        const errList = await getErrorMessage(response, getErrors);
+
+        throw new Error(JSON.stringify(errList));
     }
 }
 
@@ -167,9 +170,9 @@ export async function createClient(newClient: CreateClient){
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 }
 
@@ -184,9 +187,9 @@ export async function editClient(clientId: number, editedClient: EditClient){
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 }
 
@@ -197,9 +200,9 @@ export async function deleteClient(clientId: number){
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 }
 
@@ -208,9 +211,9 @@ export async function getBrands(): Promise<Brand[]>{
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 
     return response.json();
@@ -221,9 +224,9 @@ export async function getPrinters(): Promise<PrinterSummary[]>{
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 
     return response.json();
@@ -240,9 +243,9 @@ export async function createPrinter(newPrinter: CreatePrinter){
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 }
 
@@ -257,9 +260,9 @@ export async function createContract(newContract: CreateContract){
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 }
 
@@ -270,9 +273,9 @@ export async function deleteContract(contractId: number){
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 }
 
@@ -287,33 +290,86 @@ export async function editContract(contractId: number, contract: EditContract){
 
     if(!response.ok)
     {
-        const errMessage = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response, getErrors);
 
-        throw new Error(errMessage);
+        throw new Error(JSON.stringify(errList));
     }
 }
 
-function getErrors(body: any) : string {
-    var errorString: string = "\n";
-    
-    if(body["errors"]){
-        console.log(body["errors"]);
-        if(typeof body["errors"] === 'object')
-        {
-            Object.values(body["errors"] as string[]).forEach((error: string) => {
-                errorString += "- " + error;
-                errorString += "\n";
-            });
 
-        }else{
-            errorString += body["errors"];
-        }
-    }else
+export async function login(credentials: Credentials) {
+    const response = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify(credentials)
+    });
+
+    if(!response.ok)
     {
-        errorString += "- " + body;
-    }    
+        const errList = await getErrorMessage(response, getErrors);
 
-    return errorString;
+        throw new Error(JSON.stringify(errList));
+    }
+
+    return response.json();
+}
+
+export async function register(credentials: Credentials){
+    const response = await fetch(`${API_URL}/register`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify(credentials)
+    });
+
+    if(!response.ok)
+    {
+        const clonedResponse = response.clone();
+        const errorCodes = await getErrorMessage(clonedResponse, getErrors);
+        throw new Error(JSON.stringify(errorCodes));
+    }
+}
+
+export type AppErrorCode =
+  // .NET Identity codes
+  | "DuplicateUserName"
+  | "DuplicateEmail"
+  | "InvalidEmail"
+  | "PasswordTooShort"
+  | "PasswordRequiresDigit"
+  | "PasswordRequiresUpper"
+  // Generic codes
+  | "SERVER_ERROR"       // HTML responses, 500 codes, etc.
+  | "EMPTY_RESPONSE"     // empty JSON
+  | "PARSE_ERROR"         // JSON parse failed
+  | "UNKNOWN_ERROR";     // Uncontrolled cases
+
+
+function getErrors(body: any) : AppErrorCode[] {
+    var errorList: AppErrorCode[] = [];
+
+    if(!body) return [];
+    
+    // .NET Identity
+    if(Array.isArray(body)){
+        return body.map(err => err?.code)
+                    .filter((code): code is AppErrorCode => !!code);
+    }
+
+    // Validation / Api errors
+    if (body["errors"]) {
+        const errorsPayload = body["errors"];
+        if (typeof errorsPayload === 'object' && !Array.isArray(errorsPayload)) {
+            return Object.keys(errorsPayload).map(field => `INVALID_${field.toUpperCase()}` as AppErrorCode);
+        }
+    }
+
+    return ["SERVER_ERROR"];
 }
 
 
@@ -321,37 +377,24 @@ function getErrors(body: any) : string {
  * Safely extracts the error message from a fetch Response object.
  * Handles valid JSON, empty bodies, plain text, and network failures.
  */
-async function getErrorMessage(response: Response, getErrorsHelper?: (body: any) => string): Promise<string> {
-  try {
-    const contentType = response.headers.get("content-type");
+async function getErrorMessage(response: Response, getErrorsHelper?: (body: any) => AppErrorCode[]): Promise<AppErrorCode[]> {
+    try{
+        const contentType = response.headers.get("content-type");
 
-    if (contentType && contentType.includes("application/json")) {
+        if (contentType && contentType.includes("application/json")) {
+            const rawText = await response.text();
+            if (!rawText.trim()) return ["EMPTY_RESPONSE"];
 
-      const rawText = await response.text();
-      if (!rawText.trim()) {
-        return `Server returned an empty JSON response (Status ${response.status})`;
-      }
+            const body = JSON.parse(rawText);
+            if (getErrorsHelper) return getErrorsHelper(body);
+            
+            return ["SERVER_ERROR"];
+        }
 
-      const body = JSON.parse(rawText);
-      
-      if (getErrorsHelper) {
-        return getErrorsHelper(body);
-      }
-      return body.message || body.error || JSON.stringify(body);
+        return ["SERVER_ERROR"];
+
+    }catch{
+        return ["PARSE_ERROR"];
     }
 
-    // Fallback for plain text or HTML error pages
-    const textFallback = await response.text();
-    if (textFallback.trim()) {
-      // Truncate text if it's a massive HTML crash page
-      return textFallback.length > 150 ? `${textFallback.substring(0, 150)}...` : textFallback;
-    }
-
-    // Last fallback if the body is completely empty - Like a not allowed method
-    return `Request failed with status ${response.status} (${response.statusText})`;
-    
-  } catch (parseError) {
-    // Catch block in case response.text() or JSON.parse fails unexpectedly
-    return `Failed to parse server response (Status ${response.status})`;
-  }
 }
