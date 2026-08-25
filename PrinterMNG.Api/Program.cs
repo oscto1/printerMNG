@@ -9,6 +9,7 @@ builder.AddPrinterMNGdb();
 builder.AddAuth();
 
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var frontendUrl = builder.Configuration["Cors:FrontendUrl"];
 
 builder.Services.AddCors(options =>
 {
@@ -16,7 +17,7 @@ builder.Services.AddCors(options =>
         name: myAllowSpecificOrigins,
         policy =>
         {
-           policy.WithOrigins("http://localhost:3000")
+           policy.WithOrigins(frontendUrl!)
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
                                 .AllowCredentials(); 
