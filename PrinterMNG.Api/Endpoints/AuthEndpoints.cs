@@ -42,6 +42,76 @@ public static class AuthEndpoints
                 return Results.BadRequest(addToRoleResult.Errors);
             }
 
+            //DEMO DATA
+            Client demoClient = new()
+            {
+                Document = "12345678",
+                Name = "John Doe",
+                Phone = "3123456789",
+                Location = "Bogota",
+                CreatedAt = DateTime.UtcNow,
+                AdminId = newUser.Id
+            };
+            dbContext.Clients.Add(demoClient);
+
+            Printer demoPrinter = new()
+            {
+                Model = "eStudio 3505AC",
+                BrandId = 1,
+                IsColorPrinter = true,
+                AdminId = newUser.Id
+            };
+            dbContext.Printers.Add(demoPrinter);
+
+            DateOnly startDate = DateOnly.FromDateTime(DateTime.UtcNow).AddMonths(-2);
+            
+            Contract demoContract = new()
+            {
+                IsActive = true,
+                Client = demoClient,
+                Printer = demoPrinter,
+                BlackCopyPrice = 100,
+                ColorCopyPrice = 250,
+                MinimumCharge = 500000,
+                StartDate = startDate,
+                BillDay = startDate.Day
+            };
+            dbContext.Contracts.Add(demoContract);
+
+            MonthlyReading demoReading1 = new()
+            {
+                Contract = demoContract,
+                Month = startDate,
+                BlackCounter = 3000,
+                ColorCounter = 1400,
+                BlackCopiesUsed = 0,
+                ColorCopiesUsed = 0,
+                BlackCharge = 0,
+                ColorCharge = 0,
+                TotalCharge = 0,
+                Notes = "",
+                CreatedAt = DateTime.UtcNow,
+            };
+            dbContext.MonthlyReadings.Add(demoReading1);
+
+            MonthlyReading demoReading2 = new()
+            {
+                Contract = demoContract,
+                Month = startDate.AddMonths(1),
+                BlackCounter = 6700,
+                ColorCounter = 2800,
+                BlackCopiesUsed = 3700,
+                ColorCopiesUsed = 1400,
+                BlackCharge = 370000,
+                ColorCharge = 350000,
+                TotalCharge = 720000,
+                Notes = "",
+                CreatedAt = DateTime.UtcNow,
+            };  
+            dbContext.MonthlyReadings.Add(demoReading2);
+
+            await dbContext.SaveChangesAsync();
+
             await transaction.CommitAsync();
 
             return Results.Ok();
