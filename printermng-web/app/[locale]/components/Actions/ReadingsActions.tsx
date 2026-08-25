@@ -5,7 +5,6 @@ import Modal from "../Modal";
 import { MONTHS, currentDate } from "@/app/[locale]/lib/utils";
 import { CreateReading } from "@/app/[locale]/types/Readings/CreateReading";
 import { createReading, CustomApiError } from "@/app/[locale]/lib/api";
-import { useRouter } from "next/navigation";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { useTranslations } from "next-intl";
 
@@ -24,16 +23,17 @@ export default function ReadingsActions({contractId, contractIsActive}: {contrac
     // const router = useRouter();
 
     const t = useTranslations();
-
     const handleSave = async (reading: CreateReading) => {
         try{
             await createReading(reading);
             setOpenCreateReading(false);
             
             window.location.reload();
-        }catch(err)
-        {
+        }catch(err){
             showError(err);
+            if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
+                window.location.reload();
+            }
         }
     }
 

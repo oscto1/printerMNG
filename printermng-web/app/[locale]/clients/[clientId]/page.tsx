@@ -74,7 +74,9 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
         if(err instanceof CustomApiError){
             if(err.data.includes("UNAUTHORIZED" as AppErrorCode)){
                 redirect("/auth/login");
-            }   
+            }else if(err.data.includes("NOT_FOUND" as AppErrorCode)){
+                redirect("/clients");
+            }  
         }else{
             return(t("SERVER_ERROR"));
         }

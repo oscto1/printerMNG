@@ -6,6 +6,7 @@ import { Credentials } from "../types/Auth/Login";
 import { usernameRegex, hasUppercase, hasLowercase, hasNumber, hasSpecial } from "../lib/utils";
 // import Router from "next/router";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 
 type Mode = "login" | "register";
@@ -25,6 +26,8 @@ export default function LoginRegister() {
 
     const router = useRouter();
 
+    const t = useTranslations("login");
+
     const switchMode = (newMode: Mode) => {
         setMode(newMode);
         setError([]);
@@ -33,14 +36,6 @@ export default function LoginRegister() {
         setConfirmPassword("");
     };
 
-    const handleUpdateErrorAtIndex = (targetIndex: number, newValue: string) => {
-        setError(prevErrors => 
-            prevErrors.map((item, index) => 
-            index === targetIndex ? newValue : item
-            )
-        );
-     };
-
     const verifyRegisterCreds = ( username: string, password: string, confirmPassword: string ) : boolean => {
 
         if(!isRegister) return true;
@@ -48,31 +43,31 @@ export default function LoginRegister() {
         const newErrors = ["", "", "", "", "", "", ""];
 
         if (!usernameRegex.test(username)) {
-            newErrors[0] = "Username must be 3–18 characters and can only contain letters, numbers, and underscores.";
+            newErrors[0] = t("errors.INVALID_USERNAME_FORMAT");
         }
 
         if ((password !== "" && password.length < 6) || password.length > 128) {
-            newErrors[1] = "Password must have between 6 - 128 characters.";
+            newErrors[1] = t("errors.INVALID_PASS_CHAR_COUNT");
         }
 
         if (password !== "" && !hasUppercase.test(password)) {
-            newErrors[2] = "Password must have one uppercase letter";
+            newErrors[2] = t("errors.PASS_MISSING_UPPER");
         }
 
         if (password !== "" && !hasLowercase.test(password)) {
-            newErrors[3] = "Password must have one lowercase letter";
+            newErrors[3] = t("errors.PASS_MISSING_LOWER");
         }
 
         if (password !== "" && !hasNumber.test(password)) {
-            newErrors[4] = "Password must have one number";
+            newErrors[4] = t("errors.PASS_MISSING_NUMBER");
         }
 
         if (password !== "" && !hasSpecial.test(password)) {
-            newErrors[5] = "Password must have one special character";
+            newErrors[5] = t("errors.PASS_MISSING_SPECIAL");
         }
 
         if ((password !== "" || confirmPassword !== "") && password !== confirmPassword) {
-            newErrors[6] = "Passwords do not match.";
+            newErrors[6] = t("errors.PASS_DONT_MATCH");
         }
 
         setError(newErrors);
@@ -89,7 +84,6 @@ export default function LoginRegister() {
     const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        // setError("");
         setSuccess("");
 
         if (isRegister && !verifyRegisterCreds(username, password, confirmPassword)) return;
@@ -136,13 +130,15 @@ export default function LoginRegister() {
 
             {/* Logo / title */}
             <div className="text-center mb-6">
-                <h1 className="text-3xl font-bold text-gray-700">
+                <h1 className="text-3xl font-bold text-gray-700 font-bold">
                     PrinterMNG
                 </h1>
 
-                <p className="mt-2 text-sm text-gray-500">
-                    Printer rental and client management
+                <p className="mt-2 text-sm text-gray-500 mb-2 font-bold">
+                    {t("description")}
                 </p>
+
+                <span className="text-sm">{t("techLabel")}</span>
             </div>
 
             {/* Auth card */}
@@ -159,7 +155,7 @@ export default function LoginRegister() {
                                 : "text-gray-600 hover:text-gray-800"
                         }`}
                     >
-                        Sign in
+                        {t("signIn")}
                     </button>
 
                     <button
@@ -171,23 +167,10 @@ export default function LoginRegister() {
                                 : "text-gray-600 hover:text-gray-800"
                         }`}
                     >
-                        Create account
+                        {t("createAcc")}
                     </button>
                 </div>
 
-                <div className="mb-6">
-                    <h2 className="text-xl font-bold text-gray-700">
-                        {isRegister
-                            ? "Create your account"
-                            : "Welcome back"}
-                    </h2>
-
-                    <p className="mt-1 text-sm text-gray-500">
-                        {isRegister
-                            ? "Create an account to manage your business data."
-                            : "Sign in to manage your printers and clients."}
-                    </p>
-                </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -197,7 +180,7 @@ export default function LoginRegister() {
                             htmlFor="username"
                             className="mb-1.5 block text-sm font-semibold text-gray-700"
                         >
-                            Username
+                            {t("username")}
                         </label>
 
                         <input
@@ -208,7 +191,7 @@ export default function LoginRegister() {
                             required
                             autoComplete="username"
                             className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-gray-700 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-300"
-                            placeholder="Enter your username"
+                            placeholder={t("enterUsername")}
                         />
                     </div>
 
@@ -218,7 +201,7 @@ export default function LoginRegister() {
                             htmlFor="password"
                             className="mb-1.5 block text-sm font-semibold text-gray-700"
                         >
-                            Password
+                            {t("password")}
                         </label>
 
                         <input
@@ -234,7 +217,7 @@ export default function LoginRegister() {
                                     : "current-password"
                             }
                             className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-gray-700 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-300"
-                            placeholder="Enter your password"
+                            placeholder={t("enterPassword")}
                         />
                     </div>
 
@@ -245,7 +228,7 @@ export default function LoginRegister() {
                                 htmlFor="confirmPassword"
                                 className="mb-1.5 block text-sm font-semibold text-gray-700"
                             >
-                                Confirm password
+                                {t("confirmPass")}
                             </label>
 
                             <input
@@ -256,7 +239,7 @@ export default function LoginRegister() {
                                 required
                                 autoComplete="new-password"
                                 className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-gray-700 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-300"
-                                placeholder="Confirm your password"
+                                placeholder={t("enterConfPassword")}
                             />
                         </div>
                     )}
@@ -288,29 +271,11 @@ export default function LoginRegister() {
                         {isLoading
                             ? "Please wait..."
                             : isRegister
-                                ? "Create account"
-                                : "Sign in"}
+                                ? t("createAcc")
+                                : t("signIn")}
                     </button>
                 </form>
 
-                {/* Bottom switch */}
-                <p className="mt-6 text-center text-sm text-gray-500">
-                    {isRegister
-                        ? "Already have an account?"
-                        : "Don't have an account?"}{" "}
-
-                    <button
-                        type="button"
-                        onClick={() =>
-                            switchMode(
-                                isRegister ? "login" : "register"
-                            )
-                        }
-                        className="font-semibold text-gray-700 hover:underline"
-                    >
-                        {isRegister ? "Sign in" : "Create one"}
-                    </button>
-                </p>
             </div>
         </div>
 

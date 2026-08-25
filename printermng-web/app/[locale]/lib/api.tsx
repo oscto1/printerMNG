@@ -314,23 +314,60 @@ export async function register(credentials: Credentials){
     }
 }
 
-export type AppErrorCode =
-  // .NET Identity codes
-  | "DuplicateUserName"
-  | "DuplicateEmail"
-  | "InvalidEmail"
-  | "PasswordTooShort"
-  | "PasswordRequiresDigit"
-  | "PasswordRequiresUpper"
-  // Generic codes
-  | "UNAUTHORIZED"
-  | "SERVER_ERROR"       // HTML responses, 500 codes, etc.
-  | "EMPTY_RESPONSE"     // empty JSON
-  | "PARSE_ERROR"         // JSON parse failed
-  | "UNKNOWN_ERROR"
-  // Validation Errors
-  ;     // Uncontrolled cases
+export const APP_ERROR_CODES = [
+    // .NET Identity codes
+    "DuplicateUserName",
+    "DuplicateEmail",
+    "InvalidEmail",
+    "PasswordTooShort",
+    "PasswordRequiresDigit",
+    "PasswordRequiresUpper",
+    // Generic codes
+    "UNAUTHORIZED",
+    "NOT_FOUND",
+    "SERVER_ERROR",
+    "EMPTY_RESPONSE",
+    "PARSE_ERROR",
+    "UNKNOWN_ERROR",
+    // Validation Errors
+    "INVALID_PRINTER_ID",
+    "INVALID_BRANDID",
+    "INVALID_MODELNAME",
+    "UPDATE_PRINTER_HAS_CONTRACTS",
+    "DELETE_PRINTER_HAS_CONTRACTS",
+    "INVALID_CLIENT_DOCUMENT",
+    "INVALID_CLIENT_NAME",
+    "INVALID_CLIENT_PHONE",
+    "INVALID_CLIENT_LOCATION",
+    "DELETE_CLIENT_HAS_CONTRACTS",
+    "INVALID_PRINTER_ID",
+    "INVALID_B_COPY_PRICE",
+    "INVALID_C_COPY_PRICE",
+    "INVALID_MINIMUM_CHARGE",
+    "CLIENT_NOT_FOUND",
+    "PRINTER_NOT_FOUND",
+    "CONTRACT_NOT_FOUND",
+    "CONTRACT_NOT_ACTIVE",
+    "ONLY_LAST_READING_CAN_BE_DELETED",
+    "DATE_READING_INVALID",
+    "BLACK_COUNTER_READING_INVALID",
+    "COLOR_COUNTER_READING_INVALID",
+    "COULD_NOT_UPDATE_READING_IN",
+    "COULD_NOT_UPDATE_READING",
+    "INVALID_MONTH_FORMAT",
+    "INVALID_BLACK_COUNTER",
+    "INVALID_COLOR_COUNTER",
+    "INVALID_NOTES"
+] as const;
 
+export type AppErrorCode = typeof APP_ERROR_CODES[number];
+
+export function isAppErrorCode(value: unknown): value is AppErrorCode {
+  return (
+    typeof value === "string" &&
+    APP_ERROR_CODES.includes(value as AppErrorCode)
+  );
+}
 
 function getErrors(body: any) : AppErrorCode[] {
     var errorList: AppErrorCode[] = [];
@@ -347,7 +384,19 @@ function getErrors(body: any) : AppErrorCode[] {
     if (body["errors"]) {
         const errorsPayload = body["errors"];
         if (typeof errorsPayload === 'object' && !Array.isArray(errorsPayload)) {
-            return Object.keys(errorsPayload).map(field => `INVALID_${field.toUpperCase()}` as AppErrorCode);
+    
+            // return Object.keys(errorsPayload).map(field => `INVALID_${field.toUpperCase()}` as AppErrorCode);
+            var finalList : AppErrorCode[] = []; 
+            for(const [key, value] of Object.entries(errorsPayload)){
+                if(Array.isArray(value) && isAppErrorCode(value[0])){
+                    finalList.push(value[0]);
+                }else if(typeof value === 'string' && isAppErrorCode(value)){
+                    finalList.push(value);
+                }else{
+                    console.log(key +" : " + value);
+                }
+            }
+            if(finalList.length > 0) return finalList;
         }
 
         if(typeof errorsPayload === 'string'){
@@ -369,6 +418,10 @@ export async function getErrorMessage(response: Response): Promise<AppErrorCode[
 
         if(response.status === 401){
             return ["UNAUTHORIZED"]
+        }
+
+        if(response.status === 404){
+            return ["NOT_FOUND"]
         }
 
         if (contentType && contentType.includes("application/json")) {

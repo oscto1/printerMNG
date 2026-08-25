@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Modal from "../../Modal";
 import { useError } from "@/app/[locale]/context/ErrorContext";
-import { deleteClient } from "@/app/[locale]/lib/api";
+import { CustomApiError, deleteClient } from "@/app/[locale]/lib/api";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
@@ -22,6 +22,9 @@ export default function DeleteClientAction({clientId}:{clientId: number}){
             router.push("/clients");
         }catch(err){
             showError(err);
+            if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
+                router.refresh();
+            }
         }
     }
 

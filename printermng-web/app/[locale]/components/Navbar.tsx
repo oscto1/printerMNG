@@ -7,7 +7,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 
 
-export default function Navbar() {
+export default function Navbar({tabs=true,}: {tabs?: boolean}) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
@@ -51,15 +51,18 @@ export default function Navbar() {
           </div>
 
           {/* Desktop navigation on the middle */}
-          <div className="hidden items-center gap-1.5 md:flex">
-            <Link  href="/printers" className={navLinkClasses("/printers") + " text-gray-700"}>
-              {t("common.printers")}
-            </Link>
+          {(tabs) ? 
+                <div className="hidden items-center gap-1.5 md:flex">
+                  <Link  href="/printers" className={navLinkClasses("/printers") + " text-gray-700"}>
+                    {t("common.printers")}
+                  </Link>
 
-            <Link href="/clients" className={navLinkClasses("/clients") + " text-gray-700"}>
-              {t("common.clients")}
-            </Link>
-          </div>
+                  <Link href="/clients" className={navLinkClasses("/clients") + " text-gray-700"}>
+                    {t("common.clients")}
+                  </Link>
+                </div> 
+            : ""}
+          
 
           {/* Language change in the right */}
           <div className="relative">

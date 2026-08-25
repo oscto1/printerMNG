@@ -52,7 +52,7 @@ export default function PrintersPage(){
         return(
             <main className="w-full mx-auto px-4 py-8 space-y-6">
                 <Navbar></Navbar>
-                <PageContext url={url} title={t("title")} description={t("description")}></PageContext>
+                <PageContext url={url} title={t("printers.title")} description={t("printers.description")}></PageContext>
 
                 <CreatePrinterAction brands={brandList}></CreatePrinterAction>
                 <PrintersTable printers={printerList}></PrintersTable>

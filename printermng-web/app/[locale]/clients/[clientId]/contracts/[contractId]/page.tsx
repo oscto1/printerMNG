@@ -74,11 +74,15 @@ export default async function ContractPage({params, }: { params: Promise<{client
             </main>
         );
     }catch(err){
-        if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED" as AppErrorCode)){
-            redirect("/auth/login");
+        if(err instanceof CustomApiError){
+            if(err.data.includes("UNAUTHORIZED" as AppErrorCode)){
+                redirect("/auth/login");
+            }else if(err.data.includes("NOT_FOUND" as AppErrorCode)){
+                redirect("/clients");
+            }
         }else{
             //
-            return(t("SERVER_ERROR"));
+            return(t("errors.SERVER_ERROR"));
         }
     }
     

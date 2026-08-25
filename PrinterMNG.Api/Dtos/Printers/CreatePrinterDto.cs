@@ -2,11 +2,11 @@
 namespace PrinterMNG.Api.Dtos.Printers;
 public record CreatePrinterDto
 (
-    [Required][Range(1,20)]
+    [Required(ErrorMessage = "INVALID_BRANDID")][Range(1,10000, ErrorMessage = "INVALID_BRANDID")]
     int BrandId,
 
-    [Required][StringLength(50, MinimumLength = 3)]
-    [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "Model contains invalid characters.")] 
+    [Required(ErrorMessage = "INVALID_MODELNAME")][StringLength(50, MinimumLength = 3, ErrorMessage = "INVALID_MODELNAME")]
+    [RegularExpression(@"^[a-zA-Z0-9\s\-]+$", ErrorMessage = "INVALID_MODELNAME")] 
     string ModelName,
 
     bool IsColorPrinter

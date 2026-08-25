@@ -2,7 +2,7 @@
 import type { CreateClient } from "@/app/[locale]/types/Clients/CreateClient";
 import { useState } from "react"
 import Modal from "../../Modal";
-import { editClient } from "@/app/[locale]/lib/api";
+import { CustomApiError, editClient } from "@/app/[locale]/lib/api";
 import { useRouter } from "next/navigation";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { EditClient } from "@/app/[locale]/types/Clients/EditClient";
@@ -22,10 +22,11 @@ export default function EditClientAction({clientId, currentClientData}: {clientI
             await editClient(clientId, client);
             setOpenEditClient(false);
             router.refresh();
-        }
-        catch(err){
-            console.log(err);
+        }catch(err){
             showError(err);
+            if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
+                router.refresh();
+            }
         }
     }
 

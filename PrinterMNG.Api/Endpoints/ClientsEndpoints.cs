@@ -112,7 +112,7 @@ public static class ClientsEndpoints
 
             if(hasContracts)
             {
-                return Results.Conflict("Can't delete client because it has some contracts!");
+                return Results.Conflict(new {errors = "DELETE_CLIENT_HAS_CONTRACTS"});
             }
 
             await dbContext.Clients.Where(client => client.Id == id).ExecuteDeleteAsync();

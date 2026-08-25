@@ -5,7 +5,7 @@ import Modal from "../../Modal";
 import { Brand } from "@/app/[locale]/types/Printers/Brand";
 import { EditPrinter } from "@/app/[locale]/types/Printers/EditPrinter";
 import { PrinterDetails } from "@/app/[locale]/types/Printers/PrinterDetails";
-import { editPrinter } from "@/app/[locale]/lib/api";
+import { CustomApiError, editPrinter } from "@/app/[locale]/lib/api";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -27,6 +27,9 @@ export default function EditPrinterAction({currentPrinter, brands}: {currentPrin
             router.refresh();
         }catch(err){
             showError(err);
+            if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
+                router.refresh();
+            }
         }
     }
 

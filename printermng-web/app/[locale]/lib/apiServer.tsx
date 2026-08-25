@@ -57,7 +57,7 @@ export async function getPrinter(idPrinter: number): Promise<PrinterDetails>{
     {
         const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to fetch printer.");
     }
 
     return response.json();
@@ -70,8 +70,8 @@ export async function getContract(idClient: number, idContract: number): Promise
 
     if(!contractResponse.ok)
     {
-        const errList = await getErrorMessage(readingsResponse);
-
+        const errList = await getErrorMessage(contractResponse);
+        
         throw new CustomApiError(errList, "Failed to fetch contract details.");
     }
 

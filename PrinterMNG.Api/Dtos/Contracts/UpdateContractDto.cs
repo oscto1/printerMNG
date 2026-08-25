@@ -6,23 +6,23 @@ public record UpdateContractDto(
     [Required][Range(1,10000)]
     int ClientId,
     
-    [Required][Range(1,10000, ErrorMessage = "Select a valid printer.")]
+    [Required(ErrorMessage = "INVALID_PRINTER_ID")][Range(1,10000, ErrorMessage = "INVALID_PRINTER_ID")]
     int PrinterId,
 
-    [StringLength(80, MinimumLength = 3)]
-    [RegularExpression(@"^[A-Za-zÀ-ÿ\s]+$", ErrorMessage = "Path contains invalid characters.")]
+    [StringLength(80, MinimumLength = 3, ErrorMessage = "INVALID_PDF_PATH")]
+    [RegularExpression(@"^[A-Za-zÀ-ÿ\s]+$", ErrorMessage = "INVALID_PDF_PATH")]
     string? PDFPath,
 
     [Required]
     bool IsActive,
 
-    [Required][Range(0,10000)]
+    [Required(ErrorMessage = "INVALID_B_COPY_PRICE")][Range(0,10000, ErrorMessage = "INVALID_B_COPY_PRICE")]
     decimal BlackCopyPrice,
 
-    [Range(0,10000)]
+    [Range(0,10000, ErrorMessage = "INVALID_C_COPY_PRICE")]
     decimal ColorCopyPrice,
 
-    [Required][Range(0,10000000)]
+    [Required(ErrorMessage = "INVALID_MINIMUM_CHARGE")][Range(0,10000000, ErrorMessage = "INVALID_MINIMUM_CHARGE")]
     decimal MinimumCharge,
 
     [Required]

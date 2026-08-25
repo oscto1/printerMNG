@@ -2,7 +2,7 @@
 import type { CreateClient } from "@/app/[locale]/types/Clients/CreateClient";
 import { useState } from "react"
 import Modal from "../../Modal";
-import { createClient } from "@/app/[locale]/lib/api";
+import { createClient, CustomApiError } from "@/app/[locale]/lib/api";
 import { useRouter } from "next/navigation";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { useTranslations } from "next-intl";
@@ -13,8 +13,9 @@ export default function CreateClientAction(){
 
     
     const { showError } = useError();
-
+    const t = useTranslations();
     const router = useRouter();
+
     const handleCreateClient = async (client: CreateClient) => {
         try{
             await createClient(client);
@@ -22,12 +23,12 @@ export default function CreateClientAction(){
             router.refresh();
         }
         catch(err){
-            console.log(err);
             showError(err);
+            if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
+                router.refresh();
+            }
         }
     }
-
-    const t = useTranslations();
 
     return(
         <>

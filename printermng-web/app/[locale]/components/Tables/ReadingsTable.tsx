@@ -7,7 +7,7 @@ import Image from "next/image";
 import { MONTHS } from "../../lib/utils";
 import { EditReading } from "@/app/[locale]/types/Readings/EditReading";
 import Modal from "../Modal";
-import { deleteReading, editReading } from "@/app/[locale]/lib/api";
+import { CustomApiError, deleteReading, editReading } from "@/app/[locale]/lib/api";
 import { useRouter } from "next/navigation";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { removeDay } from "../../lib/utils";
@@ -43,9 +43,10 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
             router.refresh();
         }catch(err){
             showError(err);
+            if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
+                router.refresh();
+            }
         }
-
-        console.log(editedReading);
     }
 
     const handleClickDelete = (readingId: number) => {
@@ -58,10 +59,12 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
             await deleteReading(contract.id, readingToDelete);
             setOpenDeleteModal(false);
             router.refresh();
-        }catch(err)
-        {
+        }catch(err){
             showError(err);
-        } 
+            if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
+                router.refresh();
+            }
+        }
     }
 
     return(
@@ -214,8 +217,7 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
                             }
                         </tbody>
             </table>
-        </>
-        
+        </>     
     )
     
 }

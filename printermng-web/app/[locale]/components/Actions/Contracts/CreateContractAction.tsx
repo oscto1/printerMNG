@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Modal from "../../Modal";
 import type { CreateContract } from "@/app/[locale]/types/Contracts/CreateContract";
-import { getPrinters } from "@/app/[locale]/lib/api";
+import { CustomApiError, getPrinters } from "@/app/[locale]/lib/api";
 import { PrinterSummary } from "@/app/[locale]/types/Printers/PrinterSummary";
 import { createContract } from "@/app/[locale]/lib/api";
 import { useError } from "@/app/[locale]/context/ErrorContext";
@@ -30,9 +30,12 @@ export default function CreateContract({clientId} : {clientId: number}){
                 const printers = await getPrinters();
                 setPrinterList(printers);
 
-            } catch (err) {
-                showError(err);
+            }catch(err){
+            showError(err);
+            if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
+                router.refresh();
             }
+        }
         };
 
         handleGetPrinters();

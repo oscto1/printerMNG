@@ -45,9 +45,12 @@ export default async function PrinterPage({params}: {params: Promise<{printerId:
         if(err instanceof CustomApiError){
             if(err.data.includes("UNAUTHORIZED" as AppErrorCode)){
                 redirect("/auth/login");
+            }else if(err.data.includes("NOT_FOUND" as AppErrorCode)){
+                redirect("/printers");
             }
-        }else{
-            return(t("SERVER_ERROR"));
+        }
+        else{
+            return(t("errors.SERVER_ERROR"));
         }
     }
 

@@ -2,7 +2,7 @@
 import type { CreateClient } from "@/app/[locale]/types/Clients/CreateClient";
 import { useState, useEffect } from "react"
 import Modal from "../../Modal";
-import { editContract } from "@/app/[locale]/lib/api";
+import { CustomApiError, editContract } from "@/app/[locale]/lib/api";
 import { useRouter } from "next/navigation";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { EditContract } from "@/app/[locale]/types/Contracts/EditContract";
@@ -29,10 +29,11 @@ export default function EditContractAction({contractId, currentContractData}: {c
             await editContract(contractId, contract);
             setOpenEditContract(false);
             router.refresh();
-        }
-        catch(err){
-            console.log(err);
+        }catch(err){
             showError(err);
+            if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
+                router.refresh();
+            }
         }
     }
 

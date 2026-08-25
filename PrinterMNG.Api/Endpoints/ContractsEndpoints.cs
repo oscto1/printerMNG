@@ -247,7 +247,6 @@ public static class ContractsEndpoints
 
                 if (lastReading is not null && lastReading.Id == idRead)
                 {
-                    Console.WriteLine("Somehow found a reading");
                     if (lastReading.Id == idRead)
                     {
                         await dbContext.MonthlyReadings.Where(reading => reading.Id == idRead).ExecuteDeleteAsync();
