@@ -1,4 +1,5 @@
-import { getContract } from "@/app/[locale]/lib/api";
+import { AppErrorCode, CustomApiError } from "@/app/[locale]/lib/api";
+import { getContract } from "@/app/[locale]/lib/apiServer";
 import { formatMoney } from "@/app/[locale]/lib/utils";
 import ReadingsTable from "@/app/[locale]/components/Tables/ReadingsTable";
 import ReadingsActions from "@/app/[locale]/components/Actions/ReadingsActions";
@@ -8,15 +9,16 @@ import DeleteContractAction from "@/app/[locale]/components/Actions/Contracts/De
 import EditContractAction from "@/app/[locale]/components/Actions/Contracts/EditContractAction";
 import Navbar from "@/app/[locale]/components/Navbar";
 import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
 
 export default async function ContractPage({params, }: { params: Promise<{clientId: number, contractId: number}>})
 {
-    const { clientId, contractId } = await params;
-
-    
+    const t = await getTranslations();
     try{
+
+        const { clientId, contractId } = await params;
         const { contract, readings } = await getContract(clientId, contractId);
-        const t = await getTranslations();
+        
 
         const url : UrlItem[] = [
             {label: t("common.clients"), value: "/clients"},
@@ -71,9 +73,13 @@ export default async function ContractPage({params, }: { params: Promise<{client
                 <ReadingsTable contract={contract} readings={readings}></ReadingsTable>
             </main>
         );
-    }catch(err)
-    {   console.log(err);
-        return <main>ERROR!</main>
+    }catch(err){
+        if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED" as AppErrorCode)){
+            redirect("/auth/login");
+        }else{
+            //
+            return(t("SERVER_ERROR"));
+        }
     }
     
 }

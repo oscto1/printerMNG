@@ -4,6 +4,8 @@ import { SubmitEvent, useState, useEffect } from "react";
 import { login, register } from "../lib/api";
 import { Credentials } from "../types/Auth/Login";
 import { usernameRegex, hasUppercase, hasLowercase, hasNumber, hasSpecial } from "../lib/utils";
+// import Router from "next/router";
+import { useRouter } from "next/navigation";
 
 
 type Mode = "login" | "register";
@@ -21,6 +23,7 @@ export default function LoginRegister() {
 
     const isRegister = mode === "register";
 
+    const router = useRouter();
 
     const switchMode = (newMode: Mode) => {
         setMode(newMode);
@@ -99,6 +102,7 @@ export default function LoginRegister() {
 
             if (mode === 'login') { 
                 response = await login(credentials);
+                router.push("/clients")
             } else { 
                 response = await register(credentials);
                 setSuccess("Account created successfully. You can now sign in.");

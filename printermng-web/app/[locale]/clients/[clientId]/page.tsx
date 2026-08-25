@@ -1,4 +1,4 @@
-import { getClient } from "@/app/[locale]/lib/api";
+import { getClient } from "@/app/[locale]/lib/apiServer";
 import ClientsContractsTable from "@/app/[locale]/components/Tables/ClientsContractsTable";
 import CreateContractAction from "@/app/[locale]/components/Actions/Contracts/CreateContractAction";
 import PageContext, { UrlItem } from "@/app/[locale]/components/PageContext";
@@ -7,14 +7,14 @@ import EditClientAction from "@/app/[locale]/components/Actions/Clients/EditClie
 import DeleteClientAction from "@/app/[locale]/components/Actions/Clients/DeleteClientAction";
 import Navbar from "@/app/[locale]/components/Navbar";
 import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
+import { AppErrorCode, CustomApiError } from "../../lib/api";
 
 export default async function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
 {
-    const { clientId } = await params;
-
-
+    const t = await getTranslations();
     try{
-        const t = await getTranslations();
+        const { clientId } = await params;
 
         const { client, contracts } = await getClient(clientId);
 
@@ -70,10 +70,14 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
 
             </main>
         );
-    }catch(err)
-    {
-        console.log("ERROR: " + err);
-        return <main>Failed to get data!</main>
+    }catch(err){
+        if(err instanceof CustomApiError){
+            if(err.data.includes("UNAUTHORIZED" as AppErrorCode)){
+                redirect("/auth/login");
+            }   
+        }else{
+            return(t("SERVER_ERROR"));
+        }
     }
     
     

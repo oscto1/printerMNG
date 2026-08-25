@@ -4,7 +4,7 @@ import { useState } from "react";
 import Modal from "../Modal";
 import { MONTHS, currentDate } from "@/app/[locale]/lib/utils";
 import { CreateReading } from "@/app/[locale]/types/Readings/CreateReading";
-import { createReading } from "@/app/[locale]/lib/api";
+import { createReading, CustomApiError } from "@/app/[locale]/lib/api";
 import { useRouter } from "next/navigation";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { useTranslations } from "next-intl";
@@ -21,7 +21,7 @@ export default function ReadingsActions({contractId, contractIsActive}: {contrac
 
     const [newReading, setNewReading] = useState({ contractId: contractId, month: currentDate(), blackCounter: 0, colorCounter: 0, notes: "" } as CreateReading);
 
-    const router = useRouter();
+    // const router = useRouter();
 
     const t = useTranslations();
 

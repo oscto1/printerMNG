@@ -17,7 +17,7 @@ public class PrinterMNGContext(DbContextOptions<PrinterMNGContext> options) : Id
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Client>()   
+        modelBuilder.Entity<Client>()
             .HasOne(c => c.Admin)
             .WithMany()
             .HasForeignKey(c => c.AdminId)

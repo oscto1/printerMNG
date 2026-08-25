@@ -101,6 +101,16 @@ public static class DataExtensions
 
                     ClockSkew = TimeSpan.FromMinutes(1)
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["access_token"];
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         builder.Services.AddAuthorization();

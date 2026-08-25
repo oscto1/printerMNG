@@ -1,22 +1,22 @@
 
 import PageContext from "@/app/[locale]/components/PageContext";
 import { UrlItem } from "@/app/[locale]/components/PageContext";
-import { getPrinter, getBrands } from "@/app/[locale]/lib/api";
+import { AppErrorCode, CustomApiError, getBrands } from "@/app/[locale]/lib/api";
+import { getPrinter } from "../../lib/apiServer";
 import { PrinterDetails } from "@/app/[locale]/types/Printers/PrinterDetails";
 import Header from "@/app/[locale]/components/Header";
 import EditPrinterAction from "@/app/[locale]/components/Actions/Printers/EditPrinterAction";
 import DeletePrinterAction from "@/app/[locale]/components/Actions/Printers/DeletePrinterAction";
 import Navbar from "@/app/[locale]/components/Navbar";
 import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
 
 export default async function PrinterPage({params}: {params: Promise<{printerId: number}>}){
-    
+    const t = await getTranslations();
     try{
         const { printerId } = await params;
 
         const printer : PrinterDetails = await getPrinter(printerId);
-
-        const t = await getTranslations();
 
         const brands = await getBrands();
 
@@ -42,8 +42,13 @@ export default async function PrinterPage({params}: {params: Promise<{printerId:
             </main>
         )
     }catch(err){
-        console.log(err);
-        //REDIRECT
+        if(err instanceof CustomApiError){
+            if(err.data.includes("UNAUTHORIZED" as AppErrorCode)){
+                redirect("/auth/login");
+            }
+        }else{
+            return(t("SERVER_ERROR"));
+        }
     }
 
     

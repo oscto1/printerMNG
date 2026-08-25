@@ -1,5 +1,3 @@
-import { ClientDetails } from "../types/Clients/ClientDetails";
-import { ContractDetails } from "../types/Contracts/ContractDetails";
 import { ContractSummary } from "../types/Contracts/ContractSummary";
 import { CreateReading } from "../types/Readings/CreateReading";
 import { ReadingSummary } from "../types/Readings/ReadingSummary";
@@ -11,110 +9,77 @@ import { EditContract } from "../types/Contracts/EditContract";
 import { EditReading } from "../types/Readings/EditReading";
 import { Brand } from "../types/Printers/Brand";
 import { CreatePrinter } from "../types/Printers/CreatePrinter";
-import { PrinterDetails } from "../types/Printers/PrinterDetails";
 import { EditPrinter } from "../types/Printers/EditPrinter";
 import { Credentials } from "../types/Auth/Login";
 
-const API_URL = "http://localhost:5280"
-
-export async function getClients() {
-    const response = await fetch(`${API_URL}/clients`);
-
-    if(!response.ok){
-        throw new Error("Failed to fetch clients.");
-    }
-
-    return response.json();
-}
-
-export async function getClient(id: string): Promise<{client: ClientDetails; contracts: ContractDetails[];}>{
-    const clientResponse = await fetch(`${API_URL}/clients/${id}`);
-    const contractsResponse = await fetch(`${API_URL}/clients/${id}/contracts`);
-
-    if (!clientResponse.ok) {
-        throw new Error(`Failed to fetch client ${id}.`);
-    }
-
-    if (!contractsResponse.ok) {
-        throw new Error(`Failed to fetch contracts for client ${id}.`);
-    }
+export const API_URL = "http://localhost:5280"
 
 
-    const clientData = await clientResponse.json();
-    const contractsList = await contractsResponse.json();
 
-    return {
-            client : clientData,
-            contracts: contractsList,
-            };
-}
+// export async function getContract(idClient: number, idContract: number): Promise<{contract: ContractSummary; readings: ReadingSummary[];}>{
+//     const contractResponse = await fetch(`${API_URL}/contracts/${idContract}`, { credentials: "include" });
+//     const readingsResponse = await fetch(`${API_URL}/contracts/${idContract}/readings`, { credentials: "include" });
 
-export async function getContract(idClient: number, idContract: number): Promise<{contract: ContractSummary; readings: ReadingSummary[];}>{
-    const contractResponse = await fetch(`${API_URL}/contracts/${idContract}`);
-    const readingsResponse = await fetch(`${API_URL}/contracts/${idContract}/readings`);
+//     if(!contractResponse.ok)
+//     {
+//         const errList = await getErrorMessage(readingsResponse);
 
-    if(!readingsResponse.ok){
-        throw new Error(`Failed to fetch contract details.`);
-    }
+//         throw new CustomApiError(errList, "Failed to fetch contract details.");
+//     }
 
-    if(!readingsResponse.ok){
-        throw new Error(`Failed to fetch readings for this contract.`);
-    }
+//     if(!readingsResponse.ok)
+//     {
+//         const errList = await getErrorMessage(readingsResponse);
 
-    const contractSummary : ContractSummary = await contractResponse.json();
-    const readingsList : ReadingSummary[] = await readingsResponse.json();
+//         throw new CustomApiError(errList, "Failed to fetch readings for this contract.");
+//     }
 
-    return{
-        contract: contractSummary,
-        readings: readingsList
-    }
-}
+//     const contractSummary : ContractSummary = await contractResponse.json();
+//     const readingsList : ReadingSummary[] = await readingsResponse.json();
 
-export async function getPrinter(idPrinter: number): Promise<PrinterDetails>{
-    const response = await fetch(`${API_URL}/printers/${idPrinter}`);
-
-    if(!response.ok)
-    {
-        const errList = await getErrorMessage(response, getErrors);
-
-        throw new Error(JSON.stringify(errList));
-    }
-
-    return response.json();
-}
+//     return{
+//         contract: contractSummary,
+//         readings: readingsList
+//     }
+// }
 
 export async function editPrinter(printerId: number, printer: EditPrinter){
+
     const response = await fetch(`${API_URL}/printers/${printerId}`, {
         method: "PUT",
+        credentials: "include",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(printer)
     });
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to edit printer.");
     }
 }
 
 export async function deletePrinter(printerId: number){
     const response = await fetch(`${API_URL}/printers/${printerId}`, {
+        credentials: "include",
         method: "DELETE"
     });
 
-    if(!response.ok){
-        const errList = await getErrorMessage(response, getErrors);
+    if(!response.ok)
+    {
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to delete printer.");
     }
 }
 
 export async function createReading(newReading: CreateReading){
     const response = await fetch(`${API_URL}/monthly-readings`, {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
@@ -123,9 +88,9 @@ export async function createReading(newReading: CreateReading){
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to create printer.");
     }
 
 }
@@ -133,6 +98,7 @@ export async function createReading(newReading: CreateReading){
 export async function editReading(contractId: number, readingId: number, reading: EditReading){
     const response = await fetch(`${API_URL}/contracts/${contractId}/readings/${readingId}`, {
         method: "PUT",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
@@ -141,27 +107,30 @@ export async function editReading(contractId: number, readingId: number, reading
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to edit reading.");
     }
 }   
 
 export async function deleteReading(contractId: number, readingId: number){
     const response = await fetch(`${API_URL}/contracts/${contractId}/readings/${readingId}`, {
+        credentials: "include",
         method: "DELETE"
     });
 
-    if(!response.ok){
-        const errList = await getErrorMessage(response, getErrors);
+    if(!response.ok)
+    {
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to delete reading.");
     }
 }
 
 export async function createClient(newClient: CreateClient){
     const response = await fetch(`${API_URL}/clients`, {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
@@ -170,15 +139,16 @@ export async function createClient(newClient: CreateClient){
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to create client.");
     }
 }
 
 export async function editClient(clientId: number, editedClient: EditClient){
     const response = await fetch(`${API_URL}/clients/${clientId}`, {
         method: "PUT",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
@@ -187,22 +157,23 @@ export async function editClient(clientId: number, editedClient: EditClient){
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to edit client.");
     }
 }
 
 export async function deleteClient(clientId: number){
     const response = await fetch(`${API_URL}/clients/${clientId}`, {
         method: "DELETE",
+        credentials: "include"
     });
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to delete client.");
     }
 }
 
@@ -211,22 +182,24 @@ export async function getBrands(): Promise<Brand[]>{
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to get brands.");
     }
 
     return response.json();
 }
 
 export async function getPrinters(): Promise<PrinterSummary[]>{
-    const response = await fetch(`${API_URL}/printers`);
+    const response = await fetch(`${API_URL}/printers`, {
+        credentials: "include"
+    });
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to get printers.");
     }
 
     return response.json();
@@ -235,6 +208,7 @@ export async function getPrinters(): Promise<PrinterSummary[]>{
 export async function createPrinter(newPrinter: CreatePrinter){
     const response = await fetch(`${API_URL}/printers`, {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
@@ -243,15 +217,16 @@ export async function createPrinter(newPrinter: CreatePrinter){
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to create printer");
     }
 }
 
 export async function createContract(newContract: CreateContract){
     const response = await fetch(`${API_URL}/contracts`, {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
@@ -260,28 +235,30 @@ export async function createContract(newContract: CreateContract){
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to create contract.");
     }
 }
 
 export async function deleteContract(contractId: number){
     const response = await fetch(`${API_URL}/contracts/${contractId}`, {
+        credentials: "include",
         method: "DELETE",
     });
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to delete contract.");
     }
 }
 
 export async function editContract(contractId: number, contract: EditContract){
     const response = await fetch(`${API_URL}/contracts/${contractId}`, {
         method: "PUT",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
@@ -290,9 +267,9 @@ export async function editContract(contractId: number, contract: EditContract){
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to edit contract.");
     }
 }
 
@@ -310,9 +287,9 @@ export async function login(credentials: Credentials) {
 
     if(!response.ok)
     {
-        const errList = await getErrorMessage(response, getErrors);
+        const errList = await getErrorMessage(response);
 
-        throw new Error(JSON.stringify(errList));
+        throw new CustomApiError(errList, "Failed to login.");
     }
 
 }
@@ -330,8 +307,10 @@ export async function register(credentials: Credentials){
     if(!response.ok)
     {
         const clonedResponse = response.clone();
-        const errorCodes = await getErrorMessage(clonedResponse, getErrors);
-        throw new Error(JSON.stringify(errorCodes));
+        const errList = await getErrorMessage(clonedResponse);
+
+        throw new CustomApiError(errList, "Failed to register.");
+        // throw new Error(JSON.stringify(errorCodes));
     }
 }
 
@@ -344,10 +323,13 @@ export type AppErrorCode =
   | "PasswordRequiresDigit"
   | "PasswordRequiresUpper"
   // Generic codes
+  | "UNAUTHORIZED"
   | "SERVER_ERROR"       // HTML responses, 500 codes, etc.
   | "EMPTY_RESPONSE"     // empty JSON
   | "PARSE_ERROR"         // JSON parse failed
-  | "UNKNOWN_ERROR";     // Uncontrolled cases
+  | "UNKNOWN_ERROR"
+  // Validation Errors
+  ;     // Uncontrolled cases
 
 
 function getErrors(body: any) : AppErrorCode[] {
@@ -367,6 +349,10 @@ function getErrors(body: any) : AppErrorCode[] {
         if (typeof errorsPayload === 'object' && !Array.isArray(errorsPayload)) {
             return Object.keys(errorsPayload).map(field => `INVALID_${field.toUpperCase()}` as AppErrorCode);
         }
+
+        if(typeof errorsPayload === 'string'){
+            return [ errorsPayload as AppErrorCode ];
+        }
     }
 
     return ["SERVER_ERROR"];
@@ -377,18 +363,21 @@ function getErrors(body: any) : AppErrorCode[] {
  * Safely extracts the error message from a fetch Response object.
  * Handles valid JSON, empty bodies, plain text, and network failures.
  */
-async function getErrorMessage(response: Response, getErrorsHelper?: (body: any) => AppErrorCode[]): Promise<AppErrorCode[]> {
+export async function getErrorMessage(response: Response): Promise<AppErrorCode[]> {
     try{
         const contentType = response.headers.get("content-type");
+
+        if(response.status === 401){
+            return ["UNAUTHORIZED"]
+        }
 
         if (contentType && contentType.includes("application/json")) {
             const rawText = await response.text();
             if (!rawText.trim()) return ["EMPTY_RESPONSE"];
 
             const body = JSON.parse(rawText);
-            if (getErrorsHelper) return getErrorsHelper(body);
-            
-            return ["SERVER_ERROR"];
+            // if (getErrorsHelper) return getErrorsHelper(body);
+            return getErrors(body);
         }
 
         return ["SERVER_ERROR"];
@@ -396,5 +385,21 @@ async function getErrorMessage(response: Response, getErrorsHelper?: (body: any)
     }catch{
         return ["PARSE_ERROR"];
     }
+}
 
+
+export class CustomApiError extends Error {
+
+    public data: AppErrorCode[]
+
+    constructor(data: AppErrorCode[], message: string = "An error occurred") {
+        super(message);
+        this.name = "CustomApiError";
+        this.data = data;
+
+        // Maintains proper stack trace for where our error was thrown (V8 engines)
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, CustomApiError);
+        }
+    }
 }
