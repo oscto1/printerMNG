@@ -12,7 +12,7 @@ import { CreatePrinter } from "../types/Printers/CreatePrinter";
 import { EditPrinter } from "../types/Printers/EditPrinter";
 import { Credentials } from "../types/Auth/Login";
 
-export const API_URL = "https://printermng.onrender.com"
+export const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 export async function editPrinter(printerId: number, printer: EditPrinter){
 
