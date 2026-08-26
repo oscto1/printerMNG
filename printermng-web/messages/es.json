@@ -139,6 +139,7 @@
         "INVALID_MONTH_FORMAT": "El mes debe estar en el formato AAAA-MM.",
         "INVALID_BLACK_COUNTER": "El contador de B & N debe estar entre 0 y 10000000.",
         "INVALID_COLOR_COUNTER": "El contador de color debe estar entre 0 y 10000000.",
-        "INVALID_NOTES": "Las notas no deben superar los 150 caracteres y solo pueden contener letras, números y espacios."
+        "INVALID_NOTES": "Las notas no deben superar los 150 caracteres y solo pueden contener letras, números y espacios.",
+        "DuplicateUserName": "El nombre de usuario ya existe."
     }
 }

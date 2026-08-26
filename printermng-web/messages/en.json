@@ -139,6 +139,7 @@
         "INVALID_MONTH_FORMAT": "The month must be in YYYY-MM format.",
         "INVALID_BLACK_COUNTER": "The B & W counter must be between 0 and 10,000,000.",
         "INVALID_COLOR_COUNTER": "The color counter must be between 0 and 10,000,000.",
-        "INVALID_NOTES": "Notes must be no more than 150 characters and can only contain letters, numbers, and spaces."
+        "INVALID_NOTES": "Notes must be no more than 150 characters and can only contain letters, numbers, and spaces.",
+        "DuplicateUserName": "Username is already taken."
     }
 }

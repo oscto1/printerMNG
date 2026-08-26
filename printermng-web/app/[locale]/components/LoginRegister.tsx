@@ -1,7 +1,7 @@
 "use client";
 
 import { SubmitEvent, useState, useEffect } from "react";
-import { login, register } from "../lib/api";
+import { CustomApiError, login, register, AppErrorCode, isAppErrorCode } from "../lib/api";
 import { Credentials } from "../types/Auth/Login";
 import { usernameRegex, hasUppercase, hasLowercase, hasNumber, hasSpecial } from "../lib/utils";
 // import Router from "next/router";
@@ -26,7 +26,7 @@ export default function LoginRegister() {
 
     const router = useRouter();
 
-    const t = useTranslations("login");
+    const t = useTranslations();
 
     const switchMode = (newMode: Mode) => {
         setMode(newMode);
@@ -43,31 +43,31 @@ export default function LoginRegister() {
         const newErrors = ["", "", "", "", "", "", ""];
 
         if (!usernameRegex.test(username)) {
-            newErrors[0] = t("errors.INVALID_USERNAME_FORMAT");
+            newErrors[0] = t("login.errors.INVALID_USERNAME_FORMAT");
         }
 
         if ((password !== "" && password.length < 6) || password.length > 128) {
-            newErrors[1] = t("errors.INVALID_PASS_CHAR_COUNT");
+            newErrors[1] = t("login.errors.INVALID_PASS_CHAR_COUNT");
         }
 
         if (password !== "" && !hasUppercase.test(password)) {
-            newErrors[2] = t("errors.PASS_MISSING_UPPER");
+            newErrors[2] = t("login.errors.PASS_MISSING_UPPER");
         }
 
         if (password !== "" && !hasLowercase.test(password)) {
-            newErrors[3] = t("errors.PASS_MISSING_LOWER");
+            newErrors[3] = t("login.errors.PASS_MISSING_LOWER");
         }
 
         if (password !== "" && !hasNumber.test(password)) {
-            newErrors[4] = t("errors.PASS_MISSING_NUMBER");
+            newErrors[4] = t("login.errors.PASS_MISSING_NUMBER");
         }
 
         if (password !== "" && !hasSpecial.test(password)) {
-            newErrors[5] = t("errors.PASS_MISSING_SPECIAL");
+            newErrors[5] = t("login.errors.PASS_MISSING_SPECIAL");
         }
 
         if ((password !== "" || confirmPassword !== "") && password !== confirmPassword) {
-            newErrors[6] = t("errors.PASS_DONT_MATCH");
+            newErrors[6] = t("login.errors.PASS_DONT_MATCH");
         }
 
         setError(newErrors);
@@ -106,16 +106,25 @@ export default function LoginRegister() {
             };
 
         }catch(err){
-            if (err instanceof Error){
-                if(mode === 'login'){
-                    setError(["Failed to log in! Please verify your credentials and try again."]);
-                }
-                else{
-                    const firstParse = JSON.parse(err.message); 
-                    console.log(firstParse);
+
+            if(mode === 'login'){
+                setError(["Failed to log in! Please verify your credentials and try again."]);
+            }else{
+                if(err instanceof CustomApiError){
+                    var listErrors : string[] = err.data.filter(err => isAppErrorCode(err)).map(err => t(`errors.${err}`));
+
+                    if(listErrors.length > 0){
+                    setError(listErrors);
+                    }else{
+                        setError([err.message]);
+                    }
+                }else if(err instanceof Error){
                     setError(["Unable to create account.", err.message]);
+                }else{
+                    console.error(err);
                 }
-            }    
+            }
+
         }finally{
             setIsLoading(false);
         };
@@ -135,10 +144,10 @@ export default function LoginRegister() {
                 </h1>
 
                 <p className="mt-2 text-sm text-gray-500 mb-2 font-bold">
-                    {t("description")}
+                    {t("login.description")}
                 </p>
 
-                <span className="text-sm">{t("techLabel")}</span>
+                <span className="text-sm">{t("login.techLabel")}</span>
             </div>
 
             {/* Auth card */}
@@ -155,7 +164,7 @@ export default function LoginRegister() {
                                 : "text-gray-600 hover:text-gray-800"
                         }`}
                     >
-                        {t("signIn")}
+                        {t("login.signIn")}
                     </button>
 
                     <button
@@ -167,7 +176,7 @@ export default function LoginRegister() {
                                 : "text-gray-600 hover:text-gray-800"
                         }`}
                     >
-                        {t("createAcc")}
+                        {t("login.createAcc")}
                     </button>
                 </div>
 
@@ -180,7 +189,7 @@ export default function LoginRegister() {
                             htmlFor="username"
                             className="mb-1.5 block text-sm font-semibold text-gray-700"
                         >
-                            {t("username")}
+                            {t("login.username")}
                         </label>
 
                         <input
@@ -191,7 +200,7 @@ export default function LoginRegister() {
                             required
                             autoComplete="username"
                             className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-gray-700 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-300"
-                            placeholder={t("enterUsername")}
+                            placeholder={t("login.enterUsername")}
                         />
                     </div>
 
@@ -201,7 +210,7 @@ export default function LoginRegister() {
                             htmlFor="password"
                             className="mb-1.5 block text-sm font-semibold text-gray-700"
                         >
-                            {t("password")}
+                            {t("login.password")}
                         </label>
 
                         <input
@@ -217,7 +226,7 @@ export default function LoginRegister() {
                                     : "current-password"
                             }
                             className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-gray-700 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-300"
-                            placeholder={t("enterPassword")}
+                            placeholder={t("login.enterPassword")}
                         />
                     </div>
 
@@ -228,7 +237,7 @@ export default function LoginRegister() {
                                 htmlFor="confirmPassword"
                                 className="mb-1.5 block text-sm font-semibold text-gray-700"
                             >
-                                {t("confirmPass")}
+                                {t("login.confirmPass")}
                             </label>
 
                             <input
@@ -239,7 +248,7 @@ export default function LoginRegister() {
                                 required
                                 autoComplete="new-password"
                                 className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-gray-700 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-300"
-                                placeholder={t("enterConfPassword")}
+                                placeholder={t("login.enterConfPassword")}
                             />
                         </div>
                     )}
@@ -271,8 +280,8 @@ export default function LoginRegister() {
                         {isLoading
                             ? "Please wait..."
                             : isRegister
-                                ? t("createAcc")
-                                : t("signIn")}
+                                ? t("login.createAcc")
+                                : t("login.signIn")}
                     </button>
                 </form>
 
