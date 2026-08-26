@@ -157,7 +157,7 @@ public static class AuthEndpoints
                 HttpOnly = true,
                 Secure = true,
                 SameSite =  SameSiteMode.None,
-                Expires = DateTimeOffset.UtcNow.AddMinutes(jwtOptions.Value.ExpirationInMinutes)
+                // Expires = DateTimeOffset.UtcNow.AddMinutes(jwtOptions.Value.ExpirationInMinutes)
             });
 
             return Results.Ok();
