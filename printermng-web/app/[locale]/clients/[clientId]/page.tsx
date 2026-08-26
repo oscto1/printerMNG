@@ -78,7 +78,7 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
                 redirect("/clients");
             }  
         }else{
-            return(t("SERVER_ERROR"));
+            return(t("errors.SERVER_ERROR"));
         }
     }
     

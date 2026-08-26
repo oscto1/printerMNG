@@ -47,7 +47,7 @@ export default function Navbar({tabs=true,}: {tabs?: boolean}) {
           
           {/* Title on the left */}
           <div className="flex items-center px-4">
-            <a href="/home" className="text-gray-700 font-bold">PrinterMNG</a>
+            <a href="/" className="text-gray-700 font-bold">PrinterMNG</a>
           </div>
 
           {/* Desktop navigation on the middle */}

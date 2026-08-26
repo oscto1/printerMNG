@@ -12,36 +12,7 @@ import { CreatePrinter } from "../types/Printers/CreatePrinter";
 import { EditPrinter } from "../types/Printers/EditPrinter";
 import { Credentials } from "../types/Auth/Login";
 
-export const API_URL = "http://localhost:5280"
-
-
-
-// export async function getContract(idClient: number, idContract: number): Promise<{contract: ContractSummary; readings: ReadingSummary[];}>{
-//     const contractResponse = await fetch(`${API_URL}/contracts/${idContract}`, { credentials: "include" });
-//     const readingsResponse = await fetch(`${API_URL}/contracts/${idContract}/readings`, { credentials: "include" });
-
-//     if(!contractResponse.ok)
-//     {
-//         const errList = await getErrorMessage(readingsResponse);
-
-//         throw new CustomApiError(errList, "Failed to fetch contract details.");
-//     }
-
-//     if(!readingsResponse.ok)
-//     {
-//         const errList = await getErrorMessage(readingsResponse);
-
-//         throw new CustomApiError(errList, "Failed to fetch readings for this contract.");
-//     }
-
-//     const contractSummary : ContractSummary = await contractResponse.json();
-//     const readingsList : ReadingSummary[] = await readingsResponse.json();
-
-//     return{
-//         contract: contractSummary,
-//         readings: readingsList
-//     }
-// }
+export const API_URL = "https://printermng.onrender.com"
 
 export async function editPrinter(printerId: number, printer: EditPrinter){
 

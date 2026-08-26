@@ -1,9 +1,13 @@
-import Image from "next/image";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-[#EDEDED] font-sans">
-      <h1 className="text-black">PrinterMNG</h1>
-    </div>
-  );
+export default async function Home() {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("access_token");
+
+    if (accessToken) {
+        redirect("/clients");
+    }
+
+    redirect("/auth/login");
 }
