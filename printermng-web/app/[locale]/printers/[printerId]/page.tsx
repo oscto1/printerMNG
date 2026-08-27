@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
 import { useState, useEffect, use } from "react";
 import { Brand } from "../../types/Printers/Brand";
+import Loading from "../../components/Loading";
 
 export default function PrinterPage({params}: {params: Promise<{printerId: number}>}){
     const t = useTranslations();
@@ -55,7 +56,7 @@ export default function PrinterPage({params}: {params: Promise<{printerId: numbe
         loadPrinter();
     }, [printerId]);
 
-    if(isLoading) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>Loading...</p></main>
+    if(isLoading) return <Loading />
     if(serverError) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>{t("errors.SERVER_ERROR")}</p></main>
     return(
         

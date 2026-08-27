@@ -15,6 +15,7 @@ import { redirect } from "next/navigation";
 import { useEffect, use, useState } from "react";
 import { ContractSummary } from "@/app/[locale]/types/Contracts/ContractSummary";
 import { ReadingSummary } from "@/app/[locale]/types/Readings/ReadingSummary";
+import Loading from "@/app/[locale]/components/Loading";
 
 export default function ContractPage({params, }: { params: Promise<{clientId: number, contractId: number}>})
 {
@@ -71,7 +72,7 @@ export default function ContractPage({params, }: { params: Promise<{clientId: nu
         loadContract();
     }), [clientId, contractId])
 
-    if(isLoading) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>Loading...</p></main>
+    if(isLoading) return <Loading />
     if(serverError) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>{t("errors.SERVER_ERROR")}</p></main>
     return(
         <main className="w-full mx-auto px-4 py-8 space-y-6">

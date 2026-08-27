@@ -14,6 +14,7 @@ import { AppErrorCode, CustomApiError } from "../../lib/apiUtils";
 import { useEffect, useState, use } from "react";
 import { ClientDetails } from "../../types/Clients/ClientDetails";
 import { ContractDetails } from "../../types/Contracts/ContractDetails";
+import Loading from "../../components/Loading";
 
 export default function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
 {
@@ -69,7 +70,7 @@ export default function ClientPage({ params, }: { params: Promise<{ clientId: st
             loadClient();
         }, [clientId]);
 
-        if(isLoading) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>Loading...</p></main>
+        if(isLoading) return <Loading />
         if(serverError) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>{t("errors.SERVER_ERROR")}</p></main>
         return(
             <main className="w-full mx-auto px-4 py-8 space-y-6">

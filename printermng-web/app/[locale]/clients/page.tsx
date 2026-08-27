@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
 import { AppErrorCode, CustomApiError } from "../lib/apiUtils";
 import { useEffect, useState } from "react";
+import Loading from "../components/Loading";
 
 
 export default function ClientsPage()
@@ -37,7 +38,7 @@ export default function ClientsPage()
             }).finally(() => setIsLoading(false));
         }, []);
         
-        if(isLoading) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>Loading...</p></main>
+        if(isLoading) return <Loading />
         if(serverError) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>{t("errors.SERVER_ERROR")}</p></main>
         return (
         <main className="w-full mx-auto px-4 py-8 space-y-6">
@@ -58,11 +59,4 @@ export default function ClientsPage()
 
         </main>
     );
-    // try{
-        
-        
-    // }catch(err){
-        
-    // }
-
 }

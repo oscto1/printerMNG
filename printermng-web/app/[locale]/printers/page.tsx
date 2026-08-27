@@ -12,6 +12,7 @@ import CreatePrinterAction from "../components/Actions/Printers/CreatePrinterAct
 import Navbar from "../components/Navbar";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import Loading from "../components/Loading";
 
 export default function PrintersPage(){
     const router = useRouter();
@@ -59,7 +60,7 @@ export default function PrintersPage(){
     
     }, []);
 
-    if(isLoading) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>Loading...</p></main>
+    if(isLoading) return <Loading />
     if(serverError) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>{t("errors.SERVER_ERROR")}</p></main>
     return(
         <main className="w-full mx-auto px-4 py-8 space-y-6">
