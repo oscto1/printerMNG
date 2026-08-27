@@ -301,11 +301,11 @@ export async function deleteReading(contractId: number, readingId: number){
     }
 }
 
-
 // Auth endpoints ------------------------------------------------------------------------------------------
 export async function login(credentials: Credentials) {
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch(`${API_URL}/login`, {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
