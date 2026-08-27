@@ -119,6 +119,9 @@ public static class AuthEndpoints
 
         app.MapPost("/login", async (LoginUserDto userBody, UserManager<ApplicationUser> userManager, IOptions<JwtOptions> jwtOptions, HttpContext httpContext) =>
         {
+            Console.WriteLine($"Remote IP: {httpContext.Connection.RemoteIpAddress}");
+            Console.WriteLine($"XFF: {httpContext.Request.Headers["X-Forwarded-For"]}");
+
             var user = await userManager.FindByNameAsync(userBody.Username);
 
             if(user is null || !await userManager.CheckPasswordAsync(user, userBody.Password))

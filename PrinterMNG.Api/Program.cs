@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.HttpOverrides;
 using PrinterMNG.Api.Authorization;
 using PrinterMNG.Api.Data;
 using PrinterMNG.Api.Endpoints;
@@ -8,6 +9,8 @@ builder.Services.AddValidation();
 builder.AddPrinterMNGdb();
 builder.AddAuth();
 
+
+// CORS config
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var frontendUrl = builder.Configuration["Cors:FrontendUrl"];
 
@@ -22,6 +25,12 @@ builder.Services.AddCors(options =>
                                 .AllowAnyMethod()
                                 .AllowCredentials(); 
         });
+});
+
+// Forwarder headers to get the actual IP
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
 
 
@@ -66,9 +75,11 @@ app.MapGet("/me", (ClaimsPrincipal claimsPrincipal) =>
 })
 .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
+app.UseForwardedHeaders();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseRateLimiter();
+
 
 app.Run();
 
