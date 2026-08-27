@@ -115,7 +115,7 @@ public static class AuthEndpoints
             await transaction.CommitAsync();
 
             return Results.Ok();
-        });
+        }).RequireRateLimiting("auth");
 
         app.MapPost("/login", async (LoginUserDto userBody, UserManager<ApplicationUser> userManager, IOptions<JwtOptions> jwtOptions, HttpContext httpContext) =>
         {
@@ -161,6 +161,6 @@ public static class AuthEndpoints
             });
 
             return Results.Ok();
-        }); 
+        }).RequireRateLimiting("auth"); 
     }
 }

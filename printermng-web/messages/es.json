@@ -113,6 +113,7 @@
     "errors":{
         "SERVER_ERROR": "Se ha producido un error del servidor. Inténtelo de nuevo más tarde.",
         "UNAUTHORIZED": "Acceso denegado. Inicie sesión con credenciales autorizadas para realizar esta acción.",
+        "TOO_MANY_REQUESTS": "Demasiadas solicitudes. Inténtalo de nuevo más tarde.",
         "INVALID_BRANDID": "Seleccione una marca válida.",
         "INVALID_MODELNAME": "El modelo debe tener entre 3 y 50 caracteres y solo puede contener letras, números y espacios.",
         "UPDATE_PRINTER_HAS_CONTRACTS": "Esta impresora no se puede editar porque actualmente está vinculada a contratos. Reasigne o actualize los contratos asociados antes de modificar esta impresora.",

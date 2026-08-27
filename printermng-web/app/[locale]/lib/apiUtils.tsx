@@ -11,6 +11,7 @@ export const APP_ERROR_CODES = [
     // Generic codes
     "UNAUTHORIZED",
     "NOT_FOUND",
+    "TOO_MANY_REQUESTS",
     "SERVER_ERROR",
     "EMPTY_RESPONSE",
     "PARSE_ERROR",
@@ -102,12 +103,18 @@ export async function getErrorMessage(response: Response): Promise<AppErrorCode[
     try{
         const contentType = response.headers.get("content-type");
 
+        if(response.status)
+
         if(response.status === 401){
             return ["UNAUTHORIZED"]
         }
 
         if(response.status === 404){
             return ["NOT_FOUND"]
+        }
+
+        if(response.status === 429){
+            return ["TOO_MANY_REQUESTS"]
         }
 
         if (contentType && contentType.includes("application/json")) {

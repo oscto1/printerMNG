@@ -68,6 +68,7 @@ app.MapGet("/me", (ClaimsPrincipal claimsPrincipal) =>
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 
 app.Run();
 
