@@ -2,7 +2,8 @@
 import type { CreateClient } from "@/app/[locale]/types/Clients/CreateClient";
 import { useState } from "react"
 import Modal from "../../Modal";
-import { createClient, CustomApiError } from "@/app/[locale]/lib/api";
+import { CustomApiError } from "@/app/[locale]/lib/apiUtils";
+import { createClient } from "@/app/[locale]/lib/apiRequests";
 import { useRouter } from "next/navigation";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { useTranslations } from "next-intl";
@@ -20,12 +21,13 @@ export default function CreateClientAction(){
         try{
             await createClient(client);
             setOpenCreateClient(false);
-            router.refresh();
+            console.log("Should reload");
+            window.location.reload();
         }
         catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                router.refresh();
+                router.push("/auth/login");
             }
         }
     }

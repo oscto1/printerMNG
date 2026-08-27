@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { useRouter } from "next/navigation";
 import Modal from "../../Modal";
-import { CustomApiError, deletePrinter } from "@/app/[locale]/lib/api";
+import { CustomApiError } from "@/app/[locale]/lib/apiUtils";
+import { deletePrinter } from "@/app/[locale]/lib/apiRequests";
 import { useTranslations } from "next-intl";
 
 export default function DeletePrinterAction({printerId}: {printerId: number}){
@@ -22,7 +23,7 @@ export default function DeletePrinterAction({printerId}: {printerId: number}){
         }catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                router.refresh();
+                router.push("/auth/login");
             }
         }
     }

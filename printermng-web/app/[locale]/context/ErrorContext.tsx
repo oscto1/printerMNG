@@ -2,8 +2,9 @@
 
 import React, {createContext, useContext, useState} from "react";
 import Modal from "../components/Modal";
-import { AppErrorCode, CustomApiError } from "../lib/api";
+import { AppErrorCode, CustomApiError } from "../lib/apiUtils";
 import { useTranslations } from "next-intl";
+import { isAppErrorCode } from "../lib/apiUtils";
 
 interface ErrorContextType {
     showError: (err: unknown) => void;
@@ -45,7 +46,7 @@ export function ErrorProvider({children}: {children: React.ReactNode}){
                 <h1 className="text-heading md:text-2xl lg:text-2xl mb-2">ERROR!</h1>
                 {(Array.isArray(errorMessage)) ? 
                     <ul className="list-disc pl-5"> {errorMessage.map((err, index) => (<li key={index}>{t(err)}</li>))} </ul> 
-                :   <p>{(errorMessage !== null ? t(errorMessage) : "An unexpected error occurred.")}</p>}
+                :   <p>{(isAppErrorCode(errorMessage) ? t(errorMessage) : "An unexpected error occurred." + errorMessage)}</p>}
                 
                  
             </Modal>

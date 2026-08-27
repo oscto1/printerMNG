@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Brand } from "@/app/[locale]/types/Printers/Brand";
 import Modal from "../../Modal";
 import { CreatePrinter } from "@/app/[locale]/types/Printers/CreatePrinter";
+import { createPrinter } from "@/app/[locale]/lib/apiRequests";
 import { useError } from "@/app/[locale]/context/ErrorContext";
-import { createPrinter, CustomApiError } from "@/app/[locale]/lib/api";
+import { CustomApiError } from "@/app/[locale]/lib/apiUtils";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
@@ -27,7 +28,7 @@ export default function CreatePrinterAction({brands}:{brands: Brand[]}){
         }catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                router.refresh();
+                window.location.reload();
             }
         }
     }

@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-// import Link from "next/link";
-// import { usePathname, useRouter } from "next/navigation";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 
 
@@ -11,7 +9,6 @@ export default function Navbar({tabs=true,}: {tabs?: boolean}) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
-    const locale = useLocale();
 
     const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 

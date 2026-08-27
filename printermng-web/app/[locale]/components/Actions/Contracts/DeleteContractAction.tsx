@@ -2,7 +2,8 @@
 import { useState } from "react";
 import Modal from "../../Modal";
 import { useError } from "@/app/[locale]/context/ErrorContext";
-import { CustomApiError, deleteContract } from "@/app/[locale]/lib/api";
+import { CustomApiError } from "@/app/[locale]/lib/apiUtils";
+import { deleteContract } from "@/app/[locale]/lib/apiRequests";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
@@ -20,7 +21,7 @@ export default function DeleteContractAction({contractId, clientId}:{contractId:
         }catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                router.refresh();
+                router.push("/auth/login");
             }
         }
     }

@@ -4,7 +4,8 @@ import { useState } from "react";
 import Modal from "../Modal";
 import { MONTHS, currentDate } from "@/app/[locale]/lib/utils";
 import { CreateReading } from "@/app/[locale]/types/Readings/CreateReading";
-import { createReading, CustomApiError } from "@/app/[locale]/lib/api";
+import { CustomApiError } from "@/app/[locale]/lib/apiUtils";
+import { createReading } from "../../lib/apiRequests";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { useTranslations } from "next-intl";
 
@@ -12,15 +13,11 @@ import { useTranslations } from "next-intl";
 export default function ReadingsActions({contractId, contractIsActive}: {contractId: number, contractIsActive: boolean}){
     const [openCreateReading, setOpenCreateReading] = useState(false);
 
-    // const [openErrorModal, setOpenErrorModal] = useState(false);
-
-    // const [error, setError] = useState<string | null>(null);
 
     const { showError } = useError();
 
     const [newReading, setNewReading] = useState({ contractId: contractId, month: currentDate(), blackCounter: 0, colorCounter: 0, notes: "" } as CreateReading);
 
-    // const router = useRouter();
 
     const t = useTranslations();
     const handleSave = async (reading: CreateReading) => {
@@ -32,7 +29,7 @@ export default function ReadingsActions({contractId, contractIsActive}: {contrac
         }catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                window.location.reload();
+                window.location.href = "/auth/location";
             }
         }
     }
@@ -48,15 +45,6 @@ export default function ReadingsActions({contractId, contractIsActive}: {contrac
             
             
             <Modal open={openCreateReading} onClose={() => setOpenCreateReading(false)}>
-                {/* <form action="">
-                    <select name="" id="">
-                        {MONTHS.map((option, index) => (
-                            <option key={index} value={index}>
-                                {option}
-                            </option>
-                        ))}
-                    </select>
-                </form>     */}
                 <h1 className="text-heading md:text-2xl lg:text-2xl mb-3">{t("readings.addReading")}</h1>
                 <form action="">
                     <div>

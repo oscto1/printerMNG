@@ -2,7 +2,8 @@
 import { useState } from "react";
 import Modal from "../../Modal";
 import { useError } from "@/app/[locale]/context/ErrorContext";
-import { CustomApiError, deleteClient } from "@/app/[locale]/lib/api";
+import { CustomApiError } from "@/app/[locale]/lib/apiUtils";
+import { deleteClient } from "@/app/[locale]/lib/apiRequests";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 

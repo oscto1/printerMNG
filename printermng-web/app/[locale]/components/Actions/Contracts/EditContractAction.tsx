@@ -1,13 +1,13 @@
 "use client"
-import type { CreateClient } from "@/app/[locale]/types/Clients/CreateClient";
 import { useState, useEffect } from "react"
 import Modal from "../../Modal";
-import { CustomApiError, editContract } from "@/app/[locale]/lib/api";
+import { CustomApiError } from "@/app/[locale]/lib/apiUtils";
+import { editContract } from "@/app/[locale]/lib/apiRequests";
 import { useRouter } from "next/navigation";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { EditContract } from "@/app/[locale]/types/Contracts/EditContract";
 import { PrinterSummary } from "@/app/[locale]/types/Printers/PrinterSummary";
-import { getPrinters } from "@/app/[locale]/lib/api";
+import { getPrinters } from "@/app/[locale]/lib/apiRequests";
 import { useTranslations } from "next-intl";
 
 export default function EditContractAction({contractId, currentContractData}: {contractId: number, currentContractData: EditContract}){
@@ -28,11 +28,11 @@ export default function EditContractAction({contractId, currentContractData}: {c
         try{
             await editContract(contractId, contract);
             setOpenEditContract(false);
-            router.refresh();
+            window.location.reload();
         }catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                router.refresh();
+                router.push("/auth/login");
             }
         }
     }

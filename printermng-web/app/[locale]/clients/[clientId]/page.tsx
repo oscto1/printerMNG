@@ -1,4 +1,6 @@
-import { getClient } from "@/app/[locale]/lib/apiServer";
+'use client'
+
+import { getClient } from "@/app/[locale]/lib/apiRequests";
 import ClientsContractsTable from "@/app/[locale]/components/Tables/ClientsContractsTable";
 import CreateContractAction from "@/app/[locale]/components/Actions/Contracts/CreateContractAction";
 import PageContext, { UrlItem } from "@/app/[locale]/components/PageContext";
@@ -6,17 +8,24 @@ import Header, { HeaderRightItem } from "@/app/[locale]/components/Header";
 import EditClientAction from "@/app/[locale]/components/Actions/Clients/EditClientAction";
 import DeleteClientAction from "@/app/[locale]/components/Actions/Clients/DeleteClientAction";
 import Navbar from "@/app/[locale]/components/Navbar";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
-import { AppErrorCode, CustomApiError } from "../../lib/api";
+import { AppErrorCode, CustomApiError } from "../../lib/apiUtils";
+import { useEffect, useState, use } from "react";
+import { ClientDetails } from "../../types/Clients/ClientDetails";
+import { ContractDetails } from "../../types/Contracts/ContractDetails";
 
-export default async function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
+export default function ClientPage({ params, }: { params: Promise<{ clientId: string }>})
 {
-    const t = await getTranslations();
-    try{
-        const { clientId } = await params;
+    const t = useTranslations();
 
-        const { client, contracts } = await getClient(clientId);
+    const { clientId } = use(params);
+
+        const [ client, setClient ] = useState<ClientDetails>({id: -1, document:"", name:"", phone:"", location:""});
+        const [ contracts, setContracts ] = useState<ContractDetails[]>([]);
+
+        const [isLoading, setIsLoading] = useState(true);
+        const [serverError, setServerError] = useState(false);
 
         const url = [
             {label: t("clients.title"), value: "/clients"} as UrlItem, 
@@ -35,8 +44,33 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
             location: client.location
         }
 
-        
+        useEffect(() => {
+            const loadClient = async () => {
+                try{
+                    const result = await getClient(clientId);
 
+                    setClient(result.client);
+                    setContracts(result.contracts);
+                }catch(err){
+                    if(err instanceof CustomApiError){
+                        if(err.data.includes("UNAUTHORIZED" as AppErrorCode)){
+                            redirect("/auth/login");
+                        }
+                    }else{
+                        console.error(err);
+                        setServerError(true);
+                    }
+                }finally{
+                    setIsLoading(false);
+                }
+                
+            };
+
+            loadClient();
+        }, [clientId]);
+
+        if(isLoading) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>Loading...</p></main>
+        if(serverError) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>{t("errors.SERVER_ERROR")}</p></main>
         return(
             <main className="w-full mx-auto px-4 py-8 space-y-6">
     
@@ -69,18 +103,5 @@ export default async function ClientPage({ params, }: { params: Promise<{ client
                 </div>
 
             </main>
-        );
-    }catch(err){
-        if(err instanceof CustomApiError){
-            if(err.data.includes("UNAUTHORIZED" as AppErrorCode)){
-                redirect("/auth/login");
-            }else if(err.data.includes("NOT_FOUND" as AppErrorCode)){
-                redirect("/clients");
-            }  
-        }else{
-            return(t("errors.SERVER_ERROR"));
-        }
-    }
-    
-    
+        );    
 }

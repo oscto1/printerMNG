@@ -1,13 +1,12 @@
 "use client";
 
 import { SubmitEvent, useState, useEffect } from "react";
-import { CustomApiError, login, register, AppErrorCode, isAppErrorCode } from "../lib/api";
+import { CustomApiError, isAppErrorCode } from "../lib/apiUtils";
+import { login, register } from "../lib/apiRequests";
 import { Credentials } from "../types/Auth/Login";
 import { usernameRegex, hasUppercase, hasLowercase, hasNumber, hasSpecial } from "../lib/utils";
-// import Router from "next/router";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-
 
 type Mode = "login" | "register";
 
@@ -94,6 +93,7 @@ export default function LoginRegister() {
             var response;
             const credentials : Credentials = { username, password };
 
+            
             if (mode === 'login') { 
                 response = await login(credentials);
                 router.push("/clients")
@@ -106,13 +106,12 @@ export default function LoginRegister() {
             };
 
         }catch(err){
-
             if(mode === 'login'){
                 setError(["Failed to log in! Please verify your credentials and try again."]);
             }else{
                 if(err instanceof CustomApiError){
                     var listErrors : string[] = err.data.filter(err => isAppErrorCode(err)).map(err => t(`errors.${err}`));
-
+                    console.log(err);
                     if(listErrors.length > 0){
                     setError(listErrors);
                     }else{

@@ -152,15 +152,15 @@ public static class AuthEndpoints
 
             var accessToken = tokenHandler.CreateToken(tokenDescriptor);
 
-            httpContext.Response.Cookies.Append("access_token", accessToken, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite =  SameSiteMode.None,
-                Expires = DateTimeOffset.UtcNow.AddMinutes(jwtOptions.Value.ExpirationInMinutes)
-            });
+            // httpContext.Response.Cookies.Append("access_token", accessToken, new CookieOptions
+            // {
+            //     HttpOnly = true,
+            //     Secure = true,
+            //     SameSite =  SameSiteMode.None,
+            //     Expires = DateTimeOffset.UtcNow.AddMinutes(jwtOptions.Value.ExpirationInMinutes)
+            // });
 
-            return Results.Ok();
+            return Results.Ok(new { accessToken = accessToken });
         }); 
     }
 }

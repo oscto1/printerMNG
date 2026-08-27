@@ -2,9 +2,10 @@
 import { useState, useEffect } from "react";
 import Modal from "../../Modal";
 import type { CreateContract } from "@/app/[locale]/types/Contracts/CreateContract";
-import { CustomApiError, getPrinters } from "@/app/[locale]/lib/api";
+import { CustomApiError } from "@/app/[locale]/lib/apiUtils";
+import { getPrinters } from "@/app/[locale]/lib/apiRequests";
 import { PrinterSummary } from "@/app/[locale]/types/Printers/PrinterSummary";
-import { createContract } from "@/app/[locale]/lib/api";
+import { createContract } from "@/app/[locale]/lib/apiRequests";
 import { useError } from "@/app/[locale]/context/ErrorContext";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -33,7 +34,7 @@ export default function CreateContract({clientId} : {clientId: number}){
             }catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                router.refresh();
+                router.push("/auth/login");
             }
         }
         };
@@ -47,7 +48,8 @@ export default function CreateContract({clientId} : {clientId: number}){
         try{
             await createContract(newContract);
             setOpenCreateContract(false);
-            router.refresh();
+            console.log("Should refresh");
+            window.location.reload();
         }
         catch(err){
             showError(err);

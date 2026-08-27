@@ -1,27 +1,44 @@
-import { getClients } from "../lib/apiServer";
+'use client'
+
+import { getClients } from "../lib/apiRequests";
 import { ClientDetails } from "../types/Clients/ClientDetails";
 import ClientsTable from "../components/Tables/ClientsTable";
 import CreateClientAction from "../components/Actions/Clients/CreateClientAction";
 import PageContext, { UrlItem } from "../components/PageContext";
 import Navbar from "../components/Navbar";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
-import { AppErrorCode, CustomApiError } from "../lib/api";
+import { AppErrorCode, CustomApiError } from "../lib/apiUtils";
+import { useEffect, useState } from "react";
 
 
-export default async function ClientsPage()
+export default function ClientsPage()
 {
-    const t = await getTranslations();
-    try{
-        
-        var url : UrlItem[] = [
+    const t = useTranslations();
+
+    var url : UrlItem[] = [
             {label: `${t("clients.title")}`, value: "/clients"}
         ]
 
-        var clients: ClientDetails[] = [];
+        const [clients, setClients] = useState<ClientDetails[]>([]);
+        const [isLoading, setIsLoading] = useState(true);
+        const [serverError, setServerError] = useState(false);
 
-        clients = await getClients();
-
+        useEffect(() => {
+            getClients().then(setClients).catch(err => {
+                if(err instanceof CustomApiError){
+                    if(err.data.includes("UNAUTHORIZED" as AppErrorCode)){
+                        redirect("/auth/login");
+                    }
+                }else{
+                    console.error(err);
+                    setServerError(true);
+                }
+            }).finally(() => setIsLoading(false));
+        }, []);
+        
+        if(isLoading) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>Loading...</p></main>
+        if(serverError) return <main className="w-full mx-auto px-4 py-8 space-y-6"><p>{t("errors.SERVER_ERROR")}</p></main>
         return (
         <main className="w-full mx-auto px-4 py-8 space-y-6">
             <Navbar></Navbar>
@@ -41,14 +58,11 @@ export default async function ClientsPage()
 
         </main>
     );
-    }catch(err){
-        if(err instanceof CustomApiError){
-            if(err.data.includes("UNAUTHORIZED" as AppErrorCode)){
-                redirect("/auth/login");
-            }
-        }else{
-            return(t("errors.SERVER_ERROR"));
-        }
-    }
+    // try{
+        
+        
+    // }catch(err){
+        
+    // }
 
 }
