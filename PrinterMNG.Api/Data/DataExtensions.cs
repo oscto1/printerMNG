@@ -119,6 +119,18 @@ public static class DataExtensions
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
+            options.OnRejected = async (context, cancellationToken) =>
+            {
+                context.HttpContext.Response.ContentType = "application/json";
+
+                await context.HttpContext.Response.WriteAsJsonAsync(
+                    new
+                    {
+                        errors = "TOO_MANY_REQUESTS" 
+                    },
+                    cancellationToken);
+            };
+
             options.AddPolicy("auth", context =>
                 RateLimitPartition.GetFixedWindowLimiter(
                     partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",

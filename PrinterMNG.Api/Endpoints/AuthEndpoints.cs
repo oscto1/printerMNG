@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.EntityFrameworkCore;
 
 namespace PrinterMNG.Api.Endpoints;
 
@@ -20,6 +21,21 @@ public static class AuthEndpoints
 
         app.MapPost("/register", async (RegisterUserDto registerUser, PrinterMNGContext dbContext, UserManager<ApplicationUser> userManager) =>
         {
+            // limit accounts per day
+            DateTime today = DateTime.UtcNow.Date;
+            int accountsToday = await userManager.Users.CountAsync(u => u.CreatedAt >= today);
+
+            if(accountsToday >= 20)
+            {
+                return Results.Json(
+                    new
+                    {
+                        errors = "REGISTRATION_LIMIT_REACHED"
+                    },
+                    statusCode: StatusCodes.Status429TooManyRequests
+                );
+            }
+
             using var transaction = await dbContext.Database.BeginTransactionAsync();
 
             ApplicationUser newUser = new()

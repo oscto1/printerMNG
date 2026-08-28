@@ -26,7 +26,7 @@ export default function EditClientAction({clientId, currentClientData}: {clientI
         }catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                window.location.reload();
+                router.push("/auth/login");
             }
         }
     }

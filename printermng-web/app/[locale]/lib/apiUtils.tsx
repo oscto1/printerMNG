@@ -16,6 +16,8 @@ export const APP_ERROR_CODES = [
     "EMPTY_RESPONSE",
     "PARSE_ERROR",
     "UNKNOWN_ERROR",
+    //Limits
+    "REGISTRATION_LIMIT_REACHED",
     // Validation Errors
     "INVALID_PRINTER_ID",
     "INVALID_BRANDID",
@@ -103,7 +105,6 @@ export async function getErrorMessage(response: Response): Promise<AppErrorCode[
     try{
         const contentType = response.headers.get("content-type");
 
-        if(response.status)
 
         if(response.status === 401){
             return ["UNAUTHORIZED"]
@@ -111,10 +112,6 @@ export async function getErrorMessage(response: Response): Promise<AppErrorCode[
 
         if(response.status === 404){
             return ["NOT_FOUND"]
-        }
-
-        if(response.status === 429){
-            return ["TOO_MANY_REQUESTS"]
         }
 
         if (contentType && contentType.includes("application/json")) {

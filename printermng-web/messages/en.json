@@ -114,6 +114,7 @@
         "SERVER_ERROR": "A server error has occurred. Please try again later.",
         "UNAUTHORIZED": "Access denied. Please sign in with authorized credentials to perform this action.",
         "TOO_MANY_REQUESTS": "Too many requests. Please try again later.",
+        "REGISTRATION_LIMIT_REACHED": "We've reached today's new accounts limit. Please try again tomorrow.",
         "INVALID_BRANDID": "Select a valid brand.",
         "INVALID_MODELNAME": "The model name must be 3 - 50 characters and can only contain letters, numbers and spaces.",
         "UPDATE_PRINTER_HAS_CONTRACTS": "This printer cannot be updated because it is currently linked to contracts. Please reassign or update the associated contracts before modifying this printer.",

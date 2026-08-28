@@ -24,7 +24,7 @@ export default function DeleteClientAction({clientId}:{clientId: number}){
         }catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                router.refresh();
+                router.push("/auth/login");
             }
         }
     }
