@@ -27,12 +27,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Forwarder headers to get the actual IP
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-});
-
 
 var app = builder.Build();
 
@@ -75,7 +69,6 @@ app.MapGet("/me", (ClaimsPrincipal claimsPrincipal) =>
 })
 .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
-app.UseForwardedHeaders();
 app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
