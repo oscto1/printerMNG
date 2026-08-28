@@ -1,5 +1,6 @@
 export const API_URL = process.env.NEXT_PUBLIC_API_URL!;  
 
+// List of error that the app handles currently
 export const APP_ERROR_CODES = [
     // .NET Identity codes
     "DuplicateUserName",
@@ -58,6 +59,8 @@ export function isAppErrorCode(value: unknown): value is AppErrorCode {
   );
 }
 
+
+// Extracts errors from body of the request.
 function getErrors(body: any) : AppErrorCode[] {
     var errorList: AppErrorCode[] = [];
 
@@ -97,10 +100,9 @@ function getErrors(body: any) : AppErrorCode[] {
 }
 
 
-/**
- * Safely extracts the error message from a fetch Response object.
- * Handles valid JSON, empty bodies, plain text, and network failures.
- */
+
+// Safely extracts the error message from a fetch Response object.
+// Handles valid JSON, empty bodies, plain text, and network failures.
 export async function getErrorMessage(response: Response): Promise<AppErrorCode[]> {
     try{
         const contentType = response.headers.get("content-type");

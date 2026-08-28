@@ -92,8 +92,8 @@
     "login":{
         "signIn" : "Sign In",
         "createAcc": "Create account",
-        "description": "Full-stack demo for managing clients, printers, rental contracts, and monthly readings for a printer rental business. All data is fictional.",
-        "techLabel": "ASP.NET Core · Identity · PostgreSQL · Next.js · React · TypeScript",
+        "description": "Full-stack demo for managing clients, printers, rental contracts, and monthly readings for a printer rental business. All data is fictional. Resource limits are intentionally enforced, and demo data may be deleted without notice. Please do not enter real or sensitive information.",
+        "techLabel": "See source code in Github",
         "username": "Username",
         "enterUsername": "Enter your username",
         "password": "Password",

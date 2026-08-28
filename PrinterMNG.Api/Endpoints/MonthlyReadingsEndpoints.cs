@@ -62,8 +62,10 @@ public static class MonthlyReadingsEndpoints
                     return Results.Conflict(new { errors = "CONTRACT_NOT_ACTIVE" });
                 }
 
-                var readingsCount = await dbContext.MonthlyReadings.AsNoTracking().CountAsync(mr => mr.ContractId == contract.Id);
-                if(readingsCount >= 4)
+                int readingsCount = await dbContext.MonthlyReadings.AsNoTracking().CountAsync(mr => mr.ContractId == contract.Id);
+
+                // Limit of readings per contract
+                if(readingsCount >= 50)
                 {
                     return Results.Conflict(new { errors = "READINGS_LIMIT_REACHED" });
                 }

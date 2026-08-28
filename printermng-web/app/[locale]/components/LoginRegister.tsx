@@ -146,7 +146,8 @@ export default function LoginRegister() {
                     {t("login.description")}
                 </p>
 
-                <span className="text-sm">{t("login.techLabel")}</span>
+                <a href="https://github.com/oscto1/printerMNG" target="_blank"><span className="text-md underline">{t("login.techLabel")}</span></a>
+                
             </div>
 
             {/* Auth card */}

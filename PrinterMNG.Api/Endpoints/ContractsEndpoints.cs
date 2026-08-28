@@ -93,6 +93,8 @@ public static class ContractsEndpoints
             }
 
             var contractsCount = await dbContext.Contracts.CountAsync(c => c.ClientId == newContract.ClientId);
+
+            // Limit of contracts per client
             if(contractsCount >= 5)
             {
                 return Results.Conflict(new {errors = "CONTRACT_LIMIT_REACHED"});

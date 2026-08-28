@@ -64,7 +64,8 @@ public static class PrintersEndpoints
             string userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             int printersCount = await dbContext.Printers.CountAsync(p => p.AdminId == userId);
 
-            if(printersCount >= 30)
+            // Limit of printers per account
+            if(printersCount >= 10)
             {
                 return Results.Conflict(new { errors = "PRINTER_LIMIT_REACHED" });
             }

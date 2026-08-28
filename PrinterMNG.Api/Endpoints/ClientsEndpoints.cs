@@ -56,11 +56,11 @@ public static class ClientsEndpoints
             var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             int clientsCount = await dbContext.Clients.CountAsync(c => c.AdminId == userId);
 
-            if(clientsCount >= 5)
+            // Limit of clients per account
+            if(clientsCount >= 10)
             {
                 return Results.Conflict(new {errors = "CLIENT_LIMIT_REACHED"});
             }
-
 
             Client client = new()
             {

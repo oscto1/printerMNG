@@ -92,8 +92,8 @@
     "login":{
         "signIn" : "Iniciar sesión",
         "createAcc": "Crear cuenta",
-        "description": "Demo Full-stack para gestionar clientes, impresoras, contratos de alquiler y lecturas mensuales en una empresa de alquiler de impresoras. Todos los datos son ficticios.",
-        "techLabel": "ASP.NET Core · Identity · PostgreSQL · Next.js · React · TypeScript",
+        "description": "Demo Full-stack para gestionar clientes, impresoras, contratos de alquiler y lecturas mensuales en una empresa de alquiler de impresoras. Todos los datos son ficticios. Se aplican límites de forma intencionada, y los datos pueden eliminarse sin previo aviso. Por favor, no ingrese información real o confidencial.",
+        "techLabel": "Ver el código fuente en GitHub",
         "username": "Nombre de usuario",
         "enterUsername": "Ingrese su nombre de usuario",
         "password": "Contraseña",
