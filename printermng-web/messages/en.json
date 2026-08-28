@@ -142,6 +142,10 @@
         "INVALID_BLACK_COUNTER": "The B & W counter must be between 0 and 10,000,000.",
         "INVALID_COLOR_COUNTER": "The color counter must be between 0 and 10,000,000.",
         "INVALID_NOTES": "Notes must be no more than 150 characters and can only contain letters, numbers, and spaces.",
-        "DuplicateUserName": "Username is already taken."
+        "DuplicateUserName": "Username is already taken.",
+        "PRINTER_LIMIT_REACHED": "You've reached the maximum number of printers for this account.",
+        "CLIENT_LIMIT_REACHED": "You've reached the maximum number of clients for this account.",
+        "CONTRACT_LIMIT_REACHED": "You've reached the maximum number of contratcs for this client.",
+        "READINGS_LIMIT_REACHED": "You've reached the maximum number of readings for this contract."
     }
 }

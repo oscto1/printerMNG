@@ -142,6 +142,10 @@
         "INVALID_BLACK_COUNTER": "El contador de B & N debe estar entre 0 y 10000000.",
         "INVALID_COLOR_COUNTER": "El contador de color debe estar entre 0 y 10000000.",
         "INVALID_NOTES": "Las notas no deben superar los 150 caracteres y solo pueden contener letras, números y espacios.",
-        "DuplicateUserName": "El nombre de usuario ya existe."
+        "DuplicateUserName": "El nombre de usuario ya existe.",
+        "PRINTER_LIMIT_REACHED": "Ha alcanzado el número máximo de impresoras para esta cuenta.",
+        "CLIENT_LIMIT_REACHED": "Ha alcanzado el número máximo de clientes para esta cuenta.",
+        "CONTRACT_LIMIT_REACHED": "Ha alcanzado el número máximo de contratos para este cliente.",
+        "READINGS_LIMIT_REACHED": "Ha alcanzado el número máximo de lecturas para este contrato."
     }
 }

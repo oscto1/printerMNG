@@ -53,6 +53,15 @@ public static class ClientsEndpoints
         // POST /clients
         group.MapPost("/", async (CreateClientDto newClient, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int clientsCount = await dbContext.Clients.CountAsync(c => c.AdminId == userId);
+
+            if(clientsCount >= 5)
+            {
+                return Results.Conflict(new {errors = "CLIENT_LIMIT_REACHED"});
+            }
+
+
             Client client = new()
             {
                 Document = newClient.Document,
@@ -60,7 +69,7 @@ public static class ClientsEndpoints
                 Phone = newClient.Phone,
                 Location = newClient.Location,
                 CreatedAt = DateTime.UtcNow,
-                AdminId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!
+                AdminId = userId!
             };
 
             dbContext.Clients.Add(client);
@@ -77,7 +86,6 @@ public static class ClientsEndpoints
         group.MapPut("/{id}", async (int id, UpdateClientDto newClient, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
             var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             var client = await dbContext.Clients.FirstOrDefaultAsync(c => c.Id == id && c.AdminId == userId);
 
             if(client is null)

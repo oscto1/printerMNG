@@ -61,12 +61,20 @@ public static class PrintersEndpoints
         // POST /printers
         group.MapPost("/", async (CreatePrinterDto newPrinter, PrinterMNGContext dbContext, HttpContext httpContext) =>
         {
+            string userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            int printersCount = await dbContext.Printers.CountAsync(p => p.AdminId == userId);
+
+            if(printersCount >= 30)
+            {
+                return Results.Conflict(new { errors = "PRINTER_LIMIT_REACHED" });
+            }
+
             Printer printer = new()
             {
                 Model = newPrinter.ModelName,
                 BrandId = newPrinter.BrandId,
                 IsColorPrinter = newPrinter.IsColorPrinter,
-                AdminId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!
+                AdminId = userId
             };
 
             dbContext.Printers.Add(printer);

@@ -41,11 +41,11 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
         try{
             editedReading.month = removeDay(editedReading.month);
             await editReading(contractId, readingId, editedReading);
-            router.refresh();
+            window.location.reload();
         }catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                router.refresh();
+                router.push("/auth/login");
             }
         }
     }
@@ -59,11 +59,11 @@ export default function ReadingsTable({ contract, readings }: {contract: Contrac
         try{
             await deleteReading(contract.id, readingToDelete);
             setOpenDeleteModal(false);
-            router.refresh();
+            window.location.reload();
         }catch(err){
             showError(err);
             if(err instanceof CustomApiError && err.data.includes("UNAUTHORIZED")){
-                router.refresh();
+                router.push("/auth/login");
             }
         }
     }

@@ -62,6 +62,12 @@ public static class MonthlyReadingsEndpoints
                     return Results.Conflict(new { errors = "CONTRACT_NOT_ACTIVE" });
                 }
 
+                var readingsCount = await dbContext.MonthlyReadings.AsNoTracking().CountAsync(mr => mr.ContractId == contract.Id);
+                if(readingsCount >= 4)
+                {
+                    return Results.Conflict(new { errors = "READINGS_LIMIT_REACHED" });
+                }
+
                 DateOnly newMonth = DateOnly.ParseExact($"{newReading.Month}-01", "yyyy-MM-dd");
 
                 var prevReading = await dbContext.MonthlyReadings

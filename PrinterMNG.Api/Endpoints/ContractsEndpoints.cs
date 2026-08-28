@@ -92,12 +92,20 @@ public static class ContractsEndpoints
                 return Results.BadRequest(new {errors = "CLIENT_NOT_FOUND"});
             }
 
+            var contractsCount = await dbContext.Contracts.CountAsync(c => c.ClientId == newContract.ClientId);
+            if(contractsCount >= 5)
+            {
+                return Results.Conflict(new {errors = "CONTRACT_LIMIT_REACHED"});
+            }
+
             var printer = await dbContext.Printers.FirstOrDefaultAsync(p => p.Id == newContract.PrinterId && p.AdminId == userId);
 
             if(printer is null)
             {
                 return Results.BadRequest(new {errors = "PRINTER_NOT_FOUND"});
             }
+
+            
 
             decimal colorCopyPrice = 0;
             if(printer is not null && printer.IsColorPrinter)
